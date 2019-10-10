@@ -1,0 +1,50 @@
+@import '~nprogress/nprogress.css';
+@import '~alertifyjs/build/css/alertify.min.css';
+@import '~alertifyjs/build/css/themes/semantic.min.css';
+@import '~bootstrap3/dist/css/bootstrap.min.css';
+
+@font-face {
+  font-family: Light;
+  font-display: auto;
+  src: url('../assets/fonts/Montserrat-Light.ttf');
+}
+
+@font-face {
+  font-family: Regular;
+  font-display: auto;
+  src: url('../assets/fonts/Montserrat-Regular.ttf');
+}
+@font-face {
+  font-family: Medium;
+  font-display: auto;
+  src: url('../assets/fonts/Montserrat-Medium.ttf');
+}
+@font-face {
+  font-family: Bold;
+  font-display: auto;
+  src: url('../assets/fonts/Montserrat-Bold.ttf');
+}
+/* Colors */
+$darkColor : "#707070";
+$midColor : "#b5b5b5";
+$lightColor : "#dededf";
+$primaryColor : "#4cc4d4";
+$secondaryColor : "#f8991c";
+$whiteColor : "#ffffff";
+$blackColor : "#000000";
+
+/* Font size */
+$xl:36;
+$l:24;
+$m:18;
+$r:14;
+$sm:12;
+
+
+
+body{
+  background-color: $whiteColor;
+  font-family: Regular, sans-serif;
+  font-size: r+px;
+  color:#050505;
+}
