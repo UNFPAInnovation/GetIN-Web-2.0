@@ -44,7 +44,34 @@ $sm:12;
 
 body{
   background-color: $whiteColor;
-  font-family: Regular, sans-serif;
+  font-family: Regular, sans-serif !important;
   font-size: r+px;
   color:#050505;
+}
+h1{
+  font-family: Bold, sanserif !important;
+}
+h5{
+  font-family: Regular, sanserif !important;
+}
+
+.form-control{
+  background-color:#fff !important;
+  border:0px solid rgba(255,255,255,0) !important;
+  border-bottom:1px solid #F0F0F5 !important;
+  border-radius:0 !important;
+  box-shadow: unset !important;
+  margin-bottom:12px;
+
+}
+.btn-primary{
+  background-color:#4CC4D4 !important;
+  border-color:#4CC4D4 !important;
+  font-weight:600;
+  &.full-width{
+    width:100%;
+  }
+}
+.full-height{
+  height:100vh;
 }

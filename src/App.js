@@ -1,12 +1,12 @@
 import React, { Component, Suspense } from 'react';
-import BrowserRouter from 'react-router-dom/BrowserRouter';
-import Route from 'react-router-dom/Route';
-import Switch from 'react-router-dom/Switch';
+import {BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+
 import ScrollToTop from './components/ScrollToTop';
 import Seo from './components/Seo';
 import './styles/global.scss';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
+const Login = React.lazy(() => import('./pages/Login'));
 const Layout = React.lazy(() => import('./components/Layout'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
 
@@ -14,7 +14,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoaded: false
+      isLoaded: false,
+      isLoggedIn:false
     }
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
   }
@@ -43,6 +44,14 @@ class App extends Component {
             
           </SF>
         )} />
+         <Route
+            exact
+            path="/login"
+            render={() =>
+              this.state.isLoggedIn ? <Redirect to="/" /> : 
+              <LoginPage> <Login /></LoginPage>
+            }
+          />
         <Route render={() => (
           <SF>
             <Seo title="Not found" description="We are sorry the page you are looking for was not found" 
@@ -72,6 +81,24 @@ class SF extends Component {
             <Layout>
               {this.props.children}
             </Layout>
+          </Suspense>
+        </ErrorBoundary>
+      </ScrollToTop>
+    )
+  }
+}
+class LoginPage extends Component {
+  render() {
+    return (
+      <ScrollToTop>
+        <ErrorBoundary>
+          <Suspense fallback={<div className="loading text-center">
+          <div className="spacer"></div>
+          <div className="spacer"></div>
+          <div className="spacer"></div>
+            {/* <Logo/> */}
+          <span>Loading...</span></div>}>
+              {this.props.children}
           </Suspense>
         </ErrorBoundary>
       </ScrollToTop>
