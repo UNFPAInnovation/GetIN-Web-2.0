@@ -35,7 +35,7 @@ class App extends Component {
 
      <Switch>
 
-        <Route exact path="/" render={() => (
+        <Route exact path="/dashboard" render={() => (
           <SF>
 
             <Seo title="GetIn Dashboard" description="" keywords=""/>
@@ -46,9 +46,9 @@ class App extends Component {
         )} />
          <Route
             exact
-            path="/login"
+            path="/"
             render={() =>
-              this.state.isLoggedIn ? <Redirect to="/" /> : 
+              this.state.isLoggedIn ? <Redirect to="/dashboard" /> : 
               <LoginPage> <Login /></LoginPage>
             }
           />
