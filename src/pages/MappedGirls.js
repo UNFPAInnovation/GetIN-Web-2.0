@@ -30,7 +30,15 @@ export default class MappedGirls extends Component {
       to: moment(endOfDay).local().format('YYYY-MM-DD'),
       showCoords: true,
       manageColomns: {
-        date_of_registration: true,
+        dob: false,
+        phone_number:false,
+        village:true,
+        name:false,
+        trimester:false,
+        next_of_kin_name:false,
+        education_level:true,
+        marital_status:false,
+        last_menstruation_date:true
       },
       // remote pagination
       currentPage: 1,
@@ -161,21 +169,9 @@ export default class MappedGirls extends Component {
 //     return status;
 //   }
 
-//   initiatedByFormatter(cell, row) {
-//     let initiatedBy;
-//     switch (cell) {
-//       case "Driver":
-//         initiatedBy = "Service provider";
-//         break;
-//       case "Admin":
-//         initiatedBy = "KCCA Call center";
-//         break;
-//       default:
-//         initiatedBy = "Service provider";
-//     }
-
-//     return initiatedBy;
-//   }
+  nameFormatter(cell, row) {
+    return row.first_name+" "+row.last_name;
+  }
 
 //   enumFormatter(cell, row, enumObject) {
 //     return enumObject[cell];
@@ -238,23 +234,23 @@ export default class MappedGirls extends Component {
 //         this.getData("api/jobs?records=" + this.state.currentPage + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + this.state.sizePerPage)
 //     );
 //   }
-//   updateTable(colomn) {
-//     //make a copy of state
-//     let manageColomns = this.state.manageColomns;
+  updateTable(colomn) {
+    //make a copy of state
+    let manageColomns = this.state.manageColomns;
 
-//     if (this.state.manageColomns[colomn] === true) {
-//       manageColomns[colomn] = false;
-//       this.setState({
-//         manageColomns: manageColomns
-//       })
-//     } else {
-//       manageColomns[colomn] = true;
-//       this.setState({
-//         manageColomns: manageColomns
-//       })
-//     }
+    if (this.state.manageColomns[colomn] === true) {
+      manageColomns[colomn] = false;
+      this.setState({
+        manageColomns: manageColomns
+      })
+    } else {
+      manageColomns[colomn] = true;
+      this.setState({
+        manageColomns: manageColomns
+      })
+    }
 
-//   }
+  }
 //   onFilterChange(filterObj) {
 //     console.log("On Filter Change");
 //     this.setState({
@@ -416,10 +412,10 @@ export default class MappedGirls extends Component {
     return (
         <div>
         <div className="col-md-8 title">
-          <h4> <FontAwesomeIcon icon={faFemale} /> Mapped girls</h4>
+          <h4> <span><FontAwesomeIcon icon={faFemale} /></span> Mapped girls</h4>
           <br />
         </div>
-        <div className="col-md-12">
+        <div className="col-md-12 bg-white-content">
           <form className="form-inline pull-right">
             <div className="form-group">
               <label htmlFor="email">From:</label>
@@ -430,31 +426,21 @@ export default class MappedGirls extends Component {
               <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
             </div>
 
-            {/* <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-              <MenuItem onClick={(e, full_name) => this.updateTable("full_name")} eventKey={3.1}> <Check state={this.state.manageColomns.full_name} /> Customer Name</MenuItem>
-              <MenuItem onClick={(e, phone_number) => this.updateTable("phone_number")} eventKey={3.1}> <Check state={this.state.manageColomns.phone_number} /> Customer phone number</MenuItem>
-              <MenuItem onClick={(e, location) => this.updateTable("location")} eventKey={3.1}><Check state={this.state.manageColomns.location} /> Customer location</MenuItem>
-              <MenuItem onClick={(e, facility_type) => this.updateTable("facility_type")} eventKey={3.1}><Check state={this.state.manageColomns.facility_type} /> Facility type</MenuItem>
-              <MenuItem onClick={(e, initiated_by) => this.updateTable("initiated_by")} eventKey={3.1}><Check state={this.state.manageColomns.initiated_by} /> Initiated by</MenuItem>
-              <MenuItem onClick={(e, income_recieved) => this.updateTable("income_recieved")} eventKey={3.1}><Check state={this.state.manageColomns.income_recieved} /> Income received</MenuItem>
-              <MenuItem onClick={(e, status) => this.updateTable("status")} eventKey={3.1}><Check state={this.state.manageColomns.status} /> Status</MenuItem>
-              <MenuItem onClick={(e, service_provider) => this.updateTable("service_provider")} eventKey={3.1}><Check state={this.state.manageColomns.service_provider} />  Service provider</MenuItem>
-              <MenuItem onClick={(e, service_provider_number) => this.updateTable("service_provider_number")} eventKey={3.1}><Check state={this.state.manageColomns.service_provider_number} /> Service provider number</MenuItem>
-              <MenuItem onClick={(e, date_of_registration) => this.updateTable("date_of_registration")} eventKey={3.1}><Check state={this.state.manageColomns.date_of_registration} />  Start time</MenuItem>
-              <MenuItem onClick={(e, finish_time) => this.updateTable("finish_time")} eventKey={3.1}><Check state={this.state.manageColomns.finish_time} /> Finish time</MenuItem>
-              <MenuItem onClick={(e, start_point_long) => this.updateTable("start_point_long")} eventKey={3.1}><Check state={this.state.manageColomns.start_point_long} /> Start Point Longitudes</MenuItem>
-              <MenuItem onClick={(e, start_point_lat) => this.updateTable("start_point_lat")} eventKey={3.1}><Check state={this.state.manageColomns.start_point_lat} /> Start Point Latitudes</MenuItem>
-
-              <MenuItem onClick={(e, long) => this.updateTable("long")} eventKey={3.1}><Check state={this.state.manageColomns.long} /> Longitudes</MenuItem>
-              <MenuItem onClick={(e, lat) => this.updateTable("lat")} eventKey={3.1}><Check state={this.state.manageColomns.lat} />  Latitudes</MenuItem>
-              <MenuItem onClick={(e, division) => this.updateTable("division")} eventKey={3.1}><Check state={this.state.manageColomns.division} />  Division</MenuItem>
-              <MenuItem onClick={(e, parish) => this.updateTable("parishes")} eventKey={3.1}><Check state={this.state.manageColomns.parish} />  Parishes</MenuItem>
-              
-            </NavDropdown> */}
+            <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
+              <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+              <MenuItem onClick={(e, phone_number) => this.updateTable("phone_number")} eventKey={3.1}> <Check state={this.state.manageColomns.phone_number} /> Phone number</MenuItem>        
+              <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
+              <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>        
+              <MenuItem onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin_name")} eventKey={3.1}> <Check state={this.state.manageColomns.next_of_kin_name} /> Next of kin</MenuItem>        
+              <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>        
+              <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>        
+              <MenuItem onClick={(e, name) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>        
+              <MenuItem onClick={(e, name) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Date of birth</MenuItem>        
+            </NavDropdown>
 
           </form>
 
-        </div>
+       
 
         <div className="padding-top content-container col-md-12">
           {this.state.isLoaded === true ? (
@@ -471,12 +457,11 @@ export default class MappedGirls extends Component {
               options={options}
             //   exportCSV
               pagination>
+              <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
               <TableHeaderColumn dataSort={true} isKey dataField='phone_number'>Phone number</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.first_name} dataSort={true} dataField='first_name'>First name</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.last_name} dataField='last_name'>Last name</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.village} dataField='village'>Village</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataField='trimester'>Trimester</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataField='next_of_kin_name'>Next o Kin</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataField='next_of_kin_name'>Next of Kin</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataField='education_level'>Education level</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataField='last_menstruation_date'>Marital status</TableHeaderColumn>
@@ -502,9 +487,11 @@ export default class MappedGirls extends Component {
 
 
             </BootstrapTable>
+           
           ) : (
               <span>Loading</span>
             )}
+        </div>
         </div>
         </div>
     );
