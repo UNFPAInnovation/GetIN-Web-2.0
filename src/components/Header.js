@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { Navbar, Nav, NavItem, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, DropdownButton, MenuItem, NavDropdown } from 'react-bootstrap';
 const alertifyjs = require('alertifyjs');
 const sessionStorage = window.sessionStorage;
 
@@ -10,13 +10,13 @@ export default class Header extends Component{
     constructor(props){
       super(props);
       this.state = {
-        loggedInAs:sessionStorage.getItem("name"),
+        loggedInAs:sessionStorage.getItem("username"),
         show:true
       }
     }
     logout() {
       sessionStorage.removeItem('token');
-      sessionStorage.removeItem('first_name');
+      sessionStorage.removeItem('username');
       alertifyjs.message('Loggin out', 5, function(){  console.log('dismissed'); });
       window.location.href="/";
     }
@@ -26,19 +26,19 @@ export default class Header extends Component{
       <div className="container-fluid">
         <div id="navbar" className="">
           <ul className="profileNav nav navbar-nav navbar-right">
-          <DropdownButton
+          {/* <DropdownButton
             title={<FontAwesomeIcon icon={faUser}/>}
             // key={i}
             // id={`dropdown-basic-${i}`}
           >
           <a onClick={this.logout} eventKey="1">Logout</a>
-          </DropdownButton>
-          {/* <button type="button" className="btn pull-left">
+          </DropdownButton> */}
+           <button type="button" className="btn pull-left">
           <FontAwesomeIcon icon={faUser}/>
           </button>
               <NavDropdown eventKey={3} title={this.state.loggedInAs} id="basic-nav-dropdown">
-                <li  eventKey={3.4}>Logout</li>
-    </NavDropdown> */}
+                <MenuItem  onClick={this.logout} eventKey={3.4}>Logout</MenuItem>
+    </NavDropdown> 
           </ul>
         </div>
       </div>

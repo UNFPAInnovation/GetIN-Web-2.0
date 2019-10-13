@@ -25,13 +25,13 @@
   src: url('../assets/fonts/Montserrat-Bold.ttf');
 }
 /* Colors */
-$darkColor : "#707070";
-$midColor : "#b5b5b5";
-$lightColor : "#dededf";
-$primaryColor : "#4cc4d4";
-$secondaryColor : "#f8991c";
-$whiteColor : "#ffffff";
-$blackColor : "#000000";
+$darkColor : #707070;
+$midColor : #b5b5b5;
+$lightColor : #dededf;
+$primaryColor : #4cc4d4;
+$secondaryColor : #f8991c;
+$whiteColor : #ffffff;
+$blackColor : #000000;
 
 /* Font size */
 $xl:36;
@@ -109,6 +109,7 @@ a:focus {
 
 .profileNav{
     margin-right: unset;
+    margin-top:15px !important;
 }
 .profileNav .btn{
     margin:8px;
@@ -126,10 +127,33 @@ a:focus {
     color: #4cc4d4 !important;
     font-size: 24px;
     font-weight:700;
-    padding:15px 10px !important
+    img{
+      height:50px;
+      display:inline;
+    }
+    span{
+       display:inline;
+       margin: 0 15px;
+       line-height:50px;
+       vertical-align:middle;
+       &.brand{
+         color:#707070;
+         font: Bold;
+         padding:10px;
+         font-size:28px;
+       }
+       &.district{
+         background-color:#4cc4d4;
+         color:#fff;
+         padding:10px;
+         border-radius:20px !important;
+         font-size:14px;
+       }
+    }
 }
 .headerNav{
     box-shadow: 0 0px 5px 0 rgba(32,33,36,0.1);
+    height:80px;
     
 }
 .sideNav{
@@ -142,31 +166,47 @@ a:focus {
 .sideNav .list-group-item{
     font-size: 18px;
     border: unset;
-    margin: 20px auto;
+    margin: 10px auto;
+    padding:0 !important;
 }
 .sideNav .list-group-item a{
     color:#000;
     display: block;
+    font-weight:600;
+    color:#707070;
+    padding:15px;
+    border-radius:20px;
+
 }
 .sideNav .list-group-item a svg{
     margin-left: 20px;
     color:#9B9B9B;
     float:right;
+    opacity:0.8;
 }
-#sideNavBar.col-md-1
+
 .sideNav .list-group-item a:hover{
     text-decoration: none;
-    color:#46A142;
-    font-weight:700
+    color:#707070;
+    font-weight:600;
+    background:rgba($primaryColor, 0.1);
+    padding:15px;
+    border-radius:20px;
+    svg{
+      color:$primaryColor;
+    }
 }
-.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover, .col-md-1 .sideNav .list-group-item.active a svg{
-    background-color: #fff;
-    color:#46A142;
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover, .sideNav .list-group-item.active a svg{
+    background-color: unset !important;
+    color:$primaryColor;
     font-weight:700;
     font-size: 18px;
 }
 .list-group-item.active a, .list-group-item.active:focus a, .list-group-item.active:hover a{
-    color:#46A142;
+        background:rgba($primaryColor, 0.1);
+        svg{
+          color:$primaryColor;
+        }
 }
 .title h4{
     color:#000;
@@ -186,7 +226,6 @@ a:focus {
 .content-container {
     background-color: #fff;
     box-shadow: 0 0px 1px 1px rgba(32,33,36,0.02);
-    margin: 15px;
 }
 .card:hover, .card.active{
     box-shadow: 0 0px 5px 2px rgba(32,33,36,0.1);
@@ -265,4 +304,7 @@ a:focus {
 }
 .onMobile{
     display: none;
+}
+.bg-white{
+  background:#fff;
 }

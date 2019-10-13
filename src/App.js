@@ -50,6 +50,8 @@ class App extends Component {
           sessionStorage.removeItem('token');
           }
           else{
+            sessionStorage.removeItem('username');
+            sessionStorage.setItem('username', response.username);
             thisApp.setState(
             {
               isLoggedIn: true,
@@ -81,6 +83,8 @@ class App extends Component {
           window.location.href = "/";
           }
           else{
+            sessionStorage.removeItem('username');
+            sessionStorage.setItem('username', response.username);
             thisApp.setState(
             {
               isLoggedIn: true,

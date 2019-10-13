@@ -54,7 +54,7 @@ export  default class Login extends Component {
             <div className="col-md-6 bg-login">
 
             </div>
-            <div className="col-md-6 full-height">
+            <div className="col-md-6 full-height bg-white">
             <form onSubmit={e =>this.login(e)} className="col-md-6 col-md-offset-2 form-signin">
       <br/>
       <div className="col-md-12"><img className="text-center loginLogo" src={require("../assets/images/Logo.png")}/></div>

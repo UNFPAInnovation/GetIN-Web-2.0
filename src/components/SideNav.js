@@ -48,12 +48,33 @@ export default class SideNav extends Component{
         }
         
       }
+    activeMenu(){
+         document.getElementById("girlsLink").classList.remove("active");
+         document.getElementById("dashboardLink").classList.remove("active");
+        if(window.location.pathname == "/dashboard"){
+            document.getElementById("dashboardLink").classList.add("active");
+        }
+        else if(window.location.pathname == "/girls"){
+            document.getElementById("girlsLink").classList.add("active");
+        }
+    }
+    componentDidUpdate(prevProps) {
+      this.activeMenu();
+      
+    }
+    componentDidMount(){
+        this.activeMenu();
+    }
     render(){
         return(
     <div className={this.state.show ?("sideNav"):("sideNav hiddenMenu")}>
           <nav className="headerNav navbar navbar-default navbar-static-top">
         <div className="navbar-header">
-                     <a className="navbar-brand" href="#">GetIN</a>
+                     <a className="navbar-brand" href="/dashboard">
+                     <img src={require('../assets/images/Logo.png')}/>
+                     <span className="brand">GetIN</span>
+                     <span className="district">Arua</span>
+                     </a>
           <button type="button" className="btn onMobile" onClick={this.ToggleMenu} id="handleSidebar">
           <FontAwesomeIcon icon={faAlignRight}/>
           </button>
