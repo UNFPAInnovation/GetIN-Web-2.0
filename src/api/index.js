@@ -10,8 +10,8 @@ exports.get =  function(requesturl="", headers={}, callback){
   })
   .then(function(res){
     data_ = res.data;
-    console.log("Request done");
-    return callback(error_, data_);
+    console.log(res);
+    return callback(error_, res);
   })
   .catch(function (error) {
     error_ = error;
@@ -62,7 +62,7 @@ exports.post =  function(requesturl="", headers={}, data_sent={}, callback){
     url: requesturl,
     responseType: 'json',
     headers: headers,
-    data:encodeForm(data_sent)
+    data:JSON.stringify(data_sent)
   })
   .then(function(res){
     data_ = res.data;
@@ -70,6 +70,7 @@ exports.post =  function(requesturl="", headers={}, data_sent={}, callback){
   })
   .catch(function (error) {
     error_ = error;
+    console.log("Error", error_)
     return callback(error_);
   })
   .finally(function () {

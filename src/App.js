@@ -6,19 +6,93 @@ import Seo from './components/Seo';
 import './styles/global.scss';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
+const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Layout = React.lazy(() => import('./components/Layout'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
+
+const service = require('./api/services');
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoaded: false,
-      isLoggedIn:false
-    }
+      isLoggedIn:false,
+      token:""
+    };
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
+        this.IsAdminLoggedin.bind(this);
+        this.loginValidate.bind(this);
+    if (
+      window.location.pathname == "/"
+    ) {
+        this.loginValidate();
+    } else {
+        this.IsAdminLoggedin();
+    }
   }
+
+  loginValidate(){
+      const thisApp = this;
+      service.verifyToken(function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoggedIn: false,
+              token: "",
+              isLoaded: false
+            },
+            () => console.log(thisApp.state)
+          );
+          sessionStorage.removeItem('token');
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoggedIn: true,
+            },
+            () => console.log(thisApp.state)
+          );
+                    window.location.href = "/dashboard";
+           console.log("Authenticated");
+      
+  }
+      });
+  }
+  IsAdminLoggedin(){
+    const thisApp = this;
+
+    service.verifyToken(function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoggedIn: false,
+              token: "",
+              isLoaded: false
+            },
+            () => console.log(thisApp.state)
+          );
+          sessionStorage.removeItem('token');
+          window.location.href = "/";
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoggedIn: true,
+            },
+            () => console.log(thisApp.state)
+          );
+           console.log("Authenticated");
+          }
+    });
+  
+  }
+
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -41,6 +115,15 @@ class App extends Component {
             <Seo title="GetIn Dashboard" description="" keywords=""/>
 
             <HomePage />
+            
+          </SF>
+        )} />
+        <Route exact path="/girls" render={() => (
+          <SF>
+
+            <Seo title="Mapped girls- GetIn Dashboard" description="" keywords=""/>
+
+            <MappedGirls />
             
           </SF>
         )} />
@@ -123,31 +206,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
-      let reloadState = window.history.state || {};
-      var reloadCount = reloadState.reloadCount || 0;
-      if (performance.navigation.type === 1) { // Reload
-        reloadState.reloadCount = ++reloadCount;
-        window.history.replaceState(reloadState, null, document.URL);
-    } else if (reloadCount) {
-        delete reloadState.reloadCount;
-        reloadCount = 0;
-        window.history.replaceState(reloadState, null, document.URL);
-    }
-    if (reloadCount >= 3) {
-        // Now, do whatever you want...
-        console.log(reloadCount);
-        window.history.replaceState(0, null, document.URL);
-        console.log('The page was reloaded more than three times!');
-    }else{
-      setTimeout(function(){
-          window.location.reload(true);
-        },5000);
-    }
-
-      // setTimeout(function(){
-      //   window.location.reload(true);
-      // },5000);
+     
       return (<React.Fragment>
         <div className="container-custom text-center">
           <h1 className="page-header text-center">Something went wrong.</h1>

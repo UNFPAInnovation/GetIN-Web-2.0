@@ -1,67 +1,51 @@
 import React, { Component } from 'react';
-// import {ReactComponent as MenuOverLayIcon} from '../../assets/MenuOverLayIcon.svg';
-import '../styles/Header.scss'
-;
-export default class Header extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      show:false
-    };
-    this.ToggleMenu = this.ToggleMenu.bind(this);
-  }
-  ToggleMenu(e){
-    e.preventDefault();
-    let stateX = this.state.show;
-    if(stateX ===false){
-      this.setState({
-        show:true
-      });
-    }
-    else{
-      this.setState({
-        show:false
-      });
-    }
-    
-  }
-  render() {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { Navbar, Nav, NavItem, DropdownButton, MenuItem } from 'react-bootstrap';
+const alertifyjs = require('alertifyjs');
+const sessionStorage = window.sessionStorage;
 
-    let links = [
-      {
-        name:"-",
-        type:"icon",
-        link:"#",
-        class:"border-right",
-        onClick:this.openMenu
+
+export default class Header extends Component{
+    constructor(props){
+      super(props);
+      this.state = {
+        loggedInAs:sessionStorage.getItem("name"),
+        show:true
       }
-    ];
-    let linksMenu = links.map((item, key)=>
-      <li key={key} className={key===0 ?"on-mobile nav-item "+item.class: item.class+" nav-item"}>
-          <a className={item.link === window.location.pathname  ? "active "+item.class: item.class } href={item.link}>{item.name}</a>
-          <ul className="list">
-      { item.list && item.list.map((item_, key_)=>
-        <li key={key_}><a href={item_.link}>{item_.name}</a></li>     
-        )}
+    }
+    logout() {
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('first_name');
+      alertifyjs.message('Loggin out', 5, function(){  console.log('dismissed'); });
+      window.location.href="/";
+    }
+    render(){
+        return(
+       <nav className="headerNav navbar navbar-default navbar-static-top">
+      <div className="container-fluid">
+        <div id="navbar" className="">
+          <ul className="profileNav nav navbar-nav navbar-right">
+          <DropdownButton
+            title={<FontAwesomeIcon icon={faUser}/>}
+            // key={i}
+            // id={`dropdown-basic-${i}`}
+          >
+          <a onClick={this.logout} eventKey="1">Logout</a>
+          </DropdownButton>
+          {/* <button type="button" className="btn pull-left">
+          <FontAwesomeIcon icon={faUser}/>
+          </button>
+              <NavDropdown eventKey={3} title={this.state.loggedInAs} id="basic-nav-dropdown">
+                <li  eventKey={3.4}>Logout</li>
+    </NavDropdown> */}
           </ul>
-          </li>
-    );
-    return (
-      <nav className="header navbar navbar-default">
-  <div className="container-fluid">
-  <ul className="nav navbar-nav menuBar">
-    <li className="nav-item" >
-            <a onClick={(e)=>this.ToggleMenu(e)} href="#">{this.state.show ===true ? <React.Fragment><span>CLOSE</span></React.Fragment>:<React.Fragment><span>MENU</span> </React.Fragment>} </a>
-    </li>
-    </ul>
-    <ul className={this.state.show === true ? "open nav navbar-nav listNav": "nav navbar-nav listNav"}>
-      {linksMenu}
-    </ul>
-    <div className="navbar-header pull-right">
-      <a className="navbar-brand" href="/">GetIN</a>
-    </div>
-  </div>
-</nav>
-    );
-  }
+        </div>
+      </div>
+    </nav>
+
+        );
+    }
+
+
 }

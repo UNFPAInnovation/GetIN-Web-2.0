@@ -1,17 +1,24 @@
 import React from 'react';
 const Header = React.lazy(() => import('./Header.js'));
 const Footer = React.lazy(() => import('./Footer.js'));
+const SideNav = React.lazy(() => import('./SideNav.js'));
+
 
 export default function Layout(props){
         return(
           <React.Fragment>
-            <Header/>
-            <div className="content container-fluid">
-            <div className="row">
-              {props.children}
-              </div>
-            </div>
-            <Footer/>
+                 <div className="container-fluid">
+                    <div id="sideNavBar" className="col-md-3 noPadding">
+                         <SideNav />
+                    </div>
+                 <div id="detailComponent" className="col-md-9 noPadding">
+                   <Header />
+                         <div className="col-md-12">
+                             {props.children}
+                        </div>
+                 </div>
+                    
+                 </div>
             </React.Fragment>
         );
 }
