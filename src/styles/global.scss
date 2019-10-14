@@ -158,6 +158,7 @@ a:focus {
 .headerNav{
     box-shadow: 0 0px 5px 0 rgba(32,33,36,0.1);
     height:80px;
+    min-width: 322px;
     
 }
 .sideNav{
@@ -360,4 +361,14 @@ a:focus {
 .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
     border: 0px solid rgba(255,255,255,0) !important;
 }
-
+#controlled-tab-example{
+    .nav-tabs{
+    padding: 0 20px;
+    }
+}
+.clear-both{
+    clear: both !important;
+}
+.modal-body{
+    overflow: auto;
+}

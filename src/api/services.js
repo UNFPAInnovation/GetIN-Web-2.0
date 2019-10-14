@@ -32,7 +32,7 @@ exports.verifyToken =  function(callback){
             return callback(error);
          }else{
               if (response.status != 200) {
-                 return callback("Not authorised, please login");
+                 return callback("Not authorized, please login");
              }
               else{
                 return callback(null, response.data);
@@ -42,8 +42,8 @@ exports.verifyToken =  function(callback){
         });
 }
 
-exports.mappedGirls =  function(callback){
-    api.get(addr+"/api/v1/girls",
+exports.usersChew =  function(callback){
+    api.get(addr+"/api/v1/chews",
     {
        "content-type": "application/json",
        "Authorization": "Token "+token
@@ -55,7 +55,7 @@ exports.mappedGirls =  function(callback){
             return callback(error);
          }else{
               if (response.status != 200) {
-                 return callback("Couldnot get mapped girls");
+                 return callback("Couldnt get mapped chews");
              }
               else{
                 return callback(null, response.data);
@@ -63,4 +63,71 @@ exports.mappedGirls =  function(callback){
             
          }
         });
+}
+exports.usersMidwives =  function(callback){
+   api.get(addr+"/api/v1/midwives",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldn't get mapped midwives");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+
+exports.usersAmbulanceDrivers =  function(callback){
+   api.get(addr+"/api/v1/ambulances",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldn't get mapped ambulance drivers");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+exports.mappedGirls =  function(callback){
+   api.get(addr+"/api/v1/girls",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnot get mapped girls");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
 }

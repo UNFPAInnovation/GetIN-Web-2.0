@@ -7,6 +7,7 @@ import './styles/global.scss';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
+const Users = React.lazy(() => import('./pages/Users'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Layout = React.lazy(() => import('./components/Layout'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
@@ -124,11 +125,14 @@ class App extends Component {
         )} />
         <Route exact path="/girls" render={() => (
           <SF>
-
-            <Seo title="Mapped girls- GetIn Dashboard" description="" keywords=""/>
-
-            <MappedGirls />
-            
+            <Seo title="Mapped girls - GetIn Dashboard" description="" keywords=""/>
+            <MappedGirls />      
+          </SF>
+        )} />
+         <Route exact path="/users" render={() => (
+          <SF>
+            <Seo title="Users - GetIn Dashboard" description="" keywords=""/>
+            <Users />      
           </SF>
         )} />
          <Route

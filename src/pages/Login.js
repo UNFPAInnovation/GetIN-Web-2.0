@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import 'alertifyjs/build/css/alertify.min.css';
-import 'alertifyjs/build/css/themes/semantic.min.css';
 import '../styles/Login.scss';
 const alertifyjs = require('alertifyjs');
 
