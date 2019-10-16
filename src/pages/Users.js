@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavDropdown, MenuItem, Modal } from 'react-bootstrap';
+import { NavDropdown, MenuItem,DropdownButton, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import {Tabs, Tab} from 'react-bootstrap';
@@ -22,48 +22,25 @@ export default class Users extends React.Component {
       super(props, context);
       this.state = {
         key: 'chews',
-        show: false,
-        first_name:null,
-        last_name:null,
-        username:null,
-        password:null,
-        gender:null,
-        phone_number:null,
-        sub_county:"",
+
+        chew: false,
+        midwife: false,
+        ambulance:false,
+
         userType:"",
 
       };
       this.handleShow = this.handleShow.bind(this);
       this.handleClose = this.handleClose.bind(this);
     }
-    handleClose() {
-        this.setState({ show: false });
+    handleClose(modal) {
+        this.setState({ [modal]: false });
       }
     
-      handleShow() {
-        this.setState({ show: true });
+      handleShow(modal) {
+        this.setState({ [modal]: true });
       }
-      register(e){
-        e.preventDefault();
-        //const thisApp = this;
-        alertifyjs.message('Signing in ..', 2, function(){  console.log('dismissed'); });
-        let data = {
-            "username":this.state.username,
-            "password":this.state.password,
-          }
-        service.login(data, function(error, token){
-            if (error){
-                console.log(error);
-                alertifyjs.error('Oops! That email / password combination is not valid.', 5, function(){  console.log('dismissed'); });
-              }
-              else{
-               sessionStorage.removeItem('token');
-               sessionStorage.setItem('token', token);
-               alertifyjs.success('Signed Successfully', 5, function(){  console.log('dismissed'); });
-               window.location.href="/dashboard";
-              }
-        });
-      }
+
     componentDidMount(){
       //this.getChews();
     }
@@ -84,7 +61,20 @@ export default class Users extends React.Component {
           <div className="col-md-12">
           <div className="col-md-12 title">
               <h4 className="pull-left"> <span><FontAwesomeIcon icon={faUsers} /></span> Users</h4>
-              <button onClick={this.handleShow} className="btn btn-primary pull-right">Add user</button>
+              {/* <button onClick={this.handleShow} className="">Add user</button> */}
+              <div className="pull-right">
+              <DropdownButton
+                  bsStyle={"primary"}
+                  title={"Add user"}
+                  key={4}
+                  id={"add-user-btn"}
+                >
+                  <MenuItem onClick={()=>this.handleShow("chew")} eventKey="1">CHEW</MenuItem>
+                  <MenuItem onClick={()=>this.handleShow("midwife")} eventKey="2">Midwives</MenuItem>
+                  <MenuItem onClick={()=>this.handleShow("ambulance")} eventKey="3">Ambulance</MenuItem>
+                </DropdownButton> 
+              </div>
+              
               <br className="clear-both"/>
               <br className="clear-both"/>
             </div>
@@ -106,59 +96,152 @@ export default class Users extends React.Component {
         </Tabs>
         </div>
         </div>
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <ChewModal handleClose={(d)=>this.handleClose(d)} show={this.state.chew}/>
+        <MidwifeModal handleClose={(d)=>this.handleClose(d)} show={this.state.midwife} />
+        <AmbulanceModal handleClose={(d)=>this.handleClose(d)} show={this.state.ambulance} />
+        </React.Fragment>
+      );
+    }
+  }
+
+  class ChewModal extends Component{
+    constructor(props){
+      super(props);
+      this.state = {
+        first_name:null,
+        last_name:null,
+        username:null,
+        password:null,
+        gender:null,
+        email:null,
+        phone_number:null,
+        sub_county:null,
+        sub_counties:[],
+        loading: false
+      }
+      this.handleChange = this.handleChange.bind(this);
+    }
+    handleChange(event) {
+      const target = event.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value
+      });
+    }
+    addChew(e){
+      e.preventDefault();
+      const thisApp = this;
+      thisApp.setState({
+        loading:true
+      });
+      alertifyjs.message('Adding CHEW..', 2, function(){  console.log('dismissed'); });
+      service.addChew({
+        first_name:this.state.first_name,
+        last_name:this.state.last_name,
+        username:this.state.username,
+        email:this.state.email,
+        gender:this.state.gender,
+        sub_county:this.state.sub_county
+      }, function(error, token){
+          if (error){
+              console.log(error);
+              thisApp.setState({
+                loading:false
+              });
+              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+            }
+            else{
+              thisApp.setState({
+                loading:false
+              });
+             alertifyjs.success('Added successfully', 2, function(){  console.log('dismissed'); });
+             window.location.reload();
+            }
+      });
+    }
+    getSubcounties() {
+      const thisApp = this;
+      thisApp.setState({
+      sub_counties: [],
+      sub_counties_copy: [],
+      loadingText:"Loading...",
+    });
+      service.getSubCounties(function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoaded: true,
+              chews:[]
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoaded: true,
+              sub_counties:response.results
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+    });
+
+  }
+    componentDidMount(){
+      this.getSubcounties();
+    }
+    render(){
+      return(
+        <Modal show={this.props.show} onHide={()=>this.props.handleClose("chew")}>
           <Modal.Header closeButton>
-            <Modal.Title>Add a new user</Modal.Title>
+            <Modal.Title>Add a new CHEW</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form onSubmit={e =>this.register(e)}>
+            <form onSubmit={e =>this.addChew(e)}>
             <div className="col-md-12">
                 <div className="form-group col-md-6">
                     <label>First name</label>
-                    <input onChange={this.handleChange} value={this.state.first_name} className="form-control" placeholder="John" autoFocus={true}></input>
+                    <input required type="text" onChange={this.handleChange} name="first_name" value={this.state.first_name} className="form-control" placeholder="John" autoFocus={true}></input>
                 </div>
                 <div className="form-group col-md-6">
                     <label>Last name</label>
-                    <input onChange={this.handleChange} value={this.state.last_name} className="form-control" placeholder="Musoke"></input>
+                    <input required type="text" onChange={this.handleChange} name="last_name" value={this.state.last_name} className="form-control" placeholder="Musoke"></input>
                 </div>
                 <div className="form-group col-md-6">
                     <label>Phone number</label>
-                    <input onChange={this.handleChange} value={this.state.phone_number} className="form-control" placeholder="070XXXXXX"></input>
+                    <input required type="tel" onChange={this.handleChange} name="phone_number" value={this.state.phone_number} className="form-control" placeholder="070XXXXXX"></input>
                 </div>
                 <div className="form-group col-md-6">
                     <label>Gender</label>
-                    <select className="form-control" onChange={this.handleChange} value={this.state.gender}>
-                        <option value={0}>
-                            Female
+                    <select required className="form-control" name="gender" onChange={this.handleChange} value={this.state.gender}>
+                    <option defaultValue value={null}>
+                      Select gender
                         </option>
                         <option value={1}>
+                            Female
+                        </option>
+                        <option value={0}>
                             Male
                         </option>
                     </select>
                 </div>
                 <div className="form-group col-md-6">
+                    <label>Email address</label>
+                    <input required type="email" className="form-control" name="email"  onChange={this.handleChange} value={this.state.email} placeholder="jmusoke@gmail.com"></input>
+                </div>
+                <div className="form-group col-md-6">
                     <label>Username</label>
-                    <input className="form-control" onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
+                    <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
                 </div>
                 
                 <div className="form-group col-md-6">
                 <label>Password</label>
-                    <input className="form-control" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
-                    
-                    </div>
-                    <div className="form-group col-md-6">
-                <label>User type</label>
-                    <select className="form-control" onChange={this.handleChange} value={this.state.userType}>
-                        <option value="chew">
-                            Chew
-                        </option>
-                        <option value="midwife">
-                            Midwife
-                        </option>
-                        <option value="ambulance_driver">
-                            Ambulance driver
-                        </option>
-                    </select>
+                    <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
                     
                     </div>
             </div>
@@ -166,29 +249,33 @@ export default class Users extends React.Component {
                 <br className="clear-both"/>
                 <div className="form-group col-md-6">
                 <label>Subcounty</label>
-                    <select className="form-control" onChange={this.handleChange} value={this.state.subcounty}>
-                        <option value="">
-                            Subcounty name
+                    <select className="form-control" name="sub_county" onChange={this.handleChange} value={this.state.sub_county}>
+                    <option defaultValue value={null}>
+                      Select Subcounty
                         </option>
+                    { this.state.sub_counties.map( (value, key)=>(
+                      <option key={key} value={value.id}>
+                      {value.name}
+                        </option>
+                    ))}
+                        
                     </select>
                     
                     </div>
                     <br className="clear-both"/>
-                    <button className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Chew" : "Submit"}</button>
                     <br className="clear-both"/>
                     </div>
                      
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <button className="btn btn-default" onClick={this.handleClose}>Close</button>
+            <button className="btn btn-default" onClick={()=>this.props.handleClose("chew")}>Close</button>
           </Modal.Footer>
         </Modal>
-        </React.Fragment>
-      );
+      )
     }
   }
-
   class VHT extends Component {
     constructor(props) {
         super(props);
@@ -777,6 +864,360 @@ export default class Users extends React.Component {
     }
   }
 
+  class MidwifeModal extends Component{
+    constructor(props){
+      super(props);
+      this.state = {
+        first_name:null,
+        last_name:null,
+        username:null,
+        password:null,
+        gender:null,
+        email:null,
+        phone_number:null,
+        health_facility:null,
+        health_facilities:[],
+        loading: false
+      }
+      this.handleChange = this.handleChange.bind(this);
+    }
+    handleChange(event) {
+      const target = event.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value
+      });
+    }
+    submit(e){
+      e.preventDefault();
+      const thisApp = this;
+      thisApp.setState({
+        loading:true
+      });
+      alertifyjs.message('Adding Midwife..', 2, function(){  console.log('dismissed'); });
+      service.addMidwife({
+        first_name:this.state.first_name,
+        last_name:this.state.last_name,
+        username:this.state.username,
+        email:this.state.email,
+        gender:this.state.gender,
+        health_facility:this.state.health_facility
+      }, function(error, token){
+          if (error){
+              console.log(error);
+              thisApp.setState({
+                loading:false
+              });
+              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+            }
+            else{
+              thisApp.setState({
+                loading:false
+              });
+             alertifyjs.success('Added successfully', 2, function(){  console.log('dismissed'); });
+             window.location.reload();
+            }
+      });
+    }
+    getHealthFacilities() {
+      const thisApp = this;
+      thisApp.setState({
+        health_facilities: [],
+        health_facilities_copy: [],
+      loadingText:"Loading...",
+    });
+      service.getHealthFacilities(function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoaded: true,
+              health_facilities:[]
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoaded: true,
+              health_facilities:response.results
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+    });
+
+  }
+    componentDidMount(){
+      this.getHealthFacilities();
+    }
+    render(){
+      return(
+        <Modal show={this.props.show} onHide={()=>this.props.handleClose("midwife")}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add a new Midwife</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={e =>this.submit(e)}>
+            <div className="col-md-12">
+                <div className="form-group col-md-6">
+                    <label>First name</label>
+                    <input required type="text" onChange={this.handleChange} name="first_name" value={this.state.first_name} className="form-control" placeholder="John" autoFocus={true}></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Last name</label>
+                    <input required type="text" onChange={this.handleChange} name="last_name" value={this.state.last_name} className="form-control" placeholder="Musoke"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Phone number</label>
+                    <input required type="tel" onChange={this.handleChange} name="phone_number" value={this.state.phone_number} className="form-control" placeholder="070XXXXXX"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Gender</label>
+                    <select required className="form-control" name="gender" onChange={this.handleChange} value={this.state.gender}>
+                    <option defaultValue value={null}>
+                      Select gender
+                        </option>
+                        <option value={1}>
+                            Female
+                        </option>
+                        <option value={0}>
+                            Male
+                        </option>
+                    </select>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Email address</label>
+                    <input required type="email" className="form-control" name="email"  onChange={this.handleChange} value={this.state.email} placeholder="jmusoke@gmail.com"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Username</label>
+                    <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
+                </div>
+                
+                <div className="form-group col-md-6">
+                <label>Password</label>
+                    <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
+                    
+                    </div>
+            </div>
+        <div className="col-md-12">
+                <br className="clear-both"/>
+                <div className="form-group col-md-6">
+                <label>Health facility</label>
+                    <select className="form-control" name="health_facility" onChange={this.handleChange} value={this.state.health_facility}>
+                    <option defaultValue value={null}>
+                      Select Health Facility
+                        </option>
+                    { this.state.health_facilities.map( (value, key)=>(
+                      <option key={key} value={value.id}>
+                      {value.name}
+                        </option>
+                    ))}
+                        
+                    </select>
+                    
+                    </div>
+                    <br className="clear-both"/>
+                    <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Midwife" : "Submit"}</button>
+                    <br className="clear-both"/>
+                    </div>
+                     
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <button className="btn btn-default" onClick={()=>this.props.handleClose("midwife")}>Close</button>
+          </Modal.Footer>
+        </Modal>
+      )
+    }
+  }
+
+
+  class AmbulanceModal extends Component{
+    constructor(props){
+      super(props);
+      this.state = {
+        first_name:null,
+        last_name:null,
+        username:null,
+        password:null,
+        gender:null,
+        email:null,
+        phone_number:null,
+        number_place:null,
+        parish:null,
+        parishes:[],
+        loading: false
+      }
+      this.handleChange = this.handleChange.bind(this);
+    }
+    handleChange(event) {
+      const target = event.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value
+      });
+    }
+    submit(e){
+      e.preventDefault();
+      const thisApp = this;
+      thisApp.setState({
+        loading:true
+      });
+      alertifyjs.message('Adding Ambulance..', 2, function(){  console.log('dismissed'); });
+      service.addAmbulance({
+        first_name:this.state.first_name,
+        last_name:this.state.last_name,
+        username:this.state.username,
+        email:this.state.email,
+        gender:this.state.gender,
+        parish:this.state.parish,
+        number_place:this.state.number_place
+      }, function(error, token){
+          if (error){
+              console.log(error);
+              thisApp.setState({
+                loading:false
+              });
+              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+            }
+            else{
+              thisApp.setState({
+                loading:false
+              });
+             alertifyjs.success('Added successfully', 3, function(){  console.log('dismissed'); });
+             window.location.reload();
+            }
+      });
+    }
+    getParishes() {
+      const thisApp = this;
+      thisApp.setState({
+        parishes: [],
+        parishes_copy: [],
+        loadingText:"Loading...",
+    });
+      service.getParishes(function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoaded: true,
+              health_facilities:[]
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoaded: true,
+              parishes:response.results
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+    });
+
+  }
+    componentDidMount(){
+      this.getParishes();
+    }
+    render(){
+      return(
+        <Modal show={this.props.show} onHide={()=>this.props.handleClose("ambulance")}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add a new Ambulance</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={e =>this.submit(e)}>
+            <div className="col-md-12">
+                <div className="form-group col-md-6">
+                    <label>First name</label>
+                    <input required type="text" onChange={this.handleChange} name="first_name" value={this.state.first_name} className="form-control" placeholder="John" autoFocus={true}></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Last name</label>
+                    <input required type="text" onChange={this.handleChange} name="last_name" value={this.state.last_name} className="form-control" placeholder="Musoke"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Phone number</label>
+                    <input required type="tel" onChange={this.handleChange} name="phone_number" value={this.state.phone_number} className="form-control" placeholder="070XXXXXX"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Gender</label>
+                    <select required className="form-control" name="gender" onChange={this.handleChange} value={this.state.gender}>
+                    <option defaultValue value={null}>
+                      Select gender
+                        </option>
+                        <option value={1}>
+                            Female
+                        </option>
+                        <option value={0}>
+                            Male
+                        </option>
+                    </select>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Email address</label>
+                    <input required type="email" className="form-control" name="email"  onChange={this.handleChange} value={this.state.email} placeholder="jmusoke@gmail.com"></input>
+                </div>
+                <div className="form-group col-md-6">
+                    <label>Username</label>
+                    <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
+                </div>
+                
+                <div className="form-group col-md-6">
+                <label>Password</label>
+                    <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
+                    
+                    </div>
+                    <div className="form-group col-md-6">
+                <label>Number plate</label>
+                    <input required className="form-control" name="number_place" onChange={this.handleChange} value={this.state.number_place} type="text" placeholder="Number plate"></input>
+                    
+                    </div>
+
+            </div>
+        <div className="col-md-12">
+                <br className="clear-both"/>
+                <div className="form-group col-md-6">
+                <label>Parish</label>
+                    <select className="form-control" name="parish" onChange={this.handleChange} value={this.state.parish}>
+                    <option defaultValue value={null}>
+                      Select Parish
+                        </option>
+                    { this.state.parishes.map( (value, key)=>(
+                      <option key={key} value={value.id}>
+                      {value.name}
+                        </option>
+                    ))}
+                        
+                    </select>
+                    
+                    </div>
+                    <br className="clear-both"/>
+                    <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Ambulance" : "Submit"}</button>
+                    <br className="clear-both"/>
+                    </div>
+                     
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <button className="btn btn-default" onClick={()=>this.props.handleClose("ambulance")}>Close</button>
+          </Modal.Footer>
+        </Modal>
+      )
+    }
+  }
 
 
 

@@ -5,9 +5,8 @@ const token = sessionStorage.getItem("token");
 
 exports.login =  function(data, callback){
     api.post(addr+"/auth/login/",
-    {"content-type": "application/json",
-
-},data, function(error, token){
+    {"content-type": "application/json"},
+    data, function(error, token){
         //callback of the method here
         console.log("error", error);
          if(error){
@@ -17,6 +16,55 @@ exports.login =  function(data, callback){
             return callback(null, token.auth_token);
          }
         });
+}
+
+exports.addChew =  function(data, callback){
+   api.post(addr+"/api/v1/chews",
+   {"content-type": "application/json",
+   "Authorization": "Token "+token
+},
+   data, function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+           return callback(null, response);
+        }
+       });
+}
+exports.addMidwife =  function(data, callback){
+   api.post(addr+"/api/v1/midwives",
+   {"content-type": "application/json",
+   "Authorization": "Token "+token
+},
+   data, function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+           return callback(null, response);
+        }
+       });
+}
+exports.addAmbulance =  function(data, callback){
+   api.post(addr+"/api/v1/ambulances",
+   {"content-type": "application/json",
+   "Authorization": "Token "+token
+},
+   data, function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+           return callback(null, response);
+        }
+       });
 }
 
 exports.verifyToken =  function(callback){
@@ -123,6 +171,74 @@ exports.mappedGirls =  function(callback){
         }else{
              if (response.status != 200) {
                 return callback("Couldnot get mapped girls");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+exports.getSubCounties =  function(callback){
+   api.get(addr+"/api/v1/subcountys",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnot get subcounties");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+
+exports.getHealthFacilities =  function(callback){
+   api.get(addr+"/api/v1/healthfacilitys",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnot get subcounties");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+
+exports.getParishes =  function(callback){
+   api.get(addr+"/api/v1/parishes",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnot get parishes");
             }
              else{
                return callback(null, response.data);
