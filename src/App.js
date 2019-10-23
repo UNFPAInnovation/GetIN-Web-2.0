@@ -7,7 +7,9 @@ import './styles/global.scss';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
+const FollowUps = React.lazy(() => import('./pages/FollowUps'));
 const Users = React.lazy(() => import('./pages/Users'));
+const AncVisits = React.lazy(() => import('./pages/AncVisits'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Layout = React.lazy(() => import('./components/Layout'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
@@ -121,6 +123,18 @@ class App extends Component {
 
             <HomePage />
             
+          </SF>
+        )} />
+        <Route exact path="/anc_visits" render={() => (
+          <SF>
+            <Seo title="ANC Visits - GetIn Dashboard" description="" keywords=""/>
+            <AncVisits />      
+          </SF>
+        )} />
+        <Route exact path="/follow_ups" render={() => (
+          <SF>
+            <Seo title="Follow ups - GetIn Dashboard" description="" keywords=""/>
+            <FollowUps />      
           </SF>
         )} />
         <Route exact path="/girls" render={() => (
