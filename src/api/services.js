@@ -179,6 +179,28 @@ exports.mappedGirls =  function(callback){
         }
        });
 }
+exports.followUps =  function(callback){
+   api.get(addr+"/api/v1/followups",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnot get follow ups");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
 exports.getSubCounties =  function(callback){
    api.get(addr+"/api/v1/subcountys",
    {
