@@ -209,6 +209,7 @@ a:focus {
 }
 .list-group-item.active a, .list-group-item.active:focus a, .list-group-item.active:hover a{
         background:rgba($primaryColor, 0.1);
+        color:$primaryColor !important;
         svg{
           color:$primaryColor;
         }
