@@ -31,8 +31,9 @@ export  default class Login extends Component {
           else{
            sessionStorage.removeItem('token');
            sessionStorage.setItem('token', token);
+           console.log(token);
            alertifyjs.success('Signed Successfully', 5, function(){  console.log('dismissed'); });
-           window.location.href="/dashboard";
+          window.location.href="/dashboard";
           }
     });
   }

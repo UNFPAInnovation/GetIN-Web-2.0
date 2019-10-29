@@ -52,9 +52,14 @@ export default class SideNav extends Component{
          document.getElementById("girlsLink").classList.remove("active");
          document.getElementById("dashboardLink").classList.remove("active");
          document.getElementById("usersLink").classList.remove("active");
+<<<<<<< HEAD
          document.getElementById("anc_visitsLink").classList.remove("active");
          document.getElementById("follow_upsLink").classList.remove("active");
 
+=======
+         document.getElementById("deliveriesLink").classList.remove("active");
+         
+>>>>>>> deliveries#3
         if(window.location.pathname == "/dashboard"){
             document.getElementById("dashboardLink").classList.add("active");
         }
@@ -62,6 +67,7 @@ export default class SideNav extends Component{
             document.getElementById("girlsLink").classList.add("active");
         }
         else if(window.location.pathname == "/users"){
+<<<<<<< HEAD
             document.getElementById("usersLink").classList.add("active");
         }
         else if(window.location.pathname == "/anc_visits"){
@@ -71,6 +77,14 @@ export default class SideNav extends Component{
             document.getElementById("follow_upsLink").classList.add("active");
         }
       }
+=======
+          document.getElementById("usersLink").classList.add("active");
+        }
+        else if(window.location.pathname == "/deliveries"){
+          document.getElementById("deliveriesLink").classList.add("active");
+        }
+    }
+>>>>>>> deliveries#3
     componentDidUpdate(prevProps) {
       this.activeMenu();
       
@@ -98,8 +112,13 @@ export default class SideNav extends Component{
   <ListGroupItem id="dashboardLink"><Link to="/dashboard">{this.state.mini === false && "Dashboard"}   <FontAwesomeIcon icon={faHome} /></Link></ListGroupItem>
   <ListGroupItem id="anc_visitsLink"><Link to="/anc_visits">{ this.state.mini ===false && "ANC Visits"} <FontAwesomeIcon icon={faStethoscope}/></Link></ListGroupItem>
   <ListGroupItem id="girlsLink"><Link to="/girls">{ this.state.mini ===false && "Mapped girls"} <FontAwesomeIcon icon={faFemale}/></Link></ListGroupItem>
+<<<<<<< HEAD
   <ListGroupItem id="follow_upsLink"><Link to="/follow_ups">{ this.state.mini ===false && "Follow ups"} <FontAwesomeIcon icon={faSync}/></Link></ListGroupItem>
   <ListGroupItem id="deliverliersLink"><Link to="/deliveries">{ this.state.mini ===false && "Deliveries"} <FontAwesomeIcon icon={faBaby}/></Link></ListGroupItem>
+=======
+  <ListGroupItem id="spLink"><Link to="/follow_ups">{ this.state.mini ===false && "Follow ups"} <FontAwesomeIcon icon={faSync}/></Link></ListGroupItem>
+  <ListGroupItem id="deliveriesLink"><Link to="/deliveries">{ this.state.mini ===false && "Deliveries"} <FontAwesomeIcon icon={faBaby}/></Link></ListGroupItem>
+>>>>>>> deliveries#3
   <ListGroupItem id="dumpsLink"><Link to="/health_facilities">{ this.state.mini ===false && "Health Facilities"} <FontAwesomeIcon icon={faHospital}/></Link></ListGroupItem>
   <ListGroupItem id="usersLink"><Link to="/users">{ this.state.mini ===false && "Users"} <FontAwesomeIcon icon={faUsers}/></Link></ListGroupItem>
   <ListGroupItem id="messagesLink"><Link to="/messages">{ this.state.mini ===false && "Messages"} <FontAwesomeIcon icon={faEnvelope}/></Link></ListGroupItem>
