@@ -163,9 +163,11 @@ exports.usersAmbulanceDrivers = function(callback) {
         } else {
           return callback(null, response.data);
         }
-<<<<<<< HEAD
+      }
        });
-}
+
+};
+
 exports.followUps =  function(callback){
    api.get(addr+"/api/v1/followups",
    {
@@ -191,16 +193,14 @@ exports.followUps =  function(callback){
 exports.getSubCounties =  function(callback){
    api.get(addr+"/api/v1/subcountys",
    {
-=======
       }
-    }
+    
   );
-};
+}
 exports.mappedGirls = function(callback) {
   api.get(
     addr + "/api/v1/girls",
     {
->>>>>>> deliveries#3
       "content-type": "application/json",
       Authorization: "Token " + token
     },
