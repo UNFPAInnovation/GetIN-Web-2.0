@@ -35,7 +35,7 @@ export default class MappedGirls extends Component {
         village:true,
         name:false,
         trimester:false,
-        next_of_kin_name:false,
+        next_of_kin_name:true,
         education_level:true,
         marital_status:false,
         last_menstruation_date:true
@@ -46,25 +46,10 @@ export default class MappedGirls extends Component {
       totalDataSize: 0
     }
     this.getData = this.getData.bind(this);
-    // this.handleInputChange = this.handleInputChange.bind(this);
-    // this.updateTable = this.updateTable.bind(this);
-    // this.onPageChange = this.onPageChange.bind(this);
-    // this.onSortChange = this.onSortChange.bind(this);
-    // this.onFilterChange = this.onFilterChange.bind(this);
   }
   componentDidMount() {
    this.getData();
   }
-//   onPageChange(page, sizePerPage) {
-//     console.log("Page:" + page + " sizePerPage " + sizePerPage);
-//     const currentIndex = (page - 1) * sizePerPage;
-//     this.getData("api/jobs?records=" + page + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + sizePerPage)
-//     this.setState({
-//       currentPage: page,
-//       isLoaded: false,
-//       sizePerPage: sizePerPage
-//     });
-//   }
 
   getData() {
       const thisApp = this;
@@ -97,143 +82,7 @@ export default class MappedGirls extends Component {
     });
 
   }
-  
 
-
-    
-    
-  
-//   }
-//   getJobsSummary(url = "api/jobs/summary") {
-//     const thisApp = this;
-//     let status;
-//     var req = unirest("GET", addr + url);
-
-//     req.headers({
-//       "cache-control": "no-cache",
-//       "authorization": token
-//     });
-
-
-//     req.end(function (res) {
-//       if (res.error) console.log(res);
-
-//       console.log(res.status);
-//       if (res.status == 200) {
-//         console.log(res.body);
-//         thisApp.setState({
-//           summary: res.body,
-//           isLoaded: true,
-//         }, () => console.log(thisApp.state));
-//       }
-//       else {
-//         thisApp.setState({
-//           isLoaded: true
-//         });
-//       }
-//     });
-
-//   }
-//   timeConvert(cell, row) {
-//     //console.log(row);
-
-//     return cell && cell ? (moment(cell).format("DD/MM/YY h:mm:ss a")) : ("Date not available");
-//   }
-
-//   moneyConvert(cell, row) {
-//     let amount = "UGX 0";
-//     if (cell) {
-//       amount = "UGX " + parseInt(cell).toLocaleString('en')
-//     }
-//     return amount;
-//   }
-//   statusFomatter(cell, row) {
-//     let status;
-//     switch (cell) {
-//       case 0:
-//         status = "Pending";
-//         break;
-//       case 1:
-//         status = "Scheduled";
-//         break;
-//       case 2:
-//         status = "In progress";
-//         break;
-//       case 3:
-//         status = "Completed";
-//         break;
-//       default:
-//         status = "Pending";
-//     }
-
-//     return status;
-//   }
-
-  nameFormatter(cell, row) {
-    return row.first_name+" "+row.last_name;
-  }
-
-//   enumFormatter(cell, row, enumObject) {
-//     return enumObject[cell];
-//   }
-
-
-//   renderShowsTotal(start, to, total) {
-//     return (
-//       <p style={{ color: 'blue' }}>
-//         From {start} to {to}, totals is {total}&nbsp;&nbsp;
-//           </p>
-//     );
-//   }
-//   onSortChange(sortName, sortOrder) {
-//     console.log(sortName);
-//     const x = this.state.jobs
-//     if (sortOrder === 'asc') {
-//       x.sort(function (a, b) {
-//         console.log(JSON.stringify(a));
-//         if (parseInt(a[sortName], 10) > parseInt(b[sortName], 10)) {
-//           return 1;
-//         } else if (parseInt(b[sortName], 10) > parseInt(a[sortName], 10)) {
-//           return -1;
-//         }
-//         return 0;
-//       });
-//     } else {
-//       x.sort(function (a, b) {
-//         if (parseInt(a[sortName], 10) > parseInt(b[sortName], 10)) {
-//           return -1;
-//         } else if (parseInt(b[sortName], 10) > parseInt(a[sortName], 10)) {
-//           return 1;
-//         }
-//         return 0;
-//       });
-//     }
-
-//     this.setState({
-//       jobs: x
-//     });
-//   }
-//   handleBtnClick = () => {
-//     if (order === 'desc') {
-//       this.refs.table.handleSort('asc', 'name');
-//       order = 'asc';
-//     } else {
-//       this.refs.table.handleSort('desc', 'name');
-//       order = 'desc';
-//     }
-//   }
-//   handleInputChange(event) {
-//     const target = event.target;
-//     const value = target.type === 'checkbox' ? target.checked : target.value;
-//     const name = target.name;
-
-//     this.setState({
-//       [name]: value,
-//       isLoaded: false
-//     }, () =>
-//         this.getData("api/jobs?records=" + this.state.currentPage + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + this.state.sizePerPage)
-//     );
-//   }
   updateTable(colomn) {
     //make a copy of state
     let manageColomns = this.state.manageColomns;
@@ -251,140 +100,20 @@ export default class MappedGirls extends Component {
     }
 
   }
-//   onFilterChange(filterObj) {
-//     console.log("On Filter Change");
-//     this.setState({
-//       jobs: this.state.jobs_copy
-//     });
-//     if (Object.keys(filterObj).length === 0) {
-//       this.setState({
-//         jobs: this.state.jobs_copy
-//       });
-//       return;
-//     }
-//     const thisApp = this;
-//     const data = this.state.jobs.filter((jobs) => {
-//       let valid = true;
-//       let filterValue;
-//       for (const key in filterObj) {
-//         const targetValue = jobs[key];
-//         switch (filterObj[key].type) {
-//           case 'NumberFilter': {
-//             filterValue = filterObj[key].value.number;
-//             valid = thisApp.filterNumber(targetValue, filterValue, filterObj[key].value.comparator);
-//             break;
-//           }
-//           default: {
-//             filterValue = (typeof filterObj[key].value === 'string') ?
-//               filterObj[key].value.toLowerCase() : filterObj[key].value;
-//             valid = thisApp.filterText(targetValue, filterValue);
-//             break;
-//           }
-//         }
+  nextOfKinFormatter(cell, row) {
+    return row.next_of_kin_first_name+" "+row.next_of_kin_last_name+" - "+row.next_of_kin_phone_number;
+  }
+  getVillageItem(cell, row, item){
+    return row.village[item];
+    
+  }
+  getGirlItem(cell, row, item){
+    return row[item];
+  
+}
 
-//         if (!valid) {
-//           break;
-//         }
-//       }
-//       return valid;
-//     });
-//     this.setState({
-//       jobs: data
-//     });
-//   }
-//   filterNumber(targetVal, filterVal, comparator) {
-//     let valid = true;
-//     switch (comparator) {
-//       case '=': {
-//         if (targetVal !== filterVal) {
-//           valid = false;
-//         }
-//         break;
-//       }
-//       case '>': {
-//         if (targetVal <= filterVal) {
-//           valid = false;
-//         }
-//         break;
-//       }
-//       case '<=': {
-//         if (targetVal > filterVal) {
-//           valid = false;
-//         }
-//         break;
-//       }
-//       default: {
-//         console.error('Number comparator provided is not supported');
-//         break;
-//       }
-//     }
-//     return valid;
-//   }
-
-//   filterText(targetVal, filterVal) {
-//     console.log(filterVal);
-//     if (targetVal && targetVal.toString().toLowerCase().indexOf(filterVal) === -1) {
-//       return false;
-//     }
-
-//     return true;
-//   }
-//   handleExportCSVButtonClick = () => {
-//     const thisApp = this;
-//     this.returnAlltheData(function(){
-//       thisApp.refs.table.handleExportCSV();
-//     });
-
-//   }
-//   createCustomExportCSVButton = (onClick) => {
-//     return (
-//       <ExportCSVButton
-//         btnText='Export to CSV'
-//         btnGlyphicon='glyphicon-download'
-//         onClick={ () => this.handleExportCSVButtonClick() }/>
-//     );
-//   }
-
-//   toNearest(number) {
-
-//     switch (true) {
-//       case number <= 10:
-//         return 1;
-//         break;
-//       case number <= 10:
-//         return number;
-//         break;
-//       case number <= 100:
-//         return Math.ceil(number / 5) * 5;
-//         break;
-//       case number > 100 < 1000:
-//         return Math.ceil(number / 50) * 50;
-//         break;
-//       case number >= 1000 < 10000:
-//         return Math.ceil(number / 500) * 500;
-//         break;
-//       case number >= 1000:
-//         return Math.ceil(number / 5000) * 5000;
-//         break;
-//       default:
-//         console.log("D");
-//         return 1;
-
-//     }
-
-//   }
   render() {
     let girls = this.state.girls
-    // const statusType = {
-    //   0: 'Pending',
-    //   1: 'Scheduled',
-    //   2: 'In progress',
-    //   3: 'Completed'
-    // };
-
-
-   
-
     const options = {
       page: this.state.currentPage,  // which page you want to show as default
       onPageChange: this.onPageChange,
@@ -459,31 +188,13 @@ export default class MappedGirls extends Component {
               pagination>
               <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
               <TableHeaderColumn dataSort={true} isKey dataField='phone_number'>Phone number</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.village} dataField='village'>Village</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.village}  dataFormat ={(cell, row, item)=>this.getVillageItem(cell, row, "name")} dataField='village'>Village</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataField='trimester'>Trimester</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataField='next_of_kin_name'>Next of Kin</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataFormat ={this.nextOfKinFormatter} dataField='next_of_kin_name'>Next of Kin</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataField='education_level'>Education level</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataField='last_menstruation_date'>Marital status</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataField='dob'>Date of birth</TableHeaderColumn>
-              {/* <TableHeaderColumn hidden={this.state.manageColomns.location} dataSort={true} filter={{ type: 'TextFilter', delay: 0 }} dataField='location'>Location</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.division} dataSort={true} filter={{ type: 'TextFilter', delay: 0 }} dataField='division'>Division</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} filter={{ type: 'TextFilter', delay: 0 }} dataField='parish'>Parish</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.facility_type} dataSort={true} dataField='facility_type'>Facility type</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.initiated_by} dataSort={true} csvFormat={this.initiatedByFormatter} dataFormat={this.initiatedByFormatter} dataField='initiated_by'>Initiated by</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.income_recieved} dataSort={true} dataField='income_received' dataFormat={this.moneyConvert} csvFormat={this.moneyConvert}>Amount Received</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.status} dataSort={true} dataField='status' dataFormat={this.statusFomatter} csvFormat={this.statusFomatter}>Status</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.service_provider} dataSort={true} filter={{ type: 'TextFilter', delay: 0 }} dataField='service_provider'>Service Provider Name</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.service_provider_number} dataSort={true} filter={{ type: 'TextFilter', delay: 0 }} dataField='service_provider_number'>Service provider number</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.date_of_registration} dataField='date_of_registration' csvFormat={this.timeConvert} dataFormat={this.timeConvert}>Start Time</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.finish_time} dataField='finish_time' csvFormat={this.timeConvert} dataFormat={this.timeConvert}>Finish Time</TableHeaderColumn> */}
-
-
-              {/* <TableHeaderColumn hidden={this.state.manageColomns.start_point_long} dataField='start_point_long'>Start point Longitudes</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.start_point_lat} dataField='start_point_lat'>Start point Latitudes</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.long} dataField='long'>Longitudes</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.lat} dataField='lat'>Latitudes</TableHeaderColumn> */}
-              
+              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataField='dob'>Date of birth</TableHeaderColumn>           
 
 
             </BootstrapTable>
