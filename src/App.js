@@ -6,6 +6,7 @@ import Seo from './components/Seo';
 import './styles/global.scss';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
 const FollowUps = React.lazy(() => import('./pages/FollowUps'));
 const Users = React.lazy(() => import('./pages/Users'));
@@ -121,7 +122,7 @@ class App extends Component {
 
             <Seo title="GetIn Dashboard" description="" keywords=""/>
 
-            <HomePage />
+            <Dashboard />
             
           </SF>
         )} />

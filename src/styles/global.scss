@@ -173,6 +173,7 @@ a:focus {
     border: unset;
     margin: 10px auto;
     padding:0 !important;
+    transition: all 0.1s ease-in-out;
 }
 .sideNav .list-group-item a{
     color:#000;
@@ -181,6 +182,7 @@ a:focus {
     color:#707070;
     padding:15px;
     border-radius:20px;
+    transition: all 0.1s ease-in-out;
 
 }
 .sideNav .list-group-item a svg{
@@ -188,6 +190,7 @@ a:focus {
     color:#9B9B9B;
     float:right;
     opacity:0.8;
+    transition: all 0.1s ease-in-out;
 }
 
 .sideNav .list-group-item a:hover{
@@ -231,7 +234,6 @@ a:focus {
    
 }
 .card{
-    background-color: #fff;
     box-shadow: 0 0px 1px 1px rgba(32,33,36,0.02);
     margin: 20px 20px 0px 0;
     
@@ -260,6 +262,14 @@ a:focus {
 }
 .form-inline label{
     display: block;
+}
+.form-inline .label{
+    display: block;
+    font-weight: 600;
+    font-size: 18px;
+    color:$darkColor;
+    vertical-align: bottom;
+    line-height: 60px;
 }
 .form-inline .form-group{
     margin: 0 15px;
@@ -326,6 +336,11 @@ a:focus {
     padding: 20px 0;
     border-radius: 11px;
     box-shadow: 0 0px 1px 1px rgba(32,33,36,0.02);
+    h5{
+        font-weight: 600;
+        font-size: 18px;
+        margin-top: 20px;
+    }
     .form-inline{
         padding: 0 20px;
     }
@@ -375,4 +390,92 @@ a:focus {
 }
 #add-user-btn{
     float: right;
+}
+
+/*
+
+Dashboard Cards
+
+*/
+
+.card {
+        padding: 20px 30px;
+        border-radius: 22px;
+        color:#fff;
+        height: 180px;
+        width: 250px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.1s ease-in-out;
+        svg{
+            font-size: 20px;
+            margin: 0 20px 0 0;
+        }
+        h4{
+            color:#fff;
+            font-weight: 600;
+            font-size: 30px !important;
+        }
+        h5{
+            color:#fff;
+            font-weight: 600;
+            font-size: 20px !important;
+            opacity: 0.8;
+        }
+        .rate{
+            svg{
+                margin: 0 20px 0 0;
+            }
+            font-size: 20px;
+            opacity: 0.8;
+        }
+    &.card-purple{
+        background: #DA4453;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #89216B, #DA4453);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #89216B, #DA4453); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+    &.card-blue{
+        background: #56CCF2;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+    &.card-orange{
+        background: #ff4b1f;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #ff9068, #ff4b1f);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #ff9068, #ff4b1f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+    ::after{
+        background-color: rgba(255, 255, 255, 0.02);
+        height: 200px;
+        width:200px;
+        border-radius: 50%;
+        position: absolute;
+        right: -50px;
+        bottom: -100px;
+        content: '';
+    }
+    ::before{
+        background-color: rgba(255, 255, 255, 0.02);
+        height: 200px;
+        width:200px;
+        border-radius: 50%;
+        position: absolute;
+        right: -100px;
+        top: 0px;
+        content: '';
+    }
+    &:hover{
+        opacity: 0.8;
+    }
+}
+.flex-row{
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+    .card{
+        flex:1;
+    }
 }
