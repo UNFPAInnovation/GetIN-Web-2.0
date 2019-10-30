@@ -10,6 +10,7 @@ const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
 const FollowUps = React.lazy(() => import('./pages/FollowUps'));
 const Users = React.lazy(() => import('./pages/Users'));
 const AncVisits = React.lazy(() => import('./pages/AncVisits'));
+const HealthFacilities = React.lazy(() => import('./pages/HealthFacilities'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Layout = React.lazy(() => import('./components/Layout'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
@@ -141,6 +142,12 @@ class App extends Component {
           <SF>
             <Seo title="Mapped girls - GetIn Dashboard" description="" keywords=""/>
             <MappedGirls />      
+          </SF>
+        )} />
+        <Route exact path="/health_facilities" render={() => (
+          <SF>
+            <Seo title="Health facilities - GetIn Dashboard" description="" keywords=""/>
+            <HealthFacilities />      
           </SF>
         )} />
          <Route exact path="/users" render={() => (
