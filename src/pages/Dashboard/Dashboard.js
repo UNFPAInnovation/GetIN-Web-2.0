@@ -75,7 +75,7 @@ export default function Dashboard() {
         </div>
         <div className="col-md-12 flex-row">
           <MappedGirlsCard data={mappedGirls && mappedGirls} />
-          <DeliveriesCard />
+          <DeliveriesCard data={deliveries && deliveries} />
           <FollowUpsCard />
         </div>
         <br className="clear-both" />
