@@ -8,6 +8,7 @@ import './styles/global.scss';
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
 const FollowUps = React.lazy(() => import('./pages/FollowUps'));
+const Messages = React.lazy(() => import('./pages/Messages'));
 const Users = React.lazy(() => import('./pages/Users'));
 const AncVisits = React.lazy(() => import('./pages/AncVisits'));
 const Login = React.lazy(() => import('./pages/Login'));
@@ -147,6 +148,12 @@ class App extends Component {
           <SF>
             <Seo title="Users - GetIn Dashboard" description="" keywords=""/>
             <Users />      
+          </SF>
+        )} />
+        <Route exact path="/messages" render={() => (
+          <SF>
+            <Seo title="Messages - GetIn Dashboard" description="" keywords=""/>
+            <Messages />      
           </SF>
         )} />
          <Route
