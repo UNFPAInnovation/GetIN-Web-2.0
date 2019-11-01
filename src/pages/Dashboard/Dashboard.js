@@ -1,12 +1,14 @@
 import React, { useState, useMemo } from "react";
-import PropTypes from "prop-types";
 import moment from "moment";
 
 // Font Awesome components
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-// Our custom components
+// Loading data component
+import { LoadingData } from "../../components/Layout";
+
+// Our custom dashboard components
 import DeliveriesCard from "./components/DeliveriesCard/index";
 import FollowUpsCard from "./components/FollowUpsCard/index";
 import MappedGirlsCard from "./components/MappedGirlsCard/index";
@@ -73,17 +75,22 @@ export default function Dashboard() {
           <br className="clear-both" />
           <br className="clear-both" />
         </div>
-        <div className="col-md-12 flex-row">
-          <MappedGirlsCard data={mappedGirls && mappedGirls} />
-          <DeliveriesCard data={deliveries && deliveries} />
-          <FollowUpsCard data={followups && followups} />
-        </div>
-        <br className="clear-both" />
-        <br className="clear-both" />
-        <div className="col-md-12 bg-white-content">
-          <div className="col-md-4 ">
-            <h5>Age group of mapped girls</h5>
-            {/* <div className="col-md-12">
+
+        {isLoading ? (
+          <LoadingData text="Loading dashboard and data ...." />
+        ) : (
+          <>
+            <div className="col-md-12 flex-row">
+              <MappedGirlsCard data={mappedGirls && mappedGirls} />
+              <DeliveriesCard data={deliveries && deliveries} />
+              <FollowUpsCard data={followups && followups} />
+            </div>
+            <br className="clear-both" />
+            <br className="clear-both" />
+            <div className="col-md-12 bg-white-content">
+              <div className="col-md-4 ">
+                <h5>Age group of mapped girls</h5>
+                {/* <div className="col-md-12">
               <Bar
                 data={data}
                 width={100}
@@ -93,30 +100,32 @@ export default function Dashboard() {
                 }}
               />
             </div> */}
-          </div>
-          <div className="col-md-8">
-            <h5>Mapped Girls per subcounty</h5>
-            {/* <div className="col-md-12">
+              </div>
+              <div className="col-md-8">
+                <h5>Mapped Girls per subcounty</h5>
+                {/* <div className="col-md-12">
               <MappedGirlsBySubCounty />
             </div> */}
-          </div>
-          <br className="clear-both" />
-          <br className="clear-both" />
-          <div className="col-md-12">
-            <h5>Deliveries per subcounty</h5>
-            {/* <div className="col-md-12">
+              </div>
+              <br className="clear-both" />
+              <br className="clear-both" />
+              <div className="col-md-12">
+                <h5>Deliveries per subcounty</h5>
+                {/* <div className="col-md-12">
               <Deliveries />
             </div> */}
-          </div>
-          <br className="clear-both" />
-          <br className="clear-both" />
-          <div className="col-md-12">
-            <h5>Family Planning Methods used in Arua District</h5>
-            {/* <div className="col-md-12">
+              </div>
+              <br className="clear-both" />
+              <br className="clear-both" />
+              <div className="col-md-12">
+                <h5>Family Planning Methods used in Arua District</h5>
+                {/* <div className="col-md-12">
               <FamilyPlanning />
             </div> */}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </React.Fragment>
   );
