@@ -1,29 +1,29 @@
-import React, { useState, useMemo } from "react";
-import moment from "moment";
+import React, { useState, useMemo } from 'react';
+import moment from 'moment';
 
 // Font Awesome components
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 // Loading data component
-import { LoadingData } from "../../components/Layout";
+import { LoadingData } from '../../components/Layout';
 
 // Our custom dashboard components
-import DeliveriesCard from "./components/DeliveriesCard/index";
-import FollowUpsCard from "./components/FollowUpsCard/index";
-import MappedGirlsCard from "./components/MappedGirlsCard/index";
+import DeliveriesCard from './components/DeliveriesCard/index';
+import FollowUpsCard from './components/FollowUpsCard/index';
+import MappedGirlsCard from './components/MappedGirlsCard/index';
 
 // Get Data
-import getData from "../../utils/getData";
+import getData from '../../utils/getData';
 
 // Variables
 const startOfMonth = moment()
-  .startOf("month")
-  .format("YYYY-MM-DD");
+  .startOf('month')
+  .format('YYYY-MM-DD');
 
 const todaysDate = moment()
   .local()
-  .format("YYYY-MM-DD");
+  .format('YYYY-MM-DD');
 
 export default function Dashboard() {
   // State variables
@@ -36,59 +36,61 @@ export default function Dashboard() {
     toFilter
   );
 
+  // Memoize the data
+
   return (
     <React.Fragment>
-      <div className="col-md-12">
-        <div className="col-md-12 title">
-          <h4 className="pull-left">
-            {" "}
+      <div className='col-md-12'>
+        <div className='col-md-12 title'>
+          <h4 className='pull-left'>
+            {' '}
             <span>
               <FontAwesomeIcon icon={faHome} />
-            </span>{" "}
+            </span>{' '}
             Dashboard
           </h4>
-          <form className="form-inline pull-right">
-            <div className="form-group">
-              <span className="label">Filter</span>
+          <form className='form-inline pull-right'>
+            <div className='form-group'>
+              <span className='label'>Filter</span>
             </div>
-            <div className="form-group">
-              <label htmlFor="email">From:</label>
+            <div className='form-group'>
+              <label htmlFor='email'>From:</label>
               <input
-                name="from"
+                name='from'
                 value={fromFilter}
                 onChange={event => setFromFilter(event.target.value)}
-                className="form-control"
-                type="date"
+                className='form-control'
+                type='date'
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="email">To:</label>
+            <div className='form-group'>
+              <label htmlFor='email'>To:</label>
               <input
-                name="to"
+                name='to'
                 value={toFilter}
                 onChange={event => setToFilter(event.target.value)}
-                className="form-control"
-                type="date"
+                className='form-control'
+                type='date'
               />
             </div>
           </form>
-          <br className="clear-both" />
-          <br className="clear-both" />
+          <br className='clear-both' />
+          <br className='clear-both' />
         </div>
 
         {isLoading ? (
-          <LoadingData text="Loading dashboard and data ...." />
+          <LoadingData text='Loading dashboard and data ....' />
         ) : (
           <>
-            <div className="col-md-12 flex-row">
+            <div className='col-md-12 flex-row'>
               <MappedGirlsCard data={mappedGirls && mappedGirls} />
               <DeliveriesCard data={deliveries && deliveries} />
               <FollowUpsCard data={followups && followups} />
             </div>
-            <br className="clear-both" />
-            <br className="clear-both" />
-            <div className="col-md-12 bg-white-content">
-              <div className="col-md-4 ">
+            <br className='clear-both' />
+            <br className='clear-both' />
+            <div className='col-md-12 bg-white-content'>
+              <div className='col-md-4 '>
                 <h5>Age group of mapped girls</h5>
                 {/* <div className="col-md-12">
               <Bar
@@ -101,23 +103,23 @@ export default function Dashboard() {
               />
             </div> */}
               </div>
-              <div className="col-md-8">
+              <div className='col-md-8'>
                 <h5>Mapped Girls per subcounty</h5>
                 {/* <div className="col-md-12">
               <MappedGirlsBySubCounty />
             </div> */}
               </div>
-              <br className="clear-both" />
-              <br className="clear-both" />
-              <div className="col-md-12">
+              <br className='clear-both' />
+              <br className='clear-both' />
+              <div className='col-md-12'>
                 <h5>Deliveries per subcounty</h5>
                 {/* <div className="col-md-12">
               <Deliveries />
             </div> */}
               </div>
-              <br className="clear-both" />
-              <br className="clear-both" />
-              <div className="col-md-12">
+              <br className='clear-both' />
+              <br className='clear-both' />
+              <div className='col-md-12'>
                 <h5>Family Planning Methods used in Arua District</h5>
                 {/* <div className="col-md-12">
               <FamilyPlanning />
