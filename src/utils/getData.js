@@ -1,27 +1,26 @@
 //  Custom function to collect all data required for the dashboard.
 //  Writen as a react hook to take advantage of the useEffect hook
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 // Network stuff
 const gSession = window.sessionStorage;
-const token = gSession.getItem("token");
+const token = gSession.getItem('token');
 const DEFAULT_OPTIONS = {
   headers: {
-    "Content-Type": "application/json",
-    Authorization: "Token " + token
+    'Content-Type': 'application/json',
+    Authorization: 'Token ' + token
   }
 };
 
 // Endpoints
-const apiURL = require("../env_config").default;
+const apiURL = require('../env_config').default;
 
 export default function useGetData(fromFilter, toFilter) {
   // Currate all the api endpoints we querry for data
-  // const followupsURL = `/api/v1/followups?from=${fromFilter}&to=${toFilter}`;
-  const followupsURL = `${apiURL}/api/v1/followups`;
-  const mappedGirlsURL = `${apiURL}/api/v1/girls`;
-  const deliveriesURL = `${apiURL}/api/v1/deliveries`;
+  const followupsURL = `${apiURL}/api/v1/followups?created_from=${fromFilter}&created_to=${toFilter}`;
+  const mappedGirlsURL = `${apiURL}/api/v1/mapping_encounters?created_from=${fromFilter}&created_to=${toFilter}`;
+  const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from=${fromFilter}&created_to=${toFilter}`;
 
   // Set initial state of our data
   const [isLoading, setIsLoading] = useState(false);
