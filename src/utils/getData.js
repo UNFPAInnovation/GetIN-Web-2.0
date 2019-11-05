@@ -17,16 +17,16 @@ const DEFAULT_OPTIONS = {
 const apiURL = require('../env_config').default;
 
 export default function useGetData(fromFilter, toFilter) {
-  // Currate all the api endpoints we querry for data
+  // Currate all the api endpoints we querry for data / stats
   const followupsURL = `${apiURL}/api/v1/followups?created_from=${fromFilter}&created_to=${toFilter}`;
-  const mappedGirlsURL = `${apiURL}/api/v1/mapping_encounters?created_from=${fromFilter}&created_to=${toFilter}`;
   const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from=${fromFilter}&created_to=${toFilter}`;
+  const mappingEncountersStatsURL = `${apiURL}/api/v1/mapping_encounters_stats?from=${fromFilter}&to=${toFilter}`;
 
   // Set initial state of our data
   const [isLoading, setIsLoading] = useState(false);
   const [followups, setFollowups] = useState(null);
-  const [mappedGirls, setMappedGirls] = useState(null);
   const [deliveries, setDeliveries] = useState(null);
+  const [mappingEncountersStats, setMappingEncountersStats] = useState(null);
 
   // Fetch the data using useEffect. This allows us to mutate the data fetched based on a dependency,
   // In our case the filter. When the filter changes, we fetch new data.
@@ -39,13 +39,13 @@ export default function useGetData(fromFilter, toFilter) {
       return await response.json();
     };
 
-    const mappedGirlsReq = async () => {
-      const response = await fetch(mappedGirlsURL, DEFAULT_OPTIONS);
+    const deliveriesURLReq = async () => {
+      const response = await fetch(deliveriesURL, DEFAULT_OPTIONS);
       return await response.json();
     };
 
-    const deliveriesURLReq = async () => {
-      const response = await fetch(deliveriesURL, DEFAULT_OPTIONS);
+    const mappingEncountersStatsURLReq = async () => {
+      const response = await fetch(mappingEncountersStatsURL, DEFAULT_OPTIONS);
       return await response.json();
     };
 
@@ -54,17 +54,17 @@ export default function useGetData(fromFilter, toFilter) {
     const getAllData = () => {
       return Promise.all([
         followupsReq(),
-        mappedGirlsReq(),
-        deliveriesURLReq()
+        deliveriesURLReq(),
+        mappingEncountersStatsURLReq()
       ]);
     };
 
     // When Promise reolves, all our data is available and we can set state appropriately
     getAllData().then(
-      ([followups, mappedGirls, deliveries, healthFacilities]) => {
+      ([followups, deliveries, mappingEncountersStats, healthFacilities]) => {
         setFollowups(followups);
-        setMappedGirls(mappedGirls);
         setDeliveries(deliveries);
+        setMappingEncountersStats(mappingEncountersStats);
         setIsLoading(false);
       }
     );
@@ -73,8 +73,8 @@ export default function useGetData(fromFilter, toFilter) {
   return [
     {
       followups,
-      mappedGirls,
       deliveries,
+      mappingEncountersStats,
       isLoading
     }
   ];

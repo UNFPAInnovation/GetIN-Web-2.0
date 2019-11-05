@@ -12,6 +12,7 @@ import { LoadingData } from '../../components/Layout';
 import DeliveriesCard from './components/DeliveriesCard/index';
 import FollowUpsCard from './components/FollowUpsCard/index';
 import MappedGirlsCard from './components/MappedGirlsCard/index';
+import AgeGroupOfMappedGirlsBarChart from './components/AgeGroupOfMappedGirlsBarChart/index';
 
 // Get Data
 import getData from '../../utils/getData';
@@ -31,10 +32,9 @@ export default function Dashboard() {
   const [toFilter, setToFilter] = useState(todaysDate);
 
   // Fetch data using our custom useGetData hook
-  const [{ followups, mappedGirls, deliveries, isLoading }] = getData(
-    fromFilter,
-    toFilter
-  );
+  const [
+    { followups, deliveries, mappingEncountersStats, isLoading }
+  ] = getData(fromFilter, toFilter);
 
   // Memoize the data
 
@@ -83,7 +83,9 @@ export default function Dashboard() {
         ) : (
           <>
             <div className='col-md-12 flex-row'>
-              <MappedGirlsCard data={mappedGirls && mappedGirls} />
+              <MappedGirlsCard
+                data={mappingEncountersStats && mappingEncountersStats}
+              />
               <DeliveriesCard data={deliveries && deliveries} />
               <FollowUpsCard data={followups && followups} />
             </div>
@@ -92,16 +94,9 @@ export default function Dashboard() {
             <div className='col-md-12 bg-white-content'>
               <div className='col-md-4 '>
                 <h5>Age group of mapped girls</h5>
-                {/* <div className="col-md-12">
-              <Bar
-                data={data}
-                width={100}
-                height={400}
-                options={{
-                  maintainAspectRatio: false
-                }}
-              />
-            </div> */}
+                <AgeGroupOfMappedGirlsBarChart
+                  data={mappingEncountersStats && mappingEncountersStats}
+                />
               </div>
               <div className='col-md-8'>
                 <h5>Mapped Girls per subcounty</h5>
