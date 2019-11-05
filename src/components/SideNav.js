@@ -54,6 +54,7 @@ export default class SideNav extends Component{
          document.getElementById("usersLink").classList.remove("active");
          document.getElementById("anc_visitsLink").classList.remove("active");
          document.getElementById("follow_upsLink").classList.remove("active");
+         document.getElementById("messagesLink").classList.remove("active");
 
          document.getElementById("deliveriesLink").classList.remove("active");
          
@@ -75,7 +76,10 @@ export default class SideNav extends Component{
         else if(window.location.pathname == "/deliveries"){
           document.getElementById("deliveriesLink").classList.add("active");
         }
-    }
+        else if(window.location.pathname == "/messages"){
+          document.getElementById("messagesLink").classList.add("active");
+      }
+      }
     componentDidUpdate(prevProps) {
       this.activeMenu();
       

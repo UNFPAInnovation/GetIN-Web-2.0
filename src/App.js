@@ -15,6 +15,8 @@ const Login = React.lazy(() => import("./pages/Login"));
 const Layout = React.lazy(() => import("./components/Layout"));
 const NotFound = React.lazy(() => import("./components/NotFound"));
 const Deliveries = React.lazy(() => import("./pages/Deliveries"));
+const Messages = React.lazy(() => import('./pages/Messages'));
+
 
 const service = require("./api/services");
 
@@ -205,6 +207,12 @@ class App extends Component {
               )
             }
           />
+          <Route exact path="/messages" render={() => (
+          <SF>
+            <Seo title="Messages - GetIn Dashboard" description="" keywords=""/>
+            <Messages />      
+          </SF>
+        )} />
           <Route
             render={() => (
               <SF>
