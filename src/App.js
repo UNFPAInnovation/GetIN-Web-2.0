@@ -16,6 +16,7 @@ const Layout = React.lazy(() => import("./components/Layout"));
 const NotFound = React.lazy(() => import("./components/NotFound"));
 const Deliveries = React.lazy(() => import("./pages/Deliveries"));
 const Messages = React.lazy(() => import('./pages/Messages'));
+const HealthFacilities = React.lazy(() => import('./pages/HealthFacilities'));
 
 
 const service = require("./api/services");
@@ -193,6 +194,12 @@ class App extends Component {
               </SF>
             )}
           />
+          <Route exact path="/health_facilities" render={() => (
+          <SF>
+            <Seo title="Health facilities - GetIn Dashboard" description="" keywords=""/>
+            <HealthFacilities />      
+          </SF>
+        )} />
           <Route
             exact
             path="/"
