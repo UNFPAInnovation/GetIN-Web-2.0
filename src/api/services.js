@@ -101,6 +101,51 @@ exports.usersChew = function(callback) {
   api.get(
     addr + "/api/v1/chews",
     {
+       "content-type": "application/json",
+       "Authorization": "Token "+token
+   },function(error, response){
+        //callback of the method here
+        console.log("error", error);
+         if(error){
+            console.log(error);
+            return callback(error);
+         }else{
+              if (response.status != 200) {
+                 return callback("Couldnt get mapped chews");
+             }
+              else{
+                return callback(null, response.data);
+              }
+            
+         }
+        });
+}
+exports.getHealthFacilities =  function(callback){
+   api.get(addr+"/api/v1/healthfacilities",
+   {
+      "content-type": "application/json",
+      "Authorization": "Token "+token
+  },function(error, response){
+       //callback of the method here
+       console.log("error", error);
+        if(error){
+           console.log(error);
+           return callback(error);
+        }else{
+             if (response.status != 200) {
+                return callback("Couldnt get health facilities");
+            }
+             else{
+               return callback(null, response.data);
+             }
+           
+        }
+       });
+}
+
+exports.usersMidwives =  function(callback){
+   api.get(addr+"/api/v1/midwives",
+   {
       "content-type": "application/json",
       Authorization: "Token " + token
     },
@@ -294,6 +339,31 @@ exports.getHealthFacilities = function(callback) {
 exports.getParishes = function(callback) {
   api.get(
     addr + "/api/v1/parishes",
+    {
+      "content-type": "application/json",
+      Authorization: "Token " + token
+    },
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Couldnot get parishes");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
+
+
+exports.Appointments = function(status, from, to, callback) {
+  api.get(
+    addr + "/api/v1/appointments?status="+status+"&created_from="+from+"&created_to="+to,
     {
       "content-type": "application/json",
       Authorization: "Token " + token

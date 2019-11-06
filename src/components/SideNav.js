@@ -54,6 +54,8 @@ export default class SideNav extends Component{
          document.getElementById("usersLink").classList.remove("active");
          document.getElementById("anc_visitsLink").classList.remove("active");
          document.getElementById("follow_upsLink").classList.remove("active");
+         document.getElementById("messagesLink").classList.remove("active");
+         document.getElementById("healthFacilitiesLink").classList.remove("active");
 
          document.getElementById("deliveriesLink").classList.remove("active");
          
@@ -75,7 +77,10 @@ export default class SideNav extends Component{
         else if(window.location.pathname == "/deliveries"){
           document.getElementById("deliveriesLink").classList.add("active");
         }
-    }
+        else if(window.location.pathname == "/health_facilities"){
+          document.getElementById("healthFacilitiesLink").classList.add("active");
+      }
+      }
     componentDidUpdate(prevProps) {
       this.activeMenu();
       
@@ -105,7 +110,7 @@ export default class SideNav extends Component{
   <ListGroupItem id="girlsLink"><Link to="/girls">{ this.state.mini ===false && "Mapped girls"} <FontAwesomeIcon icon={faFemale}/></Link></ListGroupItem>
   <ListGroupItem id="follow_upsLink"><Link to="/follow_ups">{ this.state.mini ===false && "Follow ups"} <FontAwesomeIcon icon={faSync}/></Link></ListGroupItem>
   <ListGroupItem id="deliveriesLink"><Link to="/deliveries">{ this.state.mini ===false && "Deliveries"} <FontAwesomeIcon icon={faBaby}/></Link></ListGroupItem>
-  <ListGroupItem id="dumpsLink"><Link to="/health_facilities">{ this.state.mini ===false && "Health Facilities"} <FontAwesomeIcon icon={faHospital}/></Link></ListGroupItem>
+  <ListGroupItem id="healthFacilitiesLink"><Link to="/health_facilities">{ this.state.mini ===false && "Health Facilities"} <FontAwesomeIcon icon={faHospital}/></Link></ListGroupItem>
   <ListGroupItem id="usersLink"><Link to="/users">{ this.state.mini ===false && "Users"} <FontAwesomeIcon icon={faUsers}/></Link></ListGroupItem>
   <ListGroupItem id="messagesLink"><Link to="/messages">{ this.state.mini ===false && "Messages"} <FontAwesomeIcon icon={faEnvelope}/></Link></ListGroupItem>
   <ListGroupItem id="settingsLink"><Link to="/settings">{ this.state.mini ===false && "Settings"} <FontAwesomeIcon icon={faCog}/></Link></ListGroupItem>

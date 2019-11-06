@@ -5,16 +5,19 @@ import ScrollToTop from "./components/ScrollToTop";
 import Seo from "./components/Seo";
 import "./styles/global.scss";
 
-const HomePage = React.lazy(() => import('./pages/HomePage'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
-const FollowUps = React.lazy(() => import('./pages/FollowUps'));
-const Users = React.lazy(() => import('./pages/Users'));
-const AncVisits = React.lazy(() => import('./pages/AncVisits'));
-const Login = React.lazy(() => import('./pages/Login'));
-const Layout = React.lazy(() => import('./components/Layout'));
-const NotFound = React.lazy(() => import('./components/NotFound'));
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
+const MappedGirls = React.lazy(() => import("./pages/MappedGirls"));
+const FollowUps = React.lazy(() => import("./pages/FollowUps"));
+const Users = React.lazy(() => import("./pages/Users"));
+const AncVisits = React.lazy(() => import("./pages/AncVisits"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Layout = React.lazy(() => import("./components/Layout"));
+const NotFound = React.lazy(() => import("./components/NotFound"));
 const Deliveries = React.lazy(() => import("./pages/Deliveries"));
+const Messages = React.lazy(() => import('./pages/Messages'));
+const HealthFacilities = React.lazy(() => import('./pages/HealthFacilities'));
+
 
 const service = require("./api/services");
 
@@ -117,35 +120,67 @@ class App extends Component {
               <SF>
                 <Seo title="GetIn Dashboard" description="" keywords="" />
 
-            <Dashboard />
-            
-          </SF>
-        )} />
-        <Route exact path="/anc_visits" render={() => (
-          <SF>
-            <Seo title="ANC Visits - GetIn Dashboard" description="" keywords=""/>
-            <AncVisits />      
-          </SF>
-        )} />
-        <Route exact path="/follow_ups" render={() => (
-          <SF>
-            <Seo title="Follow ups - GetIn Dashboard" description="" keywords=""/>
-            <FollowUps />      
-          </SF>
-        )} />
-        <Route exact path="/girls" render={() => (
-          <SF>
-            <Seo title="Mapped girls - GetIn Dashboard" description="" keywords=""/>
-            <MappedGirls />      
-          </SF>
-        )} />
-         <Route exact path="/users" render={() => (
-          <SF>
-            <Seo title="Users - GetIn Dashboard" description="" keywords=""/>
-            <Users />      
-          </SF>
-        )} />
-        <Route
+                <Dashboard />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path="/anc_visits"
+            render={() => (
+              <SF>
+                <Seo
+                  title="ANC Visits - GetIn Dashboard"
+                  description=""
+                  keywords=""
+                />
+                <AncVisits />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path="/follow_ups"
+            render={() => (
+              <SF>
+                <Seo
+                  title="Follow ups - GetIn Dashboard"
+                  description=""
+                  keywords=""
+                />
+                <FollowUps />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path="/girls"
+            render={() => (
+              <SF>
+                <Seo
+                  title="Mapped girls - GetIn Dashboard"
+                  description=""
+                  keywords=""
+                />
+                <MappedGirls />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path="/users"
+            render={() => (
+              <SF>
+                <Seo
+                  title="Users - GetIn Dashboard"
+                  description=""
+                  keywords=""
+                />
+                <Users />
+              </SF>
+            )}
+          />
+          <Route
             exact
             path="/deliveries"
             render={() => (
@@ -159,7 +194,13 @@ class App extends Component {
               </SF>
             )}
           />
-         <Route
+          <Route exact path="/health_facilities" render={() => (
+          <SF>
+            <Seo title="Health facilities - GetIn Dashboard" description="" keywords=""/>
+            <HealthFacilities />      
+          </SF>
+        )} />
+          <Route
             exact
             path="/"
             render={() =>
@@ -173,6 +214,12 @@ class App extends Component {
               )
             }
           />
+          <Route exact path="/messages" render={() => (
+          <SF>
+            <Seo title="Messages - GetIn Dashboard" description="" keywords=""/>
+            <Messages />      
+          </SF>
+        )} />
           <Route
             render={() => (
               <SF>
