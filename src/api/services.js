@@ -213,8 +213,8 @@ exports.usersAmbulanceDrivers = function(callback) {
 
 };
 
-exports.followUps =  function(callback){
-   api.get(addr+"/api/v1/followups",
+exports.followUps =  function(from, to, callback){
+   api.get(addr+"/api/v1/followups?created_from="+from+"&created_to="+to,
    {
       "content-type": "application/json",
       "Authorization": "Token "+token
@@ -242,9 +242,9 @@ exports.getSubCounties =  function(callback){
     
   );
 }
-exports.mappedGirls = function(callback) {
+exports.mappedGirls = function(from, to, callback) {
   api.get(
-    addr + "/api/v1/girls",
+    addr + "/api/v1/girls?created_from="+from+"&created_to="+to,
     {
       "content-type": "application/json",
       Authorization: "Token " + token
