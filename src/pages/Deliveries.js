@@ -193,22 +193,22 @@ class HealthFacility extends Component {
       return moment(new Date(cell)).format("Do MMM YY hh a");
     }
     deliveryFormatter(cell, row) {
-     // console.log(cell);
-     let delivery = "";
-      if(row.is_mother_alive && row.is_baby_alive){
-          return delivery = "Mother Alive, Baby Alive";
-      }
-      else if(!row.is_mother_alive && row.is_baby_alive){
-          return delivery = "Mother Dead, Baby Alive";
-      }
-      else if(row.is_mother_alive && !row.is_baby_alive){
-          return delivery = "Mother Alive, Baby Still";
-      }
-      else if(row.is_mother_alive && !row.is_baby_alive){
-          return delivery = "Mother Dead, Baby Still";
-      }else{
-          return delivery = "Not recorded";
-      }
+      // console.log(cell);
+      let delivery = "";
+       if(row.mother_alive && row.baby_alive){
+           return delivery = "Mother Alive, Baby Alive";
+       }
+       else if(!row.mother_alive && row.baby_alive){
+           return delivery = "Mother Dead, Baby Alive";
+       }
+       else if(row.mother_alive && !row.baby_alive){
+           return delivery = "Mother Alive, Still Born";
+       }
+       else if(row.mother_alive && !row.baby_alive){
+           return delivery = "Mother Dead, Still Born";
+       }else{
+           return delivery = "Not recorded";
+       }
     }
     familyPlanningFormatter(cell, row) {
       // console.log(cell);
@@ -621,17 +621,17 @@ class Home extends Component {
   deliveryFormatter(cell, row) {
    // console.log(cell);
    let delivery = "";
-    if(row.is_mother_alive && row.is_baby_alive){
+    if(row.mother_alive && row.baby_alive){
         return delivery = "Mother Alive, Baby Alive";
     }
-    else if(!row.is_mother_alive && row.is_baby_alive){
+    else if(!row.mother_alive && row.baby_alive){
         return delivery = "Mother Dead, Baby Alive";
     }
-    else if(row.is_mother_alive && !row.is_baby_alive){
-        return delivery = "Mother Alive, Baby Still";
+    else if(row.mother_alive && !row.baby_alive){
+        return delivery = "Mother Alive, Still Born";
     }
-    else if(row.is_mother_alive && !row.is_baby_alive){
-        return delivery = "Mother Dead, Baby Still";
+    else if(row.mother_alive && !row.baby_alive){
+        return delivery = "Mother Dead, Still Born";
     }else{
         return delivery = "Not recorded";
     }

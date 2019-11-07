@@ -141,7 +141,9 @@ export default class MappedGirls extends Component {
 nameFormatter(cell, row) {
   return row.first_name+" "+row.last_name;
 }
-
+ageFormatter(cell, row) {
+  return moment().diff(row.dob, "years")+" Years";
+}
 search(event) {
   this.setState({ search: event.target.value });
   if (event.target.value.length <= 0) {
@@ -181,12 +183,12 @@ search(event) {
   render() {
     let girls = this.state.girls
     const options = {
-      page: this.state.currentPage,  // which page you want to show as default
-      onPageChange: this.onPageChange,
-      onSortChange: this.onSortChange,
-      onFilterChange: this.onFilterChange,
+      page: 1,  // which page you want to show as default
+      // onPageChange: this.onPageChange,
+      // onSortChange: this.onSortChange,
+      // onFilterChange: this.onFilterChange,
     //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-      sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+      sizePerPage: 20,  // which size per page you want to locate as default
       pageStartIndex: 1, // where to start counting the pages
       paginationSize: 10,
       prePage: 'Prev', // Previous page button text
@@ -236,7 +238,7 @@ search(event) {
               <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>        
               <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>        
               <MenuItem onClick={(e, last_menstruation_date) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>        
-              <MenuItem onClick={(e, dob) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Date of birth</MenuItem>        
+              <MenuItem onClick={(e, dob) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>        
               <MenuItem onClick={(e, voucher_id) => this.updateTable("voucher_id")} eventKey={3.1}> <Check state={this.state.manageColomns.voucher_id} /> Voucher ID</MenuItem>        
             </NavDropdown>
 
@@ -251,10 +253,10 @@ search(event) {
               hover
             //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
               ref='table'
-              remote={true}
+              remote={false}
               headerContainerClass='table-header'
               tableContainerClass='table-responsive table-onScreen'
-              fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+              // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
               pagination={true}
               options={options}
             //   exportCSV
@@ -269,7 +271,7 @@ search(event) {
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataField='education_level'>Education level</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataField='last_menstruation_date'>Marital status</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataField='dob'>Date of birth</TableHeaderColumn>           
+              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>           
               <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataField='voucher_id'>Voucher ID</TableHeaderColumn>           
 
 
