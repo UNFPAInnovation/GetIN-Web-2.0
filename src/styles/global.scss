@@ -502,6 +502,25 @@ Dashboard Cards
   }
 }
 
+// Dashboard charts
+
+.chart-card {
+  border-radius: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
+  background-color: #ffffff;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  margin-left: 10px;
+}
+
+.chart-card .content {
+  padding: 15px 15px 10px 15px;
+}
+
+.chart-card .header {
+  padding: 15px 15px 0;
+}
+
 // Loading data spinner
 .spinner {
   width: 40px;
@@ -539,191 +558,205 @@ Dashboard Cards
 /* Messages section page
 */
 
-.messagesPage{
-    .header-min{
-        height: 50px;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-        span.icon{
-                background-color: rgba(0,0,0,0.05);
-                display: block;
-                height: 40px;
-                width: 40px;
-                border-radius: 50%;
-                float:left;
-                line-height: 40px;
-                vertical-align: middle;
-                svg{
-                    line-height: 40px;
-                    vertical-align: middle;
-                    display: block;
-                    margin: 0 auto;
-                    height: 40px;
-                    width:20px;
-                    color:rgba(0,0,0,0.2)
-                }
-            }
-        .text{
-            display: block;
-                margin: 0 20px;
-                float: left;
-                height: 80px;
-                min-width:100px;
-                max-width: 150px;
-                overflow: hidden;
-                position: relative;
-                span{
-                    display: block;
-                    &.title{
-                        font-weight: 600;
-                    }
-                }
-    }
-}
-    .borderRight{
-        border-right: 1px solid rgba(0,0,0,0.1);
-    }
-    .search{
-        // padding: 20px 10px;
-
+.messagesPage {
+  .header-min {
+    height: 50px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    span.icon {
+      background-color: rgba(0, 0, 0, 0.05);
+      display: block;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      float: left;
+      line-height: 40px;
+      vertical-align: middle;
+      svg {
+        line-height: 40px;
+        vertical-align: middle;
         display: block;
-        overflow: auto;
-        span{
-            line-height: 40px;
-            vertical-align: middle;
-            float:left;
-            margin: 0px !important;
-            svg{
-                height: 40px !important;
-                display: block;
-                // width: 20px;
-                color: #9B9B9B;
-            }
-         }
-        input{
-            height: 40px !important;
-            margin: 0px !important;
-            display: block;
-            float:left;
-            max-width: 200px;
-            border:0px solid #fff !important;
-            // margin-bottom: 0px !important;
-        }
+        margin: 0 auto;
+        height: 40px;
+        width: 20px;
+        color: rgba(0, 0, 0, 0.2);
+      }
     }
-    .messageList{
-        height:60vh;
-        overflow-y:auto;
-        .item{
-            height: 80px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            padding: 10px 0px;
-            overflow: auto;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            &:hover{
-                background: rgba(0,0,0,0.01);
-                text{
-                    &::after{
-                        position: absolute;
-                        bottom: 0;
-                        content: '';
-                        width: 100%;
-                        height: 80%;
-                        background-color: rgba(255,255,255,0) !important;
-                    }
-                }
-            }
-            span.icon{
-                background-color: rgba(0,0,0,0.05);
-                display: block;
-                height: 60px;
-                width: 60px;
-                border-radius: 50%;
-                float:left;
-                line-height: 60px;
-                vertical-align: middle;
-                svg{
-                    line-height: 60px;
-                    vertical-align: middle;
-                    display: block;
-                    margin: 0 auto;
-                    height: 60px;
-                    width:20px;
-                    color:rgba(0,0,0,0.2)
-                }
-            }
-            .text{
-                display: block;
-                margin: 0 20px;
-                float: left;
-                height: 80px;
-                min-width:100px;
-                max-width: 150px;
-                overflow: hidden;
-                position: relative;
-                span{
-                    display: block;
-                    &.title{
-                        font-weight: 600;
-                    }
-                    &.msg{
-                        font-size: 12px;
-                        color:rgba(0,0,0,0.8)
-                    }
-                }
-                &::after{
-                    position: absolute;
-                    bottom: 0;
-                    content: '';
-                    width: 100%;
-                    height: 80%;
-                    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.81) 71%, rgba(255,255,255,1) 100%);
-                    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,0.81) 71%,rgba(255,255,255,1) 100%);
-                    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,0.81) 71%,rgba(255,255,255,1) 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
-                }
-            }
-            .time{
-                font-size: 12px;
-                color:rgba(0,0,0,0.8);
-                float: right;
-            }
+    .text {
+      display: block;
+      margin: 0 20px;
+      float: left;
+      height: 80px;
+      min-width: 100px;
+      max-width: 150px;
+      overflow: hidden;
+      position: relative;
+      span {
+        display: block;
+        &.title {
+          font-weight: 600;
         }
+      }
     }
-}
+  }
+  .borderRight {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .search {
+    // padding: 20px 10px;
 
-.chat{
-    height: 55vh;
-    overflow: auto;
     display: block;
-    position: relative;
-    width: 100%;
-    .chatList{
+    overflow: auto;
+    span {
+      line-height: 40px;
+      vertical-align: middle;
+      float: left;
+      margin: 0px !important;
+      svg {
+        height: 40px !important;
         display: block;
-        margin: 5px 25px 25px 5px;
-        overflow: auto;
-        .text{
-        background: rgba(0,0,0,0.1);
+        // width: 20px;
+        color: #9b9b9b;
+      }
+    }
+    input {
+      height: 40px !important;
+      margin: 0px !important;
+      display: block;
+      float: left;
+      max-width: 200px;
+      border: 0px solid #fff !important;
+      // margin-bottom: 0px !important;
+    }
+  }
+  .messageList {
+    height: 60vh;
+    overflow-y: auto;
+    .item {
+      height: 80px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 10px 0px;
+      overflow: auto;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      &:hover {
+        background: rgba(0, 0, 0, 0.01);
+        text {
+          &::after {
+            position: absolute;
+            bottom: 0;
+            content: '';
+            width: 100%;
+            height: 80%;
+            background-color: rgba(255, 255, 255, 0) !important;
+          }
+        }
+      }
+      span.icon {
+        background-color: rgba(0, 0, 0, 0.05);
         display: block;
-        padding: 20px;
-        
-        float: right;
-        clear:both;
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        float: left;
+        line-height: 60px;
+        vertical-align: middle;
+        svg {
+          line-height: 60px;
+          vertical-align: middle;
+          display: block;
+          margin: 0 auto;
+          height: 60px;
+          width: 20px;
+          color: rgba(0, 0, 0, 0.2);
         }
-        .time{
-            float: right;
-            clear:both;
-            padding: 10px 20px;
-        }
-    }
-}
-.sendSms{
-    input{
-        width:70% !important;
-    }
-    button{
-        width:20%;
+      }
+      .text {
+        display: block;
         margin: 0 20px;
+        float: left;
+        height: 80px;
+        min-width: 100px;
+        max-width: 150px;
+        overflow: hidden;
+        position: relative;
+        span {
+          display: block;
+          &.title {
+            font-weight: 600;
+          }
+          &.msg {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.8);
+          }
+        }
+        &::after {
+          position: absolute;
+          bottom: 0;
+          content: '';
+          width: 100%;
+          height: 80%;
+          background: -moz-linear-gradient(
+            top,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.81) 71%,
+            rgba(255, 255, 255, 1) 100%
+          );
+          background: -webkit-linear-gradient(
+            top,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.81) 71%,
+            rgba(255, 255, 255, 1) 100%
+          );
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.81) 71%,
+            rgba(255, 255, 255, 1) 100%
+          );
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
+        }
+      }
+      .time {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.8);
+        float: right;
+      }
     }
+  }
 }
 
+.chat {
+  height: 55vh;
+  overflow: auto;
+  display: block;
+  position: relative;
+  width: 100%;
+  .chatList {
+    display: block;
+    margin: 5px 25px 25px 5px;
+    overflow: auto;
+    .text {
+      background: rgba(0, 0, 0, 0.1);
+      display: block;
+      padding: 20px;
+
+      float: right;
+      clear: both;
+    }
+    .time {
+      float: right;
+      clear: both;
+      padding: 10px 20px;
+    }
+  }
+}
+.sendSms {
+  input {
+    width: 70% !important;
+  }
+  button {
+    width: 20%;
+    margin: 0 20px;
+  }
+}
