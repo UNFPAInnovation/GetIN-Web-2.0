@@ -384,3 +384,28 @@ exports.Appointments = function(status, from, to, callback) {
     }
   );
 };
+
+
+exports.users = function(callback) {
+  api.get(
+    addr + "/api/v1/users",
+    {
+       "content-type": "application/json",
+       "Authorization": "Token "+token
+   },function(error, response){
+        //callback of the method here
+        console.log("error", error);
+         if(error){
+            console.log(error);
+            return callback(error);
+         }else{
+              if (response.status != 200) {
+                 return callback("Couldnt get users");
+             }
+              else{
+                return callback(null, response.data);
+              }
+            
+         }
+        });
+}
