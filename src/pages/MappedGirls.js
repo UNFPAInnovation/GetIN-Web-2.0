@@ -64,7 +64,7 @@ export default class MappedGirls extends Component {
       girls_copy: [],
       loadingText:"Loading...",
     });
-      service.mappedGirls(function(error, response){
+      service.mappedGirls(this.state.from, this.state.to, function(error, response){
       console.log(response);
         if (error){
             console.log(error);

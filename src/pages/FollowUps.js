@@ -6,6 +6,7 @@ import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 const service = require('../api/services');
+const Fuse = require("fuse.js");
 
 let order = 'desc';
 let startOFDay = new Date();
@@ -23,6 +24,7 @@ export default class FollowUps extends Component {
     this.state = {
       followUps: [],
       followUps_copy:[],
+      search:null,
       isLoaded: false,
       loadingText:"Loading ..",
       status: "All",
@@ -45,7 +47,7 @@ export default class FollowUps extends Component {
         bleeding_heavily:true,
         fever:true,
         swollen_feet:true,
-        next_appointment:false,
+        next_appointment:true,
         follow_date:false
 
       },
@@ -55,9 +57,23 @@ export default class FollowUps extends Component {
       totalDataSize: 0
     }
     this.getData = this.getData.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.search = this.search.bind(this);
   }
   componentDidMount() {
    this.getData();
+  }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+      isLoaded: false
+    }, () =>
+       this.getData()
+    );
   }
   getData() {
       const thisApp = this;
@@ -66,14 +82,16 @@ export default class FollowUps extends Component {
         followUps_copy: [],
       loadingText:"Loading...",
     });
-      service.followUps(function(error, response){
+      service.followUps(this.state.from, this.state.to, function(error, response){
       console.log(response);
         if (error){
             console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
-              followUps:[]
+              followUps:[],
+              followUps_copy:response.results
+
             },
             () => console.log(thisApp.state)
           );
@@ -82,7 +100,8 @@ export default class FollowUps extends Component {
             thisApp.setState(
             {
               isLoaded: true,
-              followUps:response.results
+              followUps:response.results,
+              followUps_copy:response.results
             },
             () => console.log(thisApp.state)
           );
@@ -98,7 +117,7 @@ export default class FollowUps extends Component {
     return row.girl.trimester;
   }
   nextOfKinFormatter(cell, row) {
-    return row.girl.next_of_kin_name+" - "+row.girl.next_of_kin_phone_number;
+    return row.girl.next_of_kin_first_name+" "+row.girl.next_of_kin_last_name+" - "+row.girl.next_of_kin_phone_number;
   }
   getVillageItem(cell, row, item){
     return row.girl.village[item];
@@ -129,7 +148,7 @@ export default class FollowUps extends Component {
 
   }
   ageFormatter(cell, row){
-    return moment().diff(row.girl.dob, 'years');
+    return moment().diff(row.girl.dob, 'years')+" Years";
   }
   dateFormatter(cell){
     console.log(cell);
@@ -138,6 +157,50 @@ export default class FollowUps extends Component {
   }
   enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
+  }
+  search(event) {
+    this.setState({ search: event.target.value });
+    if (event.target.value.length <= 0) {
+      this.setState({
+        followUps: this.state.followUps_copy
+      });
+    } else {
+
+      let options = {
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [
+          "girl.first_name",
+          "girl.last_name",
+          "girl.phone_number",
+          "girl.trimester",
+          "girl.next_of_kin_last_name",
+          "girl.next_of_kin_first_name",
+          "girl.next_of_kin_phone_number",
+          "user.first_name",
+          "user.last_name",
+          "user.gender",
+          "user.village",
+          "user.role",
+          "user.phone",
+          "health_facility",
+          "follow_up_action_taken",
+          "followup_reason"
+
+        ]
+      };
+
+      var fuse = new Fuse(this.state.followUps_copy, options); // "list" is the item array
+      var result = fuse.search(event.target.value);
+      this.setState({
+        followUps: result
+      });
+    }
+
   }
   
   
@@ -149,12 +212,12 @@ export default class FollowUps extends Component {
       false: 'No'
     };
     const options = {
-      page: this.state.currentPage,  // which page you want to show as default
-      onPageChange: this.onPageChange,
-      onSortChange: this.onSortChange,
-      onFilterChange: this.onFilterChange,
-    //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-      sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+      page: 1,  // which page you want to show as default
+        // onPageChange: this.onPageChange,
+        // onSortChange: this.onSortChange,
+        // onFilterChange: this.onFilterChange,
+      //   sizePerPageList: xxx, // you can change the dropdown list for size per page
+        sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
       pageStartIndex: 1, // where to start counting the pages
       paginationSize: 10,
       prePage: 'Prev', // Previous page button text
@@ -170,6 +233,10 @@ export default class FollowUps extends Component {
         </div>
         <div className="col-md-12 bg-white-content">
           <form className="form-inline pull-right">
+            <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
+                </div>
             <div className="form-group">
               <label htmlFor="email">From:</label>
               <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
@@ -210,10 +277,10 @@ export default class FollowUps extends Component {
               striped
               hover
               ref='table'
-              remote={true}
+              remote={false}
               headerContainerClass='table-header'
               tableContainerClass='table-responsive table-onScreen'
-              fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+              // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
               pagination={true}
               options={options}
             //   exportCSV
@@ -230,8 +297,8 @@ export default class FollowUps extends Component {
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")} dataField='education_level'>Education level</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.followup_reason} dataField='followup_reason'>Follow up reason</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataField='next_appointment'>Follow up date</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.action_taken} dataField='action_taken'>Action taken</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.action_taken} dataField='follow_up_action_taken'>Action taken</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} formatExtraData={ YesNoFormat } dataFormat={ this.enumFormatter }  dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.fever} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='fever'>Fever</TableHeaderColumn>
