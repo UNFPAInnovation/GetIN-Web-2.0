@@ -12,6 +12,7 @@ import { Tabs, Tab } from "react-bootstrap";
 import moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
+const Fuse = require("fuse.js");
 const service = require("../api/services");
 
 let order = "desc";
@@ -78,9 +79,11 @@ class HealthFacility extends Component {
       this.state = {
         deliveries: [],
         deliveries_copy: [],
+        delivery_location:"health facility",
         isLoaded: false,
         loadingText: "Loading ..",
         status: "All",
+        search:null,
         from: prevMonthFirstDay,
         to: moment(endOfDay)
           .local()
@@ -109,6 +112,8 @@ class HealthFacility extends Component {
         totalDataSize: 0
       };
       this.getData = this.getData.bind(this);
+      this.handleInputChange = this.handleInputChange.bind(this);
+      this.search = this.search.bind(this);
     }
     componentDidMount() {
       this.getData();
@@ -120,14 +125,15 @@ class HealthFacility extends Component {
         deliveries_copy: [],
         loadingText: "Loading..."
       });
-      service.deliveries(function(error, response) {
+      service.deliveries(this.state.delivery_location, this.state.from, this.state.to, function(error, response) {
         console.log(response);
         if (error) {
           console.log(error);
           thisApp.setState(
             {
               isLoaded: true,
-              deliveries: []
+              deliveries: [],
+              deliveries_copy:[]
             },
             () => console.log(thisApp.state)
           );
@@ -135,7 +141,8 @@ class HealthFacility extends Component {
           thisApp.setState(
             {
               isLoaded: true,
-              deliveries: response.results
+              deliveries: response.results,
+              deliveries_copy:response.results
             },
             () => console.log(thisApp.state)
           );
@@ -223,6 +230,58 @@ class HealthFacility extends Component {
     enumFormatter(cell, row, enumObject) {
       return enumObject[cell];
     }
+    handleInputChange(event) {
+      const target = event.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value,
+        isLoaded: false
+      }, () =>
+         this.getData()
+      );
+    }
+    search(event) {
+      this.setState({ search: event.target.value });
+      if (event.target.value.length <= 0) {
+        this.setState({
+          deliveries: this.state.deliveries_copy
+        });
+      } else {
+  
+        let options = {
+          shouldSort: true,
+          threshold: 0.6,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            "girl.first_name",
+            "girl.last_name",
+            "girl.phone_number",
+            "girl.trimester",
+            "girl.next_of_kin_last_name",
+            "girl.next_of_kin_first_name",
+            "girl.next_of_kin_phone_number",
+            "user.first_name",
+            "user.last_name",
+            "user.gender",
+            "user.village",
+            "user.role",
+            "user.phone",
+          ]
+        };
+
+        var fuse = new Fuse(this.state.deliveries_copy, options); // "list" is the item array
+        var result = fuse.search(event.target.value);
+        this.setState({
+          deliveries: result
+        });
+      }
+  
+    }
   
     render() {
       let deliveries = this.state.deliveries;
@@ -231,22 +290,26 @@ class HealthFacility extends Component {
         false: "No"
       };
       const options = {
-        page: this.state.currentPage, // which page you want to show as default
-        onPageChange: this.onPageChange,
-        onSortChange: this.onSortChange,
-        onFilterChange: this.onFilterChange,
+        page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-        sizePerPage: parseInt(this.state.sizePerPage), // which size per page you want to locate as default
+          sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
         paginationSize: 10,
-        prePage: "Prev", // Previous page button text
-        nextPage: "Next", // Next page button text
-        firstPage: "First", // First page button text
-        paginationPosition: "bottom" // default is bottom, top and both is all available
+        prePage: 'Prev', // Previous page button text
+        nextPage: 'Next', // Next page button text
+        firstPage: 'First', // First page button text
+        paginationPosition: 'bottom'  // default is bottom, top and both is all available
       };
       return (
         <div className="col-md-12 bg-white-content">
           <form className="form-inline pull-right">
+          <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
+                </div>
             <div className="form-group">
               <label htmlFor="email">From:</label>
               <input
@@ -382,10 +445,10 @@ class HealthFacility extends Component {
                 striped
                 hover
                 ref="table"
-                remote={true}
+                remote={false}
                 headerContainerClass="table-header"
                 tableContainerClass="table-responsive table-onScreen"
-                fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                 pagination={true}
                 options={options}
                 //   exportCSV
@@ -504,7 +567,9 @@ class Home extends Component {
     this.state = {
       deliveries: [],
       deliveries_copy: [],
+      delivery_location:"home",
       isLoaded: false,
+      search:null,
       loadingText: "Loading ..",
       status: "All",
       from: prevMonthFirstDay,
@@ -535,6 +600,8 @@ class Home extends Component {
       totalDataSize: 0
     };
     this.getData = this.getData.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.search = this.search.bind(this);
   }
   componentDidMount() {
     this.getData();
@@ -546,14 +613,15 @@ class Home extends Component {
       deliveries_copy: [],
       loadingText: "Loading..."
     });
-    service.deliveries(function(error, response) {
+    service.deliveries(this.state.delivery_location, this.state.from, this.state.to, function(error, response) {
       console.log(response);
       if (error) {
         console.log(error);
         thisApp.setState(
           {
             isLoaded: true,
-            deliveries: []
+            deliveries: [],
+            deliveries_copy:[]
           },
           () => console.log(thisApp.state)
         );
@@ -561,7 +629,8 @@ class Home extends Component {
         thisApp.setState(
           {
             isLoaded: true,
-            deliveries: response.results
+            deliveries: response.results,
+            deliveries_copy:response.results
           },
           () => console.log(thisApp.state)
         );
@@ -649,6 +718,58 @@ class Home extends Component {
   enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
   }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+      isLoaded: false
+    }, () =>
+       this.getData()
+    );
+  }
+  search(event) {
+    this.setState({ search: event.target.value });
+    if (event.target.value.length <= 0) {
+      this.setState({
+        deliveries: this.state.deliveries_copy
+      });
+    } else {
+
+      let options = {
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [
+          "girl.first_name",
+          "girl.last_name",
+          "girl.phone_number",
+          "girl.trimester",
+          "girl.next_of_kin_last_name",
+          "girl.next_of_kin_first_name",
+          "girl.next_of_kin_phone_number",
+          "user.first_name",
+          "user.last_name",
+          "user.gender",
+          "user.village",
+          "user.role",
+          "user.phone",
+        ]
+      };
+
+      var fuse = new Fuse(this.state.deliveries_copy, options); // "list" is the item array
+      var result = fuse.search(event.target.value);
+      this.setState({
+        deliveries: result
+      });
+    }
+
+  }
 
   render() {
     let deliveries = this.state.deliveries;
@@ -657,23 +778,28 @@ class Home extends Component {
       false: "No"
     };
     const options = {
-      page: this.state.currentPage, // which page you want to show as default
-      onPageChange: this.onPageChange,
-      onSortChange: this.onSortChange,
-      onFilterChange: this.onFilterChange,
+      page: 1,  // which page you want to show as default
+        // onPageChange: this.onPageChange,
+        // onSortChange: this.onSortChange,
+        // onFilterChange: this.onFilterChange,
       //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-      sizePerPage: parseInt(this.state.sizePerPage), // which size per page you want to locate as default
+        sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
       pageStartIndex: 1, // where to start counting the pages
       paginationSize: 10,
-      prePage: "Prev", // Previous page button text
-      nextPage: "Next", // Next page button text
-      firstPage: "First", // First page button text
-      paginationPosition: "bottom" // default is bottom, top and both is all available
+      prePage: 'Prev', // Previous page button text
+      nextPage: 'Next', // Next page button text
+      firstPage: 'First', // First page button text
+      paginationPosition: 'bottom'  // default is bottom, top and both is all available
     };
     return (
       <div className="col-md-12 bg-white-content">
         <form className="form-inline pull-right">
+        <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
+                </div>
           <div className="form-group">
+
             <label htmlFor="email">From:</label>
             <input
               name="from"
@@ -808,10 +934,10 @@ class Home extends Component {
               striped
               hover
               ref="table"
-              remote={true}
+              remote={false}
               headerContainerClass="table-header"
               tableContainerClass="table-responsive table-onScreen"
-              fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+              // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
               pagination={true}
               options={options}
               //   exportCSV

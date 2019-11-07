@@ -23,7 +23,7 @@ exports.login = function(data, callback) {
 
 exports.addChew = function(data, callback) {
   api.post(
-    addr + "/api/v1/chews",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -40,7 +40,7 @@ exports.addChew = function(data, callback) {
 };
 exports.addMidwife = function(data, callback) {
   api.post(
-    addr + "/api/v1/midwives",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -57,7 +57,7 @@ exports.addMidwife = function(data, callback) {
 };
 exports.addAmbulance = function(data, callback) {
   api.post(
-    addr + "/api/v1/ambulances",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -265,9 +265,9 @@ exports.mappedGirls = function(from, to, callback) {
     }
   );
 };
-exports.deliveries = function(callback) {
+exports.deliveries = function(delivery_location, from, to, callback) {
    api.get(
-     addr + "/api/v1/deliveries",
+     addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&&created_from="+from+"&created_to="+to,
      {
        "content-type": "application/json",
        Authorization: "Token " + token
@@ -314,7 +314,7 @@ exports.getSubCounties = function(callback) {
 
 exports.getHealthFacilities = function(callback) {
   api.get(
-    addr + "/api/v1/healthfacilitys",
+    addr + "/api/v1/healthfacilities",
     {
       "content-type": "application/json",
       Authorization: "Token " + token
@@ -376,7 +376,7 @@ exports.Appointments = function(status, from, to, callback) {
         return callback(error);
       } else {
         if (response.status != 200) {
-          return callback("Couldnot get parishes");
+          return callback("Couldnot get appointments");
         } else {
           return callback(null, response.data);
         }
@@ -384,3 +384,28 @@ exports.Appointments = function(status, from, to, callback) {
     }
   );
 };
+
+
+exports.users = function(role, callback) {
+  api.get(
+    addr + "/api/v1/users?role="+role,
+    {
+       "content-type": "application/json",
+       "Authorization": "Token "+token
+   },function(error, response){
+        //callback of the method here
+        console.log("error", error);
+         if(error){
+            console.log(error);
+            return callback(error);
+         }else{
+              if (response.status != 200) {
+                 return callback("Couldnt get users");
+             }
+              else{
+                return callback(null, response.data);
+              }
+            
+         }
+        });
+}

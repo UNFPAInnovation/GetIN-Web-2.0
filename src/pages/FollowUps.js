@@ -263,7 +263,7 @@ export default class FollowUps extends Component {
                 <MenuItem onClick={(e, fever) => this.updateTable("fever")} eventKey={3.1}> <Check state={this.state.manageColomns.fever} /> Fever</MenuItem>        
                 <MenuItem onClick={(e, swollen_feet) => this.updateTable("swollen_feet")} eventKey={3.1}> <Check state={this.state.manageColomns.swollen_feet} /> Swollen feet</MenuItem>        
                 <MenuItem onClick={(e, next_appointment) => this.updateTable("next_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Next Appointment</MenuItem>        
-                <MenuItem onClick={(e, follow_date) => this.updateTable("follow_date")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Follow up date</MenuItem>        
+                <MenuItem onClick={(e, follow_date) => this.updateTable("follow_date")} eventKey={3.1}> <Check state={this.state.manageColomns.follow_date} /> Follow up date</MenuItem>        
                     
               </NavDropdown>
 
@@ -297,7 +297,7 @@ export default class FollowUps extends Component {
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")} dataField='education_level'>Education level</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.followup_reason} dataField='followup_reason'>Follow up reason</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.follow_date} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.action_taken} dataField='follow_up_action_taken'>Action taken</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} formatExtraData={ YesNoFormat } dataFormat={ this.enumFormatter }  dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>

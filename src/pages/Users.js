@@ -8,6 +8,7 @@ import { BootstrapTable, TableHeaderColumn, ExportCSVButton } from 'react-bootst
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 const alertifyjs = require('alertifyjs');
 const service = require('../api/services');
+const Fuse = require("fuse.js");
 
 let order = 'desc';
 let startOFDay = new Date();
@@ -143,7 +144,10 @@ export default class Users extends React.Component {
         username:this.state.username,
         email:this.state.email,
         gender:this.state.gender,
-        sub_county:this.state.sub_county
+        sub_county:this.state.sub_county,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:3
       }, function(error, token){
           if (error){
               console.log(error);
@@ -281,11 +285,12 @@ export default class Users extends React.Component {
         super(props);
     
         this.state = {
-            chews: [],
-            chews_copy:[],
+            users: [],
+            users_copy:[],
+            search:null,
             isLoaded: false,
             loadingText:"Loading ..",
-            status: "All",
+            role: 3,
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -304,9 +309,8 @@ export default class Users extends React.Component {
         this.getData = this.getData.bind(this);
         // this.handleInputChange = this.handleInputChange.bind(this);
         this.updateTable = this.updateTable.bind(this);
-        // this.onPageChange = this.onPageChange.bind(this);
-        // this.onSortChange = this.onSortChange.bind(this);
-        // this.onFilterChange = this.onFilterChange.bind(this);
+        this.search = this.search.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
       }
       componentDidMount() {
        this.getData();
@@ -325,18 +329,19 @@ export default class Users extends React.Component {
       getData() {
           const thisApp = this;
           thisApp.setState({
-          chews: [],
-          chews_copy: [],
+          users: [],
+          users_copy: [],
           loadingText:"Loading...",
         });
-          service.usersChew(function(error, response){
+          service.users(this.state.role, function(error, response){
           console.log(response);
             if (error){
                 console.log(error);
                 thisApp.setState(
                 {
                   isLoaded: true,
-                  chews:[]
+                  users:[],
+                  users_copy: [],
                 },
                 () => console.log(thisApp.state)
               );
@@ -345,7 +350,8 @@ export default class Users extends React.Component {
                 thisApp.setState(
                 {
                   isLoaded: true,
-                  chews:response.results
+                  users:response.results,
+                  users_copy: response.results,
                 },
                 () => console.log(thisApp.state)
               );
@@ -354,11 +360,39 @@ export default class Users extends React.Component {
     
       }
       
-    
-    
-        
-        
-   
+      search(event) {
+        this.setState({ search: event.target.value });
+        if (event.target.value.length <= 0) {
+          this.setState({
+            users: this.state.users_copy
+          });
+        } else {
+      
+          let options = {
+            shouldSort: true,
+            threshold: 0.6,
+            location: 0,
+            distance: 100,
+            maxPatternLength: 32,
+            minMatchCharLength: 1,
+            keys: [
+              "first_name",
+              "last_name",
+              "phone_number",
+              "email",
+              "phone"
+            ]
+          };
+      
+          var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
+          var result = fuse.search(event.target.value);
+          this.setState({
+            users: result
+          });
+        }
+      
+      }
+
       updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
@@ -379,19 +413,31 @@ export default class Users extends React.Component {
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
       }
+      handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value,
+          isLoaded: false
+        }, () =>
+           this.getData()
+        );
+      }
       render() {
-        let chews = this.state.chews
+        let users = this.state.users
   
     
        
     
         const options = {
-          page: this.state.currentPage,  // which page you want to show as default
-          onPageChange: this.onPageChange,
-          onSortChange: this.onSortChange,
-          onFilterChange: this.onFilterChange,
+          page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-          sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+          sizePerPage: 20,  // which size per page you want to locate as default
           pageStartIndex: 1, // where to start counting the pages
           paginationSize: 10,
           prePage: 'Prev', // Previous page button text
@@ -405,15 +451,10 @@ export default class Users extends React.Component {
             <div className="col-md-12">
             <br className="clear-both"/>
               <form className="form-inline pull-right">
-                <div className="form-group">
-                  <label htmlFor="email">From:</label>
-                  <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
+              <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="email">To:</label>
-                  <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
-                </div>
-    
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
@@ -428,15 +469,15 @@ export default class Users extends React.Component {
     
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
-                <BootstrapTable data={chews}
+                <BootstrapTable data={users}
                   striped
                   hover
                 //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                   ref='table'
-                  remote={true}
+                  remote={false}
                   headerContainerClass='table-header'
                   tableContainerClass='table-responsive table-onScreen'
-                  fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                  // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                   pagination={true}
                   options={options}
                 //   exportCSV
@@ -471,11 +512,13 @@ export default class Users extends React.Component {
         super(props);
     
         this.state = {
-            midwives: [],
-            midwives_copy:[],
+          users: [],
+          users_copy:[],
+          search:null,
             isLoaded: false,
             loadingText:"Loading ..",
             status: "All",
+            role:4,
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -494,9 +537,8 @@ export default class Users extends React.Component {
         this.getData = this.getData.bind(this);
         // this.handleInputChange = this.handleInputChange.bind(this);
         this.updateTable = this.updateTable.bind(this);
-        // this.onPageChange = this.onPageChange.bind(this);
-        // this.onSortChange = this.onSortChange.bind(this);
-        // this.onFilterChange = this.onFilterChange.bind(this);
+        this.search = this.search.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
       }
       componentDidMount() {
        this.getData();
@@ -512,38 +554,71 @@ export default class Users extends React.Component {
     //     });
     //   }
     
-      getData() {
-          const thisApp = this;
-          thisApp.setState({
-            midwives: [],
-            midwives_copy: [],
-          loadingText:"Loading...",
-        });
-          service.usersMidwives(function(error, response){
-          console.log(response);
-            if (error){
-                console.log(error);
-                thisApp.setState(
-                {
-                  isLoaded: true,
-                  midwives:[]
-                },
-                () => console.log(thisApp.state)
-              );
-              }
-              else{
-                thisApp.setState(
-                {
-                  isLoaded: true,
-                  midwives:response.results
-                },
-                () => console.log(thisApp.state)
-              );
-              }
-        });
-    
-      }
-      
+    getData() {
+      const thisApp = this;
+      thisApp.setState({
+      users: [],
+      users_copy: [],
+      loadingText:"Loading...",
+    });
+      service.users(this.state.role, function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoaded: true,
+              users:[],
+              users_copy: [],
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoaded: true,
+              users:response.results,
+              users_copy: response.results,
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+    });
+
+  }
+  search(event) {
+    this.setState({ search: event.target.value });
+    if (event.target.value.length <= 0) {
+      this.setState({
+        users: this.state.users_copy
+      });
+    } else {
+  
+      let options = {
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [
+          "first_name",
+          "last_name",
+          "phone_number",
+          "email",
+          "phone"
+        ]
+      };
+  
+      var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
+      var result = fuse.search(event.target.value);
+      this.setState({
+        users: result
+      });
+    }
+  
+  }
     
     
         
@@ -569,19 +644,31 @@ export default class Users extends React.Component {
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
       }
+      handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value,
+          isLoaded: false
+        }, () =>
+           this.getData()
+        );
+      }
       render() {
-        let midwives = this.state.midwives
+        let users = this.state.users;
   
     
        
     
         const options = {
-          page: this.state.currentPage,  // which page you want to show as default
-          onPageChange: this.onPageChange,
-          onSortChange: this.onSortChange,
-          onFilterChange: this.onFilterChange,
+          page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-          sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+          sizePerPage: 20,  // which size per page you want to locate as default
           pageStartIndex: 1, // where to start counting the pages
           paginationSize: 10,
           prePage: 'Prev', // Previous page button text
@@ -595,13 +682,9 @@ export default class Users extends React.Component {
             <div className="col-md-12">
             <br className="clear-both"/>
               <form className="form-inline pull-right">
-                <div className="form-group">
-                  <label htmlFor="email">From:</label>
-                  <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">To:</label>
-                  <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
+              <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
@@ -618,15 +701,15 @@ export default class Users extends React.Component {
     
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
-                <BootstrapTable data={midwives}
+                <BootstrapTable data={users}
                   striped
                   hover
                 //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                   ref='table'
-                  remote={true}
+                  remote={false}
                   headerContainerClass='table-header'
                   tableContainerClass='table-responsive table-onScreen'
-                  fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                  // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                   pagination={true}
                   options={options}
                 //   exportCSV
@@ -660,12 +743,14 @@ export default class Users extends React.Component {
         super(props);
     
         this.state = {
-            ambulance_drivers: [],
-            ambulance_drivers_copy:[],
+          users: [],
+          users_copy:[],
+          search:null,
             isLoaded: false,
             loadingText:"Loading ..",
             status: "All",
             from: prevMonthFirstDay,
+            role:5,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
             manageColomns: {
@@ -684,60 +769,80 @@ export default class Users extends React.Component {
         this.getData = this.getData.bind(this);
         // this.handleInputChange = this.handleInputChange.bind(this);
         this.updateTable = this.updateTable.bind(this);
-        // this.onPageChange = this.onPageChange.bind(this);
-        // this.onSortChange = this.onSortChange.bind(this);
-        // this.onFilterChange = this.onFilterChange.bind(this);
+        this.search = this.search.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
       }
       componentDidMount() {
        this.getData();
       }
-    //   onPageChange(page, sizePerPage) {
-    //     console.log("Page:" + page + " sizePerPage " + sizePerPage);
-    //     const currentIndex = (page - 1) * sizePerPage;
-    //     this.getData("api/jobs?records=" + page + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + sizePerPage)
-    //     this.setState({
-    //       currentPage: page,
-    //       isLoaded: false,
-    //       sizePerPage: sizePerPage
-    //     });
-    //   }
     
-      getData() {
-          const thisApp = this;
-          thisApp.setState({
-            midwives: [],
-            midwives_copy: [],
-          loadingText:"Loading...",
-        });
-          service.usersAmbulanceDrivers(function(error, response){
-          console.log(response);
-            if (error){
-                console.log(error);
-                thisApp.setState(
-                {
-                  isLoaded: true,
-                  ambulance_drivers:[]
-                },
-                () => console.log(thisApp.state)
-              );
-              }
-              else{
-                thisApp.setState(
-                {
-                  isLoaded: true,
-                  ambulance_drivers:response.results
-                },
-                () => console.log(thisApp.state)
-              );
-              }
-        });
     
+    getData() {
+      const thisApp = this;
+      thisApp.setState({
+      users: [],
+      users_copy: [],
+      loadingText:"Loading...",
+    });
+      service.users(this.state.role, function(error, response){
+      console.log(response);
+        if (error){
+            console.log(error);
+            thisApp.setState(
+            {
+              isLoaded: true,
+              users:[],
+              users_copy: [],
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+          else{
+            thisApp.setState(
+            {
+              isLoaded: true,
+              users:response.results,
+              users_copy: response.results,
+            },
+            () => console.log(thisApp.state)
+          );
+          }
+    });
+
+  }
+
+    search(event) {
+      this.setState({ search: event.target.value });
+      if (event.target.value.length <= 0) {
+        this.setState({
+          users: this.state.users_copy
+        });
+      } else {
+    
+        let options = {
+          shouldSort: true,
+          threshold: 0.6,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            "first_name",
+            "last_name",
+            "phone_number",
+            "email",
+            "phone"
+          ]
+        };
+    
+        var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
+        var result = fuse.search(event.target.value);
+        this.setState({
+          users: result
+        });
       }
-      
     
-    
-        
-        
+    }
    
       updateTable(colomn) {
         //make a copy of state
@@ -759,19 +864,31 @@ export default class Users extends React.Component {
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
       }
+      handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value,
+          isLoaded: false
+        }, () =>
+           this.getData()
+        );
+      }
       render() {
-        let ambulance_drivers = this.state.ambulance_drivers
+        let users = this.state.users
   
     
        
     
         const options = {
-          page: this.state.currentPage,  // which page you want to show as default
-          onPageChange: this.onPageChange,
-          onSortChange: this.onSortChange,
-          onFilterChange: this.onFilterChange,
+          page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-          sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+          sizePerPage: 20,  // which size per page you want to locate as default
           pageStartIndex: 1, // where to start counting the pages
           paginationSize: 10,
           prePage: 'Prev', // Previous page button text
@@ -779,19 +896,14 @@ export default class Users extends React.Component {
           firstPage: 'First', // First page button text
           paginationPosition: 'bottom'  // default is bottom, top and both is all available
         };
-
         return (
             <div>
             <div className="col-md-12">
             <br className="clear-both"/>
               <form className="form-inline pull-right">
-                <div className="form-group">
-                  <label htmlFor="email">From:</label>
-                  <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">To:</label>
-                  <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
+              <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
@@ -809,7 +921,7 @@ export default class Users extends React.Component {
     
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
-                <BootstrapTable data={ambulance_drivers}
+                <BootstrapTable data={users}
                   striped
                   hover
                 //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
@@ -903,7 +1015,10 @@ export default class Users extends React.Component {
         username:this.state.username,
         email:this.state.email,
         gender:this.state.gender,
-        health_facility:this.state.health_facility
+        health_facility:this.state.health_facility,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:4
       }, function(error, token){
           if (error){
               console.log(error);
@@ -1079,7 +1194,10 @@ export default class Users extends React.Component {
         email:this.state.email,
         gender:this.state.gender,
         parish:this.state.parish,
-        number_place:this.state.number_place
+        number_place:this.state.number_place,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:5
       }, function(error, token){
           if (error){
               console.log(error);
