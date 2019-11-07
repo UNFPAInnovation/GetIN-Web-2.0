@@ -314,7 +314,7 @@ exports.getSubCounties = function(callback) {
 
 exports.getHealthFacilities = function(callback) {
   api.get(
-    addr + "/api/v1/healthfacilitys",
+    addr + "/api/v1/healthfacilities",
     {
       "content-type": "application/json",
       Authorization: "Token " + token
@@ -376,7 +376,7 @@ exports.Appointments = function(status, from, to, callback) {
         return callback(error);
       } else {
         if (response.status != 200) {
-          return callback("Couldnot get parishes");
+          return callback("Couldnot get appointments");
         } else {
           return callback(null, response.data);
         }
