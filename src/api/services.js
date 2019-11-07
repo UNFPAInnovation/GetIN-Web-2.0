@@ -23,7 +23,7 @@ exports.login = function(data, callback) {
 
 exports.addChew = function(data, callback) {
   api.post(
-    addr + "/api/v1/chews",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -40,7 +40,7 @@ exports.addChew = function(data, callback) {
 };
 exports.addMidwife = function(data, callback) {
   api.post(
-    addr + "/api/v1/midwives",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -57,7 +57,7 @@ exports.addMidwife = function(data, callback) {
 };
 exports.addAmbulance = function(data, callback) {
   api.post(
-    addr + "/api/v1/ambulances",
+    addr + "/api/v1/users",
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
@@ -386,9 +386,9 @@ exports.Appointments = function(status, from, to, callback) {
 };
 
 
-exports.users = function(callback) {
+exports.users = function(role, callback) {
   api.get(
-    addr + "/api/v1/users",
+    addr + "/api/v1/users?role="+role,
     {
        "content-type": "application/json",
        "Authorization": "Token "+token

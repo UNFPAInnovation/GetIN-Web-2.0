@@ -144,7 +144,10 @@ export default class Users extends React.Component {
         username:this.state.username,
         email:this.state.email,
         gender:this.state.gender,
-        sub_county:this.state.sub_county
+        sub_county:this.state.sub_county,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:3
       }, function(error, token){
           if (error){
               console.log(error);
@@ -287,7 +290,7 @@ export default class Users extends React.Component {
             search:null,
             isLoaded: false,
             loadingText:"Loading ..",
-            status: "All",
+            role: 3,
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -330,7 +333,7 @@ export default class Users extends React.Component {
           users_copy: [],
           loadingText:"Loading...",
         });
-          service.users(function(error, response){
+          service.users(this.state.role, function(error, response){
           console.log(response);
             if (error){
                 console.log(error);
@@ -515,6 +518,7 @@ export default class Users extends React.Component {
             isLoaded: false,
             loadingText:"Loading ..",
             status: "All",
+            role:4,
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -557,7 +561,7 @@ export default class Users extends React.Component {
       users_copy: [],
       loadingText:"Loading...",
     });
-      service.users(function(error, response){
+      service.users(this.state.role, function(error, response){
       console.log(response);
         if (error){
             console.log(error);
@@ -746,6 +750,7 @@ export default class Users extends React.Component {
             loadingText:"Loading ..",
             status: "All",
             from: prevMonthFirstDay,
+            role:5,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
             manageColomns: {
@@ -779,7 +784,7 @@ export default class Users extends React.Component {
       users_copy: [],
       loadingText:"Loading...",
     });
-      service.users(function(error, response){
+      service.users(this.state.role, function(error, response){
       console.log(response);
         if (error){
             console.log(error);
@@ -1010,7 +1015,10 @@ export default class Users extends React.Component {
         username:this.state.username,
         email:this.state.email,
         gender:this.state.gender,
-        health_facility:this.state.health_facility
+        health_facility:this.state.health_facility,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:4
       }, function(error, token){
           if (error){
               console.log(error);
@@ -1186,7 +1194,10 @@ export default class Users extends React.Component {
         email:this.state.email,
         gender:this.state.gender,
         parish:this.state.parish,
-        number_place:this.state.number_place
+        number_place:this.state.number_place,
+        password:this.state.password,
+        phone:this.state.phone_number,
+        role:5
       }, function(error, token){
           if (error){
               console.log(error);
