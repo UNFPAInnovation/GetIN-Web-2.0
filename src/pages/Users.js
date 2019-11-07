@@ -116,8 +116,8 @@ export default class Users extends React.Component {
         gender:null,
         email:null,
         phone_number:null,
-        sub_county:null,
-        sub_counties:[],
+        village:null,
+        villages:[],
         loading: false
       }
       this.handleChange = this.handleChange.bind(this);
@@ -138,13 +138,13 @@ export default class Users extends React.Component {
         loading:true
       });
       alertifyjs.message('Adding CHEW..', 2, function(){  console.log('dismissed'); });
-      service.addChew({
+      service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
         username:this.state.username,
         email:this.state.email,
         gender:this.state.gender,
-        sub_county:this.state.sub_county,
+        village:this.state.village,
         password:this.state.password,
         phone:this.state.phone_number,
         role:3
@@ -165,21 +165,21 @@ export default class Users extends React.Component {
             }
       });
     }
-    getSubcounties() {
+    getVillages() {
       const thisApp = this;
       thisApp.setState({
       sub_counties: [],
       sub_counties_copy: [],
       loadingText:"Loading...",
     });
-      service.getSubCounties(function(error, response){
+      service.getVillages(function(error, response){
       console.log(response);
         if (error){
             console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
-              chews:[]
+              villages:[]
             },
             () => console.log(thisApp.state)
           );
@@ -188,7 +188,7 @@ export default class Users extends React.Component {
             thisApp.setState(
             {
               isLoaded: true,
-              sub_counties:response.results
+              villages:response.results
             },
             () => console.log(thisApp.state)
           );
@@ -197,7 +197,7 @@ export default class Users extends React.Component {
 
   }
     componentDidMount(){
-      this.getSubcounties();
+      this.getVillages();
     }
     render(){
       return(
@@ -252,12 +252,12 @@ export default class Users extends React.Component {
         <div className="col-md-12">
                 <br className="clear-both"/>
                 <div className="form-group col-md-6">
-                <label>Subcounty</label>
-                    <select className="form-control" name="sub_county" onChange={this.handleChange} value={this.state.sub_county}>
+                <label>Villages</label>
+                    <select className="form-control" name="sub_county" onChange={this.handleChange} value={this.state.village}>
                     <option defaultValue value={null}>
-                      Select Subcounty
+                      Select Village
                         </option>
-                    { this.state.sub_counties.map( (value, key)=>(
+                    { this.state.villages.map( (value, key)=>(
                       <option key={key} value={value.id}>
                       {value.name}
                         </option>
@@ -1009,7 +1009,7 @@ export default class Users extends React.Component {
         loading:true
       });
       alertifyjs.message('Adding Midwife..', 2, function(){  console.log('dismissed'); });
-      service.addMidwife({
+      service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
         username:this.state.username,
@@ -1187,7 +1187,7 @@ export default class Users extends React.Component {
         loading:true
       });
       alertifyjs.message('Adding Ambulance..', 2, function(){  console.log('dismissed'); });
-      service.addAmbulance({
+      service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
         username:this.state.username,

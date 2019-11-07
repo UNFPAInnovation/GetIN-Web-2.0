@@ -20,7 +20,23 @@ exports.login = function(data, callback) {
     }
   );
 };
-
+exports.addUser = function(data, callback) {
+  api.post(
+    addr + "/auth/register/",
+    { "content-type": "application/json", Authorization: "Token " + token },
+    data,
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        return callback(null, response);
+      }
+    }
+  );
+};
 exports.addChew = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
@@ -235,13 +251,29 @@ exports.followUps =  function(from, to, callback){
         }
        });
 }
-exports.getSubCounties =  function(callback){
-   api.get(addr+"/api/v1/subcountys",
-   {
+exports.getVillages = function(callback) {
+  api.get(
+    addr + "/api/v1/villages",
+    {
+      "content-type": "application/json",
+      Authorization: "Token " + token
+    },
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Couldnot get subcounties");
+        } else {
+          return callback(null, response.data);
+        }
       }
-    
+    }
   );
-}
+};
 exports.mappedGirls = function(from, to, callback) {
   api.get(
     addr + "/api/v1/girls?created_from="+from+"&created_to="+to,
