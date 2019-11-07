@@ -5,6 +5,7 @@ import { faFemale } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn, ExportCSVButton } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+const Fuse = require("fuse.js");
 const service = require('../api/services');
 
 let order = 'desc';
@@ -38,7 +39,10 @@ export default class MappedGirls extends Component {
         next_of_kin_name:true,
         education_level:true,
         marital_status:false,
-        last_menstruation_date:true
+        last_menstruation_date:true,
+        voucher_id:true,
+        parish:true,
+        subcounty:true
       },
       // remote pagination
       currentPage: 1,
@@ -46,6 +50,8 @@ export default class MappedGirls extends Component {
       totalDataSize: 0
     }
     this.getData = this.getData.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.search = this.search.bind(this);
   }
   componentDidMount() {
    this.getData();
@@ -65,7 +71,9 @@ export default class MappedGirls extends Component {
             thisApp.setState(
             {
               isLoaded: true,
-              girls:[]
+              girls:[],
+              girls_copy:[],
+              isLoaded: false
             },
             () => console.log(thisApp.state)
           );
@@ -74,13 +82,26 @@ export default class MappedGirls extends Component {
             thisApp.setState(
             {
               isLoaded: true,
-              girls:response.results
+              girls:response.results,
+              girls_copy:response.results
             },
             () => console.log(thisApp.state)
           );
           }
     });
 
+  }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+      isLoaded: false
+    }, () =>
+       this.getData()
+    );
   }
 
   updateTable(colomn) {
@@ -107,20 +128,67 @@ export default class MappedGirls extends Component {
     return row.village[item];
     
   }
+  getSubCountyItem(cell, row, item){
+    return row.village && row.village.parish && row.village.parish.subcounty && row.village.parish.subcounty[item];
+  }
+  getParishItem(cell, row, item){
+    return row.village.parish && row.village.parish[item];
+  }
   getGirlItem(cell, row, item){
     return row[item];
   
 }
+nameFormatter(cell, row) {
+  return row.first_name+" "+row.last_name;
+}
+ageFormatter(cell, row) {
+  return moment().diff(row.dob, "years")+" Years";
+}
+search(event) {
+  this.setState({ search: event.target.value });
+  if (event.target.value.length <= 0) {
+    this.setState({
+      girls: this.state.girls_copy
+    });
+  } else {
+
+    let options = {
+      shouldSort: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "first_name",
+        "last_name",
+        "phone_number",
+        "trimester",
+        "next_of_kin_last_name",
+        "next_of_kin_first_name",
+        "next_of_kin_phone_number"
+      ]
+    };
+
+    var fuse = new Fuse(this.state.girls_copy, options); // "list" is the item array
+    var result = fuse.search(event.target.value);
+    this.setState({
+      girls: result
+    });
+  }
+
+}
+
 
   render() {
     let girls = this.state.girls
     const options = {
-      page: this.state.currentPage,  // which page you want to show as default
-      onPageChange: this.onPageChange,
-      onSortChange: this.onSortChange,
-      onFilterChange: this.onFilterChange,
+      page: 1,  // which page you want to show as default
+      // onPageChange: this.onPageChange,
+      // onSortChange: this.onSortChange,
+      // onFilterChange: this.onFilterChange,
     //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-      sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+      sizePerPage: 20,  // which size per page you want to locate as default
       pageStartIndex: 1, // where to start counting the pages
       paginationSize: 10,
       prePage: 'Prev', // Previous page button text
@@ -146,6 +214,10 @@ export default class MappedGirls extends Component {
         </div>
         <div className="col-md-12 bg-white-content">
           <form className="form-inline pull-right">
+          <div className="form-group">
+                  <label htmlFor="email">Search:</label>
+                  <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
+                </div>
             <div className="form-group">
               <label htmlFor="email">From:</label>
               <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
@@ -159,12 +231,15 @@ export default class MappedGirls extends Component {
               <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
               <MenuItem onClick={(e, phone_number) => this.updateTable("phone_number")} eventKey={3.1}> <Check state={this.state.manageColomns.phone_number} /> Phone number</MenuItem>        
               <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
+              <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>        
+              <MenuItem onClick={(e, subcounty) => this.updateTable("subcounty")} eventKey={3.1}> <Check state={this.state.manageColomns.subcounty} /> Sub county</MenuItem>        
               <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>        
               <MenuItem onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin_name")} eventKey={3.1}> <Check state={this.state.manageColomns.next_of_kin_name} /> Next of kin</MenuItem>        
               <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>        
               <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>        
-              <MenuItem onClick={(e, name) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>        
-              <MenuItem onClick={(e, name) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Date of birth</MenuItem>        
+              <MenuItem onClick={(e, last_menstruation_date) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>        
+              <MenuItem onClick={(e, dob) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>        
+              <MenuItem onClick={(e, voucher_id) => this.updateTable("voucher_id")} eventKey={3.1}> <Check state={this.state.manageColomns.voucher_id} /> Voucher ID</MenuItem>        
             </NavDropdown>
 
           </form>
@@ -178,10 +253,10 @@ export default class MappedGirls extends Component {
               hover
             //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
               ref='table'
-              remote={true}
+              remote={false}
               headerContainerClass='table-header'
               tableContainerClass='table-responsive table-onScreen'
-              fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+              // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
               pagination={true}
               options={options}
             //   exportCSV
@@ -189,12 +264,15 @@ export default class MappedGirls extends Component {
               <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
               <TableHeaderColumn dataSort={true} isKey dataField='phone_number'>Phone number</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.village}  dataFormat ={(cell, row, item)=>this.getVillageItem(cell, row, "name")} dataField='village'>Village</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.parish}  dataFormat ={(cell, row, item)=>this.getParishItem(cell, row, "name")} dataField='parish'>Parish</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.subcounty}  dataFormat ={(cell, row, item)=>this.getSubCountyItem(cell, row, "name")} dataField='subcounty'>Sub county</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataField='trimester'>Trimester</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataFormat ={this.nextOfKinFormatter} dataField='next_of_kin_name'>Next of Kin</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataField='education_level'>Education level</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataField='last_menstruation_date'>Marital status</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataField='dob'>Date of birth</TableHeaderColumn>           
+              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>           
+              <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataField='voucher_id'>Voucher ID</TableHeaderColumn>           
 
 
             </BootstrapTable>

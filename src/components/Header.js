@@ -10,7 +10,7 @@ export default class Header extends Component{
     constructor(props){
       super(props);
       this.state = {
-        loggedInAs:sessionStorage.getItem("username"),
+        loggedInAs:"",
         show:true
       }
     }
@@ -19,6 +19,11 @@ export default class Header extends Component{
       sessionStorage.removeItem('username');
       alertifyjs.message('Loggin out', 5, function(){  console.log('dismissed'); });
       window.location.href="/";
+    }
+    componentDidMount(){
+      this.setState({
+        loggedInAs:sessionStorage.getItem("username"),
+      })
     }
     render(){
         return(

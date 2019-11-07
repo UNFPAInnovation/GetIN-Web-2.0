@@ -26,7 +26,7 @@ export  default class Login extends Component {
     service.login(data, function(error, token){
         if (error){
             console.log(error);
-            alertifyjs.error('Oops! That email / password combination is not valid.', 5, function(){  console.log('dismissed'); });
+            alertifyjs.error('Email / password combination is not valid.', 5, function(){  console.log('dismissed'); });
           }
           else{
            sessionStorage.removeItem('token');

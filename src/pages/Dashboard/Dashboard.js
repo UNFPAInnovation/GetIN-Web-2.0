@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import moment from 'moment';
 
+// React bootstrap components
+import { Grid, Row, Col } from 'react-bootstrap';
+
 // Font Awesome components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
@@ -89,38 +92,16 @@ export default function Dashboard() {
               <DeliveriesCard data={deliveries && deliveries} />
               <FollowUpsCard data={followups && followups} />
             </div>
-            <br className='clear-both' />
-            <br className='clear-both' />
-            <div className='col-md-12 bg-white-content'>
-              <div className='col-md-4 '>
-                <h5>Age group of mapped girls</h5>
-                <AgeGroupOfMappedGirlsBarChart
-                  data={mappingEncountersStats && mappingEncountersStats}
-                />
-              </div>
-              <div className='col-md-8'>
-                <h5>Mapped Girls per subcounty</h5>
-                {/* <div className="col-md-12">
-              <MappedGirlsBySubCounty />
-            </div> */}
-              </div>
-              <br className='clear-both' />
-              <br className='clear-both' />
-              <div className='col-md-12'>
-                <h5>Deliveries per subcounty</h5>
-                {/* <div className="col-md-12">
-              <Deliveries />
-            </div> */}
-              </div>
-              <br className='clear-both' />
-              <br className='clear-both' />
-              <div className='col-md-12'>
-                <h5>Family Planning Methods used in Arua District</h5>
-                {/* <div className="col-md-12">
-              <FamilyPlanning />
-            </div> */}
-              </div>
-            </div>
+            <Grid fluid>
+              <Row>
+                <Col md={4}>
+                  <AgeGroupOfMappedGirlsBarChart
+                    data={mappingEncountersStats && mappingEncountersStats}
+                  />
+                </Col>
+                <Col md={8}></Col>
+              </Row>
+            </Grid>
           </>
         )}
       </div>

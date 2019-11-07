@@ -56,7 +56,7 @@ class App extends Component {
         sessionStorage.removeItem("token");
       } else {
         sessionStorage.removeItem("username");
-        sessionStorage.setItem("username", response.username);
+        sessionStorage.setItem("username", response.data && response.data.username && response.data.username);
         thisApp.setState(
           {
             isLoggedIn: true

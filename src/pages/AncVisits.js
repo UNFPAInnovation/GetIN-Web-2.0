@@ -101,11 +101,11 @@ export default class AncVisits extends React.Component {
             search:null,
             manageColomns: {
               name:false,
-              vht:false,
+              vht:true,
               health_facility:false,
               trimester:false,
               missed_appointments:false,
-              recently_missed_appointment:false
+              date:false
             },
             // remote pagination
             currentPage: 1,
@@ -253,12 +253,12 @@ export default class AncVisits extends React.Component {
         let data_table = this.state.appointments;
 
         const options = {
-          page: this.state.currentPage,  // which page you want to show as default
-          onPageChange: this.onPageChange,
-          onSortChange: this.onSortChange,
-          onFilterChange: this.onFilterChange,
-        //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-          sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+          page: 1,  // which page you want to show as default
+            // onPageChange: this.onPageChange,
+            // onSortChange: this.onSortChange,
+            // onFilterChange: this.onFilterChange,
+          //   sizePerPageList: xxx, // you can change the dropdown list for size per page
+            sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
           pageStartIndex: 1, // where to start counting the pages
           paginationSize: 10,
           prePage: 'Prev', // Previous page button text
@@ -290,8 +290,8 @@ export default class AncVisits extends React.Component {
                   <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
                   <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
                   <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
-                  <MenuItem onClick={(e, missed_appointments) => this.updateTable("missed_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.missed_appointments} /> Missed Appointments</MenuItem>             
-                  <MenuItem onClick={(e, recently_missed_appointment) => this.updateTable("recently_missed_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.recently_missed_appointment} /> Recently Missed Appointment</MenuItem>             
+                  {/* <MenuItem onClick={(e, missed_appointments) => this.updateTable("missed_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.missed_appointments} /> Missed Appointments</MenuItem>              */}
+                  <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
                 </NavDropdown>
     
               </form>
@@ -302,21 +302,21 @@ export default class AncVisits extends React.Component {
                   hover
                 //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                   ref='table'
-                  remote={true}
+                  remote={false}
                   headerContainerClass='table-header'
                   tableContainerClass='table-responsive table-onScreen'
-                  fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                  // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                   pagination={true}
                   options={options}
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn isKey={true} hidden={true} dataSort={true} dataField='id'>#</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.missed_appointments} dataSort={true} dataField='missed_appointments'>Missed Appointments</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.recently_missed_appointment} dataSort={true} dataField='recently_missed_appointment'>Recently Missed Appointment</TableHeaderColumn>
+                  {/* <TableHeaderColumn hidden={this.state.manageColomns.missed_appointments} dataSort={true} dataField='missed_appointments'>Missed Appointments</TableHeaderColumn> */}
+                  <TableHeaderColumn hidden={this.state.manageColomns.data} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
                 </BootstrapTable>
                
               ) : (
@@ -345,11 +345,11 @@ export default class AncVisits extends React.Component {
           search:null,
           manageColomns: {
             name:false,
-            vht:false,
+            vht:true,
             health_facility:false,
             trimester:false,
             remaining_visits:false,
-            next_appointment:false
+            date:false
           },
           // remote pagination
           currentPage: 1,
@@ -418,6 +418,9 @@ export default class AncVisits extends React.Component {
     }
     nameFormatter(cell, row) {
       return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
+    }
+    remainingVisitsFormatter(cell, row) {
+      return row.girl.pending_visits;
     }
     chewFormatter(cell, row) {
       return row.user.first_name+" "+row.user.last_name+" - "+row.user.phone;
@@ -491,12 +494,12 @@ export default class AncVisits extends React.Component {
      
   
       const options = {
-        page: this.state.currentPage,  // which page you want to show as default
-        onPageChange: this.onPageChange,
-        onSortChange: this.onSortChange,
-        onFilterChange: this.onFilterChange,
-      //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-        sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+        page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
+        //   sizePerPageList: xxx, // you can change the dropdown list for size per page
+          sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
         paginationSize: 10,
         prePage: 'Prev', // Previous page button text
@@ -529,7 +532,7 @@ export default class AncVisits extends React.Component {
                 <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
                 <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
                 <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>             
-                <MenuItem onClick={(e, next_appointment) => this.updateTable("next_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Next Appointment</MenuItem>             
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
               </NavDropdown>
   
             </form>
@@ -540,21 +543,21 @@ export default class AncVisits extends React.Component {
                 hover
               //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                 ref='table'
-                remote={true}
+                remote={false}
                 headerContainerClass='table-header'
                 tableContainerClass='table-responsive table-onScreen'
-                fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                fetchInfo={{ dataTotalSize: data_table.length }}
                 pagination={true}
                 options={options}
               //   exportCSV
                 pagination>
                 <TableHeaderColumn isKey={true} hidden={true} dataSort={true} dataField='id'>#</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataField='pending_visits'>Remaining Visits</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataSort={true} dataFormat={this.dateFormatter} dataField='next_appointment'>Next Appointment</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataFormat={this.remainingVisitsFormatter} dataField='pending_visits'>Remaining Visits</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
   
               </BootstrapTable>
              
@@ -584,11 +587,11 @@ export default class AncVisits extends React.Component {
           showCoords: true,
           manageColomns: {
             name:false,
-            vht:false,
+            vht:true,
             health_facility:false,
             trimester:false,
             attended_appointments:false,
-            next_appointment:false
+            date:false
           },
           // remote pagination
           currentPage: 1,
@@ -735,12 +738,12 @@ export default class AncVisits extends React.Component {
       let data_table =this.state.appointments;    
   
       const options = {
-        page: this.state.currentPage,  // which page you want to show as default
-        onPageChange: this.onPageChange,
-        onSortChange: this.onSortChange,
-        onFilterChange: this.onFilterChange,
-      //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-        sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+        page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
+        //   sizePerPageList: xxx, // you can change the dropdown list for size per page
+          sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
         paginationSize: 10,
         prePage: 'Prev', // Previous page button text
@@ -766,23 +769,13 @@ export default class AncVisits extends React.Component {
                 <label htmlFor="email">To:</label>
                 <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
               </div>
-          {/*
-
-            name:false,
-            vht:false,
-            health_facility:false,
-            trimester:false,
-            missed_appointments:false,
-            recently_missed_appointments:false
-
-          */}
               <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                 <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
                 <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
                 <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
                 <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
                 <MenuItem onClick={(e, attended_appointments) => this.updateTable("attended_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.attended_appointments} /> Attended Appointments</MenuItem>             
-                <MenuItem onClick={(e, next_appointment) => this.updateTable("next_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Next Appointment</MenuItem>             
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
               </NavDropdown>
   
             </form>
@@ -793,10 +786,10 @@ export default class AncVisits extends React.Component {
                 hover
               //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                 ref='table'
-                remote={true}
+                remote={false}
                 headerContainerClass='table-header'
                 tableContainerClass='table-responsive table-onScreen'
-                fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                 pagination={true}
                 options={options}
               //   exportCSV
@@ -807,7 +800,7 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.attended_appointments} dataSort={true} dataField='attended_appointments'>Attended Appointments</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataSort={true} dataField='next_appointment'>Next Appointment</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.date} dataFormat={this.dateFormatter} dataSort={true} dataField='date'>Date</TableHeaderColumn>
               </BootstrapTable>
              
             ) : (
@@ -836,10 +829,10 @@ export default class AncVisits extends React.Component {
           search:null,
           manageColomns: {
             name:false,
-            vht:false,
+            vht:true,
             health_facility:false,
             trimester:false,
-            attended_appointments:false,
+            date:false,
           },
           // remote pagination
           currentPage: 1,
@@ -979,12 +972,12 @@ export default class AncVisits extends React.Component {
       let data_table =this.state.appointments;
   
       const options = {
-        page: this.state.currentPage,  // which page you want to show as default
-        onPageChange: this.onPageChange,
-        onSortChange: this.onSortChange,
-        onFilterChange: this.onFilterChange,
-      //   sizePerPageList: xxx, // you can change the dropdown list for size per page
-        sizePerPage: parseInt(this.state.sizePerPage),  // which size per page you want to locate as default
+        page: 1,  // which page you want to show as default
+          // onPageChange: this.onPageChange,
+          // onSortChange: this.onSortChange,
+          // onFilterChange: this.onFilterChange,
+        //   sizePerPageList: xxx, // you can change the dropdown list for size per page
+          sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
         paginationSize: 10,
         prePage: 'Prev', // Previous page button text
@@ -1016,7 +1009,7 @@ export default class AncVisits extends React.Component {
                 <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
                 <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
                 <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
-                <MenuItem onClick={(e, attended_appointments) => this.updateTable("attended_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.attended_appointments} /> Attended Appointments</MenuItem>                         
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>                         
               </NavDropdown>
   
             </form>
@@ -1027,10 +1020,10 @@ export default class AncVisits extends React.Component {
                 hover
               //   csvFileName={'jobs_'+moment(Date.now()).local().format("YYYY_MM_DD_HHmmss")+".csv"}
                 ref='table'
-                remote={true}
+                remote={false}
                 headerContainerClass='table-header'
                 tableContainerClass='table-responsive table-onScreen'
-                fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
+                // fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                 pagination={true}
                 options={options}
               //   exportCSV
@@ -1040,7 +1033,7 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.attended_appointments} dataSort={true} dataField='attended_appointments'>Attended Appointments</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataField='date'>Date</TableHeaderColumn>
   
               </BootstrapTable>
              
