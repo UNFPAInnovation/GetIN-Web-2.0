@@ -265,9 +265,9 @@ exports.mappedGirls = function(from, to, callback) {
     }
   );
 };
-exports.deliveries = function(callback) {
+exports.deliveries = function(delivery_location, from, to, callback) {
    api.get(
-     addr + "/api/v1/deliveries",
+     addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&&created_from="+from+"&created_to="+to,
      {
        "content-type": "application/json",
        Authorization: "Token " + token
