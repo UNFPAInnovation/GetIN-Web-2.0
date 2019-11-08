@@ -16,13 +16,20 @@ import DeliveriesCard from './components/DeliveriesCard/index';
 import FollowUpsCard from './components/FollowUpsCard/index';
 import MappedGirlsCard from './components/MappedGirlsCard/index';
 import AgeGroupOfMappedGirlsBarChart from './components/AgeGroupOfMappedGirlsBarChart/index';
+import MappedGirlsPerSubcountyBarChart from './components/MappedGirlsPerSubcountyBarChart/index';
 
 // Get Data
 import getData from '../../utils/getData';
 
 // Variables
+// const startOfMonth = moment()
+//   .startOf('month')
+//   .format('YYYY-MM-DD');
+
 const startOfMonth = moment()
-  .startOf('month')
+  .subtract(1, 'months')
+  .date(1)
+  .local()
   .format('YYYY-MM-DD');
 
 const todaysDate = moment()
@@ -99,7 +106,11 @@ export default function Dashboard() {
                     data={mappingEncountersStats && mappingEncountersStats}
                   />
                 </Col>
-                <Col md={8}></Col>
+                <Col md={8}>
+                  <MappedGirlsPerSubcountyBarChart
+                    data={mappingEncountersStats && mappingEncountersStats}
+                  />
+                </Col>
               </Row>
             </Grid>
           </>

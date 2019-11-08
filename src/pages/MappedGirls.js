@@ -42,7 +42,14 @@ export default class MappedGirls extends Component {
         last_menstruation_date:true,
         voucher_id:true,
         parish:true,
-        subcounty:true
+        subcounty:true,
+        attended_anc_visits:true,
+        using_family_planning: true,
+        fever: true,
+        bleeding_heavily: true,
+        blurred_vision: true,
+        swollen_feet: true
+
       },
       // remote pagination
       currentPage: 1,
@@ -64,7 +71,7 @@ export default class MappedGirls extends Component {
       girls_copy: [],
       loadingText:"Loading...",
     });
-      service.mappedGirls(this.state.from, this.state.to, function(error, response){
+      service.mappedGirlsEncounter(this.state.from, this.state.to, function(error, response){
       console.log(response);
         if (error){
             console.log(error);
@@ -122,27 +129,27 @@ export default class MappedGirls extends Component {
 
   }
   nextOfKinFormatter(cell, row) {
-    return row.next_of_kin_first_name+" "+row.next_of_kin_last_name+" - "+row.next_of_kin_phone_number;
+    return row.girl.next_of_kin_first_name+" "+row.girl.next_of_kin_last_name+" - "+row.girl.next_of_kin_phone_number;
   }
   getVillageItem(cell, row, item){
-    return row.village[item];
+    return row.girl.village[item];
     
   }
   getSubCountyItem(cell, row, item){
-    return row.village && row.village.parish && row.village.parish.subcounty && row.village.parish.subcounty[item];
+    return row.girl.village && row.girl.village.parish && row.girl.village.parish.subcounty && row.girl.village.parish.subcounty[item];
   }
   getParishItem(cell, row, item){
-    return row.village.parish && row.village.parish[item];
+    return row.girl.village.parish && row.girl.village.parish[item];
   }
   getGirlItem(cell, row, item){
-    return row[item];
+    return row.girl[item];
   
 }
 nameFormatter(cell, row) {
-  return row.first_name+" "+row.last_name;
+  return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
 }
 ageFormatter(cell, row) {
-  return moment().diff(row.dob, "years")+" Years";
+  return moment().diff(row.girl.dob, "years")+" Years";
 }
 search(event) {
   this.setState({ search: event.target.value });
@@ -160,13 +167,13 @@ search(event) {
       maxPatternLength: 32,
       minMatchCharLength: 1,
       keys: [
-        "first_name",
-        "last_name",
-        "phone_number",
-        "trimester",
-        "next_of_kin_last_name",
-        "next_of_kin_first_name",
-        "next_of_kin_phone_number"
+        "girl.first_name",
+        "girl.last_name",
+        "girl.phone_number",
+        "girl.trimester",
+        "girl.next_of_kin_last_name",
+        "girl.next_of_kin_first_name",
+        "girl.next_of_kin_phone_number"
       ]
     };
 
@@ -178,9 +185,25 @@ search(event) {
   }
 
 }
-
+familyPlanningFormatter(cell, row) {
+  // console.log(cell);
+  let familyPlanning = "";
+   if(row.using_family_planning){
+       return familyPlanning = "Yes, "+row.family_planning_type;
+   }
+  else{
+       return familyPlanning = "None, "+row.no_family_planning_reason;
+   }
+ }
+enumFormatter(cell, row, enumObject) {
+  return enumObject[cell];
+}
 
   render() {
+    const YesNoFormat = {
+      true: "Yes",
+      false: "No"
+    };
     let girls = this.state.girls
     const options = {
       page: 1,  // which page you want to show as default
@@ -229,7 +252,7 @@ search(event) {
 
             <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
               <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
-              <MenuItem onClick={(e, phone_number) => this.updateTable("phone_number")} eventKey={3.1}> <Check state={this.state.manageColomns.phone_number} /> Phone number</MenuItem>        
+      
               <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
               <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>        
               <MenuItem onClick={(e, subcounty) => this.updateTable("subcounty")} eventKey={3.1}> <Check state={this.state.manageColomns.subcounty} /> Sub county</MenuItem>        
@@ -239,7 +262,14 @@ search(event) {
               <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>        
               <MenuItem onClick={(e, last_menstruation_date) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>        
               <MenuItem onClick={(e, dob) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>        
-              <MenuItem onClick={(e, voucher_id) => this.updateTable("voucher_id")} eventKey={3.1}> <Check state={this.state.manageColomns.voucher_id} /> Voucher ID</MenuItem>        
+              <MenuItem onClick={(e, voucher_id) => this.updateTable("voucher_id")} eventKey={3.1}> <Check state={this.state.manageColomns.voucher_id} /> Voucher ID</MenuItem>
+    
+              <MenuItem onClick={(e, attended_anc_visits) => this.updateTable("attended_anc_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.attended_anc_visits} /> Attended ANC visits</MenuItem>    
+              <MenuItem onClick={(e, using_family_planning) => this.updateTable("using_family_planning")} eventKey={3.1}> <Check state={this.state.manageColomns.using_family_planning} /> Family planning</MenuItem>    
+              <MenuItem onClick={(e, fever) => this.updateTable("fever")} eventKey={3.1}> <Check state={this.state.manageColomns.fever} /> Has fever</MenuItem>    
+              <MenuItem onClick={(e, bleeding_heavily) => this.updateTable("bleeding_heavily")} eventKey={3.1}> <Check state={this.state.manageColomns.bleeding_heavily} /> Is bleeding heavily</MenuItem>    
+              <MenuItem onClick={(e, blurred_vision) => this.updateTable("blurred_vision")} eventKey={3.1}> <Check state={this.state.manageColomns.blurred_vision} /> Has blurred vision</MenuItem>    
+              <MenuItem onClick={(e, swollen_feet) => this.updateTable("swollen_feet")} eventKey={3.1}> <Check state={this.state.manageColomns.swollen_feet} /> Has swollen feet</MenuItem>    
             </NavDropdown>
 
           </form>
@@ -261,19 +291,37 @@ search(event) {
               options={options}
             //   exportCSV
               pagination>
-              <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
-              <TableHeaderColumn dataSort={true} isKey dataField='phone_number'>Phone number</TableHeaderColumn>
+              <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+              <TableHeaderColumn dataSort={true} hidden={true} isKey dataField='phone_number'>Phone number</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.village}  dataFormat ={(cell, row, item)=>this.getVillageItem(cell, row, "name")} dataField='village'>Village</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.parish}  dataFormat ={(cell, row, item)=>this.getParishItem(cell, row, "name")} dataField='parish'>Parish</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.subcounty}  dataFormat ={(cell, row, item)=>this.getSubCountyItem(cell, row, "name")} dataField='subcounty'>Sub county</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataField='trimester'>Trimester</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "trimester")} dataField='trimester'>Trimester</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin_name} dataFormat ={this.nextOfKinFormatter} dataField='next_of_kin_name'>Next of Kin</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataField='education_level'>Education level</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataField='marital_status'>Marital status</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataField='last_menstruation_date'>Marital status</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")}  dataField='education_level'>Education level</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}  dataField='marital_status'>Marital status</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "last_menstruation_date")} dataField='last_menstruation_date'>Last menstruation date</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>           
-              <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataField='voucher_id'>Voucher ID</TableHeaderColumn>           
+              <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "voucher_id")}  dataField='voucher_id'>Voucher ID</TableHeaderColumn>
 
+              <TableHeaderColumn hidden={this.state.manageColomns.attended_anc_visits} dataFormat={this.enumFormatter}
+                   formatExtraData={YesNoFormat} dataField='attended_anc_visit'>Has attended ANC visits</TableHeaderColumn> 
+              <TableHeaderColumn
+                  hidden={this.state.manageColomns.using_family_planning}
+                  dataFormat={this.familyPlanningFormatter}
+                  dataField="using_family_planning"
+                >
+                  Family planning
+                </TableHeaderColumn>          
+                <TableHeaderColumn hidden={this.state.manageColomns.fever} dataFormat={this.enumFormatter}
+                   formatExtraData={YesNoFormat} dataField='fever'>Has fever</TableHeaderColumn>
+                   <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} dataFormat={this.enumFormatter}
+                   formatExtraData={YesNoFormat} dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} dataFormat={this.enumFormatter}
+                   formatExtraData={YesNoFormat} dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
+                <TableHeaderColumn hidden={this.state.manageColomns.swollen_feet} dataFormat={this.enumFormatter}
+                   formatExtraData={YesNoFormat} dataField='swollen_feet'>Has swollen feet</TableHeaderColumn>
+                
 
             </BootstrapTable>
            

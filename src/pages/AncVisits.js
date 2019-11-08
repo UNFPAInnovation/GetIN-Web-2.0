@@ -102,7 +102,7 @@ export default class AncVisits extends React.Component {
             manageColomns: {
               name:false,
               vht:true,
-              health_facility:false,
+              health_facility:true,
               trimester:false,
               missed_appointments:false,
               date:false
@@ -346,7 +346,7 @@ export default class AncVisits extends React.Component {
           manageColomns: {
             name:false,
             vht:true,
-            health_facility:false,
+            health_facility:true,
             trimester:false,
             remaining_visits:false,
             date:false
@@ -588,9 +588,9 @@ export default class AncVisits extends React.Component {
           manageColomns: {
             name:false,
             vht:true,
-            health_facility:false,
+            health_facility:true,
             trimester:false,
-            attended_appointments:false,
+            attended_appointments:true,
             date:false
           },
           // remote pagination
@@ -830,7 +830,7 @@ export default class AncVisits extends React.Component {
           manageColomns: {
             name:false,
             vht:true,
-            health_facility:false,
+            health_facility:true,
             trimester:false,
             date:false,
           },

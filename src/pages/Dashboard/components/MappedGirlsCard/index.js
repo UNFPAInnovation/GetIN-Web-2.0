@@ -12,7 +12,19 @@ const MappedGirlsCard = ({ data }) => {
       icon={faFemale}
       rate='30%'
       direction='up'
-      number={data && data.results.count}
+      number={
+        data &&
+        new Intl.NumberFormat('lg-UG').format(
+          Math.ceil(
+            data
+              .map(c => c.count)
+              .reduce(
+                (accumulator, currentValue) => accumulator + currentValue,
+                0
+              )
+          )
+        )
+      }
       color='card-purple'
     />
   );
