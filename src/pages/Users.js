@@ -298,7 +298,7 @@ export default class Users extends React.Component {
               email: false,
               name:false,
               gender:false,
-              sub_county:false,
+              village:false,
               username:false,
             },
             // remote pagination
@@ -459,7 +459,7 @@ export default class Users extends React.Component {
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>        
-                  <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Subcounty</MenuItem>        
+                  <MenuItem onClick={(e, sub_county) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
                   <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
                 </NavDropdown>
     
@@ -485,7 +485,7 @@ export default class Users extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataField='sub_county'>Subcounty</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataField='village'>Village</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
                  

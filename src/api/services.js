@@ -127,7 +127,7 @@ exports.usersChew = function(callback) {
             return callback(error);
          }else{
               if (response.status != 200) {
-                 return callback("Couldnt get mapped chews");
+                 return callback("Couldnt get chews");
              }
               else{
                 return callback(null, response.data);
@@ -173,7 +173,7 @@ exports.usersMidwives =  function(callback){
         return callback(error);
       } else {
         if (response.status != 200) {
-          return callback("Couldnt get mapped chews");
+          return callback("Couldnt get chews");
         } else {
           return callback(null, response.data);
         }
@@ -196,7 +196,7 @@ exports.usersMidwives = function(callback) {
         return callback(error);
       } else {
         if (response.status != 200) {
-          return callback("Couldn't get mapped midwives");
+          return callback("Couldn't get midwives");
         } else {
           return callback(null, response.data);
         }
@@ -220,7 +220,7 @@ exports.usersAmbulanceDrivers = function(callback) {
         return callback(error);
       } else {
         if (response.status != 200) {
-          return callback("Couldn't get mapped ambulance drivers");
+          return callback("Couldn't get ambulance drivers");
         } else {
           return callback(null, response.data);
         }
@@ -297,6 +297,32 @@ exports.mappedGirls = function(from, to, callback) {
     }
   );
 };
+// Map encounter introdudced by backend to enable show more fields on mapped girls
+
+exports.mappedGirlsEncounter = function(from, to, callback) {
+  api.get(
+    addr + "/api/v1/mapping_encounters?created_from="+from+"&created_to="+to,
+    {
+      "content-type": "application/json",
+      Authorization: "Token " + token
+    },
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Couldnot get mapped girls");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
+
 exports.deliveries = function(delivery_location, from, to, callback) {
    api.get(
      addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&&created_from="+from+"&created_to="+to,
