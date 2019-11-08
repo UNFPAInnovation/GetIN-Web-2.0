@@ -5,7 +5,9 @@ const options = {
       {
         gridLines: {
           display: false
-        }
+        },
+        barThickness: 6, // number (pixels) or 'flex'
+        maxBarThickness: 8
       }
     ],
     yAxes: [
@@ -13,8 +15,7 @@ const options = {
         ticks: {
           beginAtZero: true,
           stepSize: 2,
-          min: 0,
-          max: 10
+          min: 0
         },
         gridLines: {
           display: true
