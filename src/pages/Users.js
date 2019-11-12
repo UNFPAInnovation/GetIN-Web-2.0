@@ -147,7 +147,7 @@ export default class Users extends React.Component {
         village:this.state.village,
         password:this.state.password,
         phone:this.state.phone_number,
-        role:3
+        role:"vht"
       }, function(error, token){
           if (error){
               console.log(error);
@@ -1018,7 +1018,7 @@ export default class Users extends React.Component {
         health_facility:this.state.health_facility,
         password:this.state.password,
         phone:this.state.phone_number,
-        role:4
+        role:"midwife"
       }, function(error, token){
           if (error){
               console.log(error);
@@ -1197,7 +1197,7 @@ export default class Users extends React.Component {
         number_place:this.state.number_place,
         password:this.state.password,
         phone:this.state.phone_number,
-        role:5
+        role:"ambulance"
       }, function(error, token){
           if (error){
               console.log(error);
