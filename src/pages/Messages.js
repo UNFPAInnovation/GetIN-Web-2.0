@@ -16,7 +16,7 @@ export default class Messages extends Component {
       messages: [],
       messages_copy: [],
       compose:false,
-      isLoaded: true,
+      isLoaded: false,
       loadingText: "Loading .."
     };
     this.getData = this.getData.bind(this);
@@ -143,7 +143,7 @@ export default class Messages extends Component {
                     <div className="messageList">
                     {
                         this.state.messages.map((value, key)=>
-                            <MessageList title={value.recipient.first_name+" "+value.recipient.last_name} userType={value.userType} time={value.created_at} lastMessage={value.message} />
+                            <MessageList title={value.recipient.first_name+" "+value.recipient.last_name} phone={value.recipient.phone} userType={value.userType} time={value.created_at} lastMessage={value.message} />
                         )
                     }
                         
@@ -171,7 +171,9 @@ class MessageList extends Component{
                         <FontAwesomeIcon icon={faUser} />
                     </span>
                 <div className="text">
-                    <span className="title">{this.props.title}</span>
+                    <span className="title">{this.props.title}<br/>
+                    {this.props.phone}
+                    </span>
                     <span className="msg">{this.props.lastMessage}</span>
                 </div>
                 <span className="time">{moment(this.props.time).local().format("Do-MMM-YYYY HH:mm")}</span>
@@ -268,7 +270,7 @@ class ComposeModal extends Component{
         else{
           let options =[];
           response.results.map((v, k)=>
-            options.push({"value":v.id, "label":v.first_name+" "+v.last_name+" ("+v.role+")"})
+            options.push({"value":v.id, "label":v.first_name+" "+v.last_name+" - "+v.phone+" ("+v.role+")"})
           )
           thisApp.setState(
           {
@@ -304,21 +306,22 @@ class ComposeModal extends Component{
         value={selectedOption}
         onChange={this.handleChangeSelect}
         options={options}
+        placeholder="Select users"
       />
               </div>
           </div>
           <div className="col-md-12">
               <div className="form-group col-md-6">
                   <label>Message</label>
-                  <textarea value={this.state.message} onChange={this.handleChange} className="form-control" name="message" placeholder="Type your message here"></textarea>
+                  <textarea rows="5" value={this.state.message} onChange={this.handleChange} className="form-control" name="message" placeholder="Type your message here"></textarea>
               </div>
           </div>
       <div className="col-md-12">
-              <br className="clear-both"/>
+      <div className="form-group col-md-6">
+              
+                  <button type="submit" className="btn btn-primary">{this.state.loading ? "Sending message" : "Submit"}</button>
                   <br className="clear-both"/>
-                  <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Midwife" : "Submit"}</button>
-                  <br className="clear-both"/>
-                  </div>
+                  </div></div>
           </form>
         </Modal.Body>
         <Modal.Footer>
