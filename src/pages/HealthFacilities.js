@@ -220,7 +220,7 @@ export default class AncVisits extends React.Component {
                   <MenuItem onClick={(e, midwives) => this.updateTable("midwives")} eventKey={3.1}> <Check state={this.state.manageColomns.midwives} /> Midwives</MenuItem>             
                   <MenuItem onClick={(e, vhts) => this.updateTable("vhts")} eventKey={3.1}> <Check state={this.state.manageColomns.vhts} /> Chews</MenuItem>             
                   <MenuItem onClick={(e, level) => this.updateTable("level")} eventKey={3.1}> <Check state={this.state.manageColomns.level} /> Level</MenuItem>             
-                  <MenuItem onClick={(e, av_deliveries) => this.updateTable("av_deliveries")} eventKey={3.1}> <Check state={this.state.manageColomns.av_deliveries} /> Average deliveries</MenuItem>             
+                  <MenuItem onClick={(e, av_deliveries) => this.updateTable("av_deliveries")} eventKey={3.1}> <Check state={this.state.manageColomns.av_deliveries} /> GETIN Average deliveries</MenuItem>             
                   <MenuItem onClick={(e, ambulances) => this.updateTable("ambulances")} eventKey={3.1}> <Check state={this.state.manageColomns.ambulances} /> Ambulances</MenuItem>             
                 </NavDropdown>
     
@@ -246,7 +246,7 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.midwives} dataSort={true} dataField='midwives'>Midwives</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vhts} dataSort={true} dataField='vhts'>Chews</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.level} dataSort={true} dataField='level'>Level</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.av_deliveries} dataSort={true} dataField='av_deliveries'>Average deliveries</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.av_deliveries} dataSort={true} dataField='av_deliveries'>GETIN Average deliveries</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.ambulances} dataSort={true} dataField='ambulances'>Ambulances</TableHeaderColumn>
     
                 </BootstrapTable>

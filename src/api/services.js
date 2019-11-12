@@ -325,7 +325,7 @@ exports.mappedGirlsEncounter = function(from, to, callback) {
 
 exports.deliveries = function(delivery_location, from, to, callback) {
    api.get(
-     addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&&created_from="+from+"&created_to="+to,
+     addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&date_from="+from+"&date_to="+to,
      {
        "content-type": "application/json",
        Authorization: "Token " + token
@@ -467,3 +467,69 @@ exports.users = function(role, callback) {
          }
         });
 }
+
+exports.listSms = function(callback) {
+  api.get(
+    addr + "/api/v1/sms",
+    {
+      "content-type": "application/json",
+      Authorization: "Token " + token
+    },
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Could not get sent sms");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
+
+exports.getAllUsers = function(callback) {
+  api.get(
+    addr + "/api/v1/users",
+    {
+      "content-type": "application/json",
+      Authorization: "Token " + token
+    },
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Could not get users");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
+
+exports.sendSms = function(data, callback) {
+  api.post(
+    addr + "/api/v1/sms",
+    { "content-type": "application/json", Authorization: "Token " + token },
+    data,
+    function(error, response) {
+      //callback of the method here
+      console.log("error", error);
+      if (error) {
+        console.log(error);
+        return callback(error);
+      } else {
+        return callback(null, response);
+      }
+    }
+  );
+};
