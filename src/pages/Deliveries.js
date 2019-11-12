@@ -104,7 +104,7 @@ class HealthFacility extends Component {
           delivery:false,
           family_planning:false,
           delivery_date: false,
-          health_facility: false
+          health_facility: true
         },
         // remote pagination
         currentPage: 1,
@@ -196,7 +196,7 @@ class HealthFacility extends Component {
       return moment().diff(row.girl.dob, "years");
     }
     dateFormatter(cell) {
-      console.log(cell);
+      //console.log(cell);
       return moment(new Date(cell)).format("Do MMM YY hh a");
     }
     deliveryFormatter(cell, row) {
@@ -592,7 +592,7 @@ class Home extends Component {
         delivery:false,
         family_planning:false,
         delivery_date: false,
-        health_facility: false
+        health_facility: true
       },
       // remote pagination
       currentPage: 1,
@@ -1000,7 +1000,7 @@ class Home extends Component {
               <TableHeaderColumn
                 hidden={this.state.manageColomns.delivery_date}
                 dataFormat={this.dateFormatter}
-                dataField="delivery_date"
+                dataField="baby_birth_date"
               >
                 Delivery date
               </TableHeaderColumn>
