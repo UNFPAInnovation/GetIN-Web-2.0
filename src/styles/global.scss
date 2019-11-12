@@ -690,6 +690,7 @@ Dashboard Cards
           }
           &.msg {
             font-size: 12px;
+            margin-top:10px;
             color: rgba(0, 0, 0, 0.8);
           }
         }
@@ -740,7 +741,7 @@ Dashboard Cards
 }
 .modal-dialog{
   width:80%;
-  height: 90vh;
+  height: 70vh;
   .modal-content{
     height: 100%;
   }

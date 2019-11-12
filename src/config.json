@@ -1,3 +1,4 @@
 {
-    "BASE_URL": "https://getin-server.herokuapp.com"
+    "BASE_URL": "http://testbackend.getinmobile.org",
+    "BASE_URL_TEST":"http://testbackend.getinmobile.org"
 }
