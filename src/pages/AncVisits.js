@@ -348,7 +348,7 @@ export default class AncVisits extends React.Component {
             vht:true,
             health_facility:true,
             trimester:false,
-            remaining_visits:false,
+          //  remaining_visits:false,
             date:false
           },
           // remote pagination
@@ -531,7 +531,7 @@ export default class AncVisits extends React.Component {
                 <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
                 <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
                 <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
-                <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>             
+                {/* <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>              */}
                 <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
               </NavDropdown>
   
@@ -556,7 +556,7 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
-                <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataFormat={this.remainingVisitsFormatter} dataField='pending_visits'>Remaining Visits</TableHeaderColumn>
+                {/* <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataFormat={this.remainingVisitsFormatter} dataField='pending_visits'>Remaining Visits</TableHeaderColumn> */}
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
   
               </BootstrapTable>
