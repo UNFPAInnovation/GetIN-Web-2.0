@@ -162,6 +162,15 @@ a:focus {
   height: 80px;
   // min-width: 322px;
 }
+@media screen and (min-width: 995px) {
+
+  #sideNavBar{
+    width: 27.666667% !important;
+  }
+  #detailComponent{
+    width:72.333333% !important;
+  }
+}
 .sideNav {
   box-shadow: 0 0px 5px 0 rgba(32, 33, 36, 0.1);
   background-color: #fff;
