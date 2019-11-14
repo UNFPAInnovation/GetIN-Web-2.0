@@ -164,7 +164,7 @@ class HealthFacility extends Component {
     }
     nextOfKinFormatter(cell, row) {
       return (
-        row.girl.next_of_kin_name + " - " + row.girl.next_of_kin_phone_number
+        row.girl.next_of_kin_phone_number
       );
     }
     getVillageItem(cell, row, item) {
@@ -368,7 +368,7 @@ class HealthFacility extends Component {
                 <Check state={this.state.manageColomns.marital_status} /> Marital
                 status
               </MenuItem>
-               <MenuItem
+               {/* <MenuItem
                 onClick={(e, followup_reason) =>
                   this.updateTable("followup_reason")
                 }
@@ -377,7 +377,7 @@ class HealthFacility extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.followup_reason} />{" "}
                 Follow up reason
-              </MenuItem>
+              </MenuItem> */}
   
               <MenuItem
                 onClick={(e, action_taken) =>
@@ -495,12 +495,12 @@ class HealthFacility extends Component {
                 >
                   Age (Years)
                 </TableHeaderColumn>
-                <TableHeaderColumn
+                {/* <TableHeaderColumn
                   hidden={this.state.manageColomns.followup_reason}
                   dataField="followup_reason"
                 >
                   Follow up reason
-                </TableHeaderColumn>
+                </TableHeaderColumn> */}
                 <TableHeaderColumn
                 dataFormat={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}
                   hidden={this.state.manageColomns.marital_status}
@@ -511,7 +511,7 @@ class HealthFacility extends Component {
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.delivery_date}
                   dataFormat={this.dateFormatter}
-                  dataField="delivery_date"
+                  dataField="baby_birth_date"
                 >
                   Delivery date
                 </TableHeaderColumn>
@@ -652,7 +652,7 @@ class Home extends Component {
   }
   nextOfKinFormatter(cell, row) {
     return (
-      row.girl.next_of_kin_name + " - " + row.girl.next_of_kin_phone_number
+      row.girl.next_of_kin_phone_number
     );
   }
   getVillageItem(cell, row, item) {
@@ -857,7 +857,7 @@ class Home extends Component {
               <Check state={this.state.manageColomns.marital_status} /> Marital
               status
             </MenuItem>
-             <MenuItem
+             {/* <MenuItem
               onClick={(e, followup_reason) =>
                 this.updateTable("followup_reason")
               }
@@ -866,7 +866,7 @@ class Home extends Component {
               {" "}
               <Check state={this.state.manageColomns.followup_reason} />{" "}
               Follow up reason
-            </MenuItem>
+            </MenuItem> */}
 
             <MenuItem
               onClick={(e, action_taken) =>
@@ -916,13 +916,13 @@ class Home extends Component {
               {" "}
               <Check state={this.state.manageColomns.delivery_date} /> Date of delivery
             </MenuItem>
-            <MenuItem
+            {/* <MenuItem
               onClick={(e, health_facility) => this.updateTable("health_facility")}
               eventKey={3.1}
             >
               {" "}
               <Check state={this.state.manageColomns.health_facility} /> Health facility
-            </MenuItem>
+            </MenuItem> */}
            
           </NavDropdown>
         </form>
@@ -984,12 +984,12 @@ class Home extends Component {
               >
                 Age (Years)
               </TableHeaderColumn>
-              <TableHeaderColumn
+              {/* <TableHeaderColumn
                 hidden={this.state.manageColomns.followup_reason}
                 dataField="followup_reason"
               >
                 Follow up reason
-              </TableHeaderColumn>
+              </TableHeaderColumn> */}
               <TableHeaderColumn
               dataFormat={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}
                 hidden={this.state.manageColomns.marital_status}
@@ -1032,12 +1032,12 @@ class Home extends Component {
               >
                 Family planning
               </TableHeaderColumn>
-              <TableHeaderColumn
+              {/* <TableHeaderColumn
                 hidden={this.state.manageColomns.health_facility}
                 dataField="health_facility"
               >
                 Health Facility
-              </TableHeaderColumn>
+              </TableHeaderColumn> */}
               
             </BootstrapTable>
           ) : (

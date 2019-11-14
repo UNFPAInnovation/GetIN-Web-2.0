@@ -130,7 +130,7 @@ export default class MappedGirls extends Component {
 
   }
   nextOfKinFormatter(cell, row) {
-    return row.girl.next_of_kin_first_name+" "+row.girl.next_of_kin_last_name+" - "+row.girl.next_of_kin_phone_number;
+    return row.girl.next_of_kin_phone_number;
   }
   getVillageItem(cell, row, item){
     return row.girl.village[item];
