@@ -511,7 +511,7 @@ class HealthFacility extends Component {
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.delivery_date}
                   dataFormat={this.dateFormatter}
-                  dataField="delivery_date"
+                  dataField="baby_birth_date"
                 >
                   Delivery date
                 </TableHeaderColumn>
