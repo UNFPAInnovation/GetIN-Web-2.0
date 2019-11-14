@@ -234,8 +234,6 @@ export default class AncVisits extends React.Component {
       });
     }
         });
-
-      
   }
       
       // trim(cell, row){
@@ -421,6 +419,7 @@ export default class AncVisits extends React.Component {
       this.updateTable = this.updateTable.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
       this.search = this.search.bind(this);
+      this.onFilterChange = this.onFilterChange.bind(this);
     }
     componentDidMount() {
      this.getData();
@@ -480,15 +479,28 @@ export default class AncVisits extends React.Component {
     nameFormatter(cell, row) {
       return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
     }
+    trimesterFormatter(cell, row) {
+      if(row.girl.trimester === 1){
+         return row.girl.trimester+"st";
+      }
+      else if(row.girl.trimester === 2){
+        return row.girl.trimester+"nd";
+      }
+      else if(row.girl.trimester === 3){
+        return row.girl.trimester+"rd";
+      }
+      else{
+        return row.girl.trimester;
+      }
+      
+    }
     remainingVisitsFormatter(cell, row) {
       return row.girl.pending_visits;
     }
     chewFormatter(cell, row) {
       return row.user.first_name+" "+row.user.last_name+" - "+row.user.phone;
     }
-    trimesterFormatter(cell, row) {
-      return row.girl.trimester;
-    }
+
     handleInputChange(event) {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -547,18 +559,45 @@ export default class AncVisits extends React.Component {
       }
   
     }
-
+    onFilterChange(filter){
+      let results = [];
+      this.setState({
+        appointments:this.state.appointments_copy
+      },function(){
+        if(filter && filter.trimester && filter.trimester.value){
+      this.state.appointments.forEach(function(element){
+        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
+        if(element.girl.trimester.toString() === filter.trimester.value.toString()){
+          results.push(element);
+        //  console.log(element+" KAboom");
+        }
+    });
+      this.setState({
+        appointments:results
+      });
+    }
+  else{
+    this.setState({
+      appointments:this.state.appointments_copy
+    });
+  }
+      });
+}
     render() {
       let data_table =this.state.appointments
-
+      const trimesterType = {
+        '1': '1st',
+        '2': '2nd',
+        '3': '3rd'
+      };
   
      
   
       const options = {
         page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
-          // onSortChange: this.onSortChange,
-          // onFilterChange: this.onFilterChange,
+       // onSortChange: this.onSortChange,
+          onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
           sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
@@ -616,7 +655,13 @@ export default class AncVisits extends React.Component {
                 <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
+                  <TableHeaderColumn 
+                  hidden={this.state.manageColomns.trimester} 
+                  // dataSort={true} 
+                  filterFormatted dataFormat={ this.enumFormatter }
+                  dataFormat={this.trimesterFormatter} 
+                  filter={ { type: 'SelectFilter', options: trimesterType } }
+                  dataField='trimester'>Trimester</TableHeaderColumn>
                 {/* <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataFormat={this.remainingVisitsFormatter} dataField='pending_visits'>Remaining Visits</TableHeaderColumn> */}
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
   
@@ -663,6 +708,7 @@ export default class AncVisits extends React.Component {
       this.updateTable = this.updateTable.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
       this.search = this.search.bind(this);
+      this.onFilterChange = this.onFilterChange.bind(this);
     }
     componentDidMount() {
       this.getData();
@@ -742,7 +788,19 @@ export default class AncVisits extends React.Component {
       return row.user.first_name+" "+row.user.last_name+" - "+row.user.phone;
     }
     trimesterFormatter(cell, row) {
-      return row.girl.trimester;
+      if(row.girl.trimester === 1){
+         return row.girl.trimester+"st";
+      }
+      else if(row.girl.trimester === 2){
+        return row.girl.trimester+"nd";
+      }
+      else if(row.girl.trimester === 3){
+        return row.girl.trimester+"rd";
+      }
+      else{
+        return row.girl.trimester;
+      }
+      
     }
     dateFormatter(cell){
       console.log(cell);
@@ -794,15 +852,43 @@ export default class AncVisits extends React.Component {
       }
   
     }
+    onFilterChange(filter){
+      let results = [];
+      this.setState({
+        appointments:this.state.appointments_copy
+      },function(){
+        if(filter && filter.trimester && filter.trimester.value){
+      this.state.appointments.forEach(function(element){
+        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
+        if(element.girl.trimester.toString() === filter.trimester.value.toString()){
+          results.push(element);
+        //  console.log(element+" KAboom");
+        }
+    });
+      this.setState({
+        appointments:results
+      });
+    }
+  else{
+    this.setState({
+      appointments:this.state.appointments_copy
+    });
+  }
+      });
+}
 
     render() {
       let data_table =this.state.appointments;    
-  
+      const trimesterType = {
+        '1': '1st',
+        '2': '2nd',
+        '3': '3rd'
+      };
       const options = {
         page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
           // onSortChange: this.onSortChange,
-          // onFilterChange: this.onFilterChange,
+        onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
           sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
@@ -859,7 +945,13 @@ export default class AncVisits extends React.Component {
                 <TableHeaderColumn hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.trimester} dataSort={true} dataFormat={this.trimesterFormatter} dataField='trimester'>Trimester</TableHeaderColumn>
+                  <TableHeaderColumn 
+                  hidden={this.state.manageColomns.trimester} 
+                  // dataSort={true} 
+                  filterFormatted dataFormat={ this.enumFormatter }
+                  dataFormat={this.trimesterFormatter} 
+                  filter={ { type: 'SelectFilter', options: trimesterType } }
+                  dataField='trimester'>Trimester</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.attended_appointments} dataSort={true} dataField='attended_appointments'>Attended Appointments</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataFormat={this.dateFormatter} dataSort={true} dataField='date'>Date</TableHeaderColumn>
               </BootstrapTable>
@@ -904,6 +996,7 @@ export default class AncVisits extends React.Component {
       this.updateTable = this.updateTable.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
       this.search = this.search.bind(this);
+      this.onFilterChange = this.onFilterChange.bind(this);
     }
     componentDidMount() {
      this.getData();
@@ -980,8 +1073,44 @@ export default class AncVisits extends React.Component {
       return row.user.first_name+" "+row.user.last_name+" - "+row.user.phone;
     }
     trimesterFormatter(cell, row) {
-      return row.girl.trimester;
+      if(row.girl.trimester === 1){
+         return row.girl.trimester+"st";
+      }
+      else if(row.girl.trimester === 2){
+        return row.girl.trimester+"nd";
+      }
+      else if(row.girl.trimester === 3){
+        return row.girl.trimester+"rd";
+      }
+      else{
+        return row.girl.trimester;
+      }
+      
     }
+    onFilterChange(filter){
+      let results = [];
+      this.setState({
+        appointments:this.state.appointments_copy
+      },function(){
+        if(filter && filter.trimester && filter.trimester.value){
+      this.state.appointments.forEach(function(element){
+        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
+        if(element.girl.trimester.toString() === filter.trimester.value.toString()){
+          results.push(element);
+        //  console.log(element+" KAboom");
+        }
+    });
+      this.setState({
+        appointments:results
+      });
+    }
+  else{
+    this.setState({
+      appointments:this.state.appointments_copy
+    });
+  }
+      });
+}
     
     dateFormatter(cell){
       console.log(cell);
@@ -1044,7 +1173,7 @@ export default class AncVisits extends React.Component {
         page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
           // onSortChange: this.onSortChange,
-          // onFilterChange: this.onFilterChange,
+        onFilterChange: this.onFilterChange,
         //   sizePerPageList: xxx, // you can change the dropdown list for size per page
           sizePerPage: 20,  // which size per page you want to locate as default  // which size per page you want to locate as default
         pageStartIndex: 1, // where to start counting the pages
@@ -1104,7 +1233,7 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn 
                   hidden={this.state.manageColomns.trimester} 
                   // dataSort={true} 
-                  filterFormatted dataFormat={ this.enumFormatter } formatExtraData={ trimesterType }
+                  filterFormatted dataFormat={ this.enumFormatter }
                   dataFormat={this.trimesterFormatter} 
                   filter={ { type: 'SelectFilter', options: trimesterType } }
                   dataField='trimester'>Trimester</TableHeaderColumn>
