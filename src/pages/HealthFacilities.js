@@ -164,6 +164,9 @@ export default class AncVisits extends React.Component {
         }
       
       }
+      enumFormatter(cell, row, enumObject) {
+        return enumObject[cell];
+      }
     render() {
         let data_table =this.state.health_facilities;
           const options = {
