@@ -42,7 +42,7 @@ export default class MappedGirls extends Component {
         last_menstruation_date:true,
         voucher_id:true,
         parish:true,
-        subcounty:true,
+        subcounty:false,
         attended_anc_visits:true,
         using_family_planning: true,
         fever: true,
@@ -59,6 +59,7 @@ export default class MappedGirls extends Component {
     this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
+    this.sortByAge = this.sortByAge.bind(this);
   }
   componentDidMount() {
    this.getData();
@@ -136,7 +137,7 @@ export default class MappedGirls extends Component {
     
   }
   getSubCountyItem(cell, row, item){
-    return row.girl.village && row.girl.village.parish && row.girl.village.parish.subcounty && row.girl.village.parish.subcounty[item];
+    return row.girl.village && row.girl.village.parish && row.girl.village.parish.sub_county && row.girl.village.parish.sub_county[item];
   }
   getParishItem(cell, row, item){
     return row.girl.village.parish && row.girl.village.parish[item];
@@ -149,7 +150,7 @@ nameFormatter(cell, row) {
   return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
 }
 ageFormatter(cell, row) {
-  return moment().diff(row.girl.dob, "years")+" Years";
+  return row.girl.age+" Years";
 }
 search(event) {
   this.setState({ search: event.target.value });
@@ -199,6 +200,29 @@ enumFormatter(cell, row, enumObject) {
   return enumObject[cell];
 }
 
+
+sortByAge(a, b, order) {
+   // console.log(c);
+    // if (order === 'desc') {
+    // //  _.sortBy(a, 'name');
+    // return this.state.girls.sort((a,b) => (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
+    //   order = 'asc';
+    // } else {
+    // //  this.refs.table.handleSort('desc', 'dob');
+    // return this.state.girls.sort((a,b) <= (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
+    //   order = 'desc';
+    // }
+
+
+    if (order === 'desc') {
+      return a.girl.age - b.girl.age;
+    } else {
+      return b.girl.age - a.girl.age;
+    }
+
+
+}
+
   render() {
     const YesNoFormat = {
       true: "Yes",
@@ -208,7 +232,7 @@ enumFormatter(cell, row, enumObject) {
     const options = {
       page: 1,  // which page you want to show as default
       // onPageChange: this.onPageChange,
-      // onSortChange: this.onSortChange,
+      // onSortChange: this.sortByName,
       // onFilterChange: this.onFilterChange,
     //   sizePerPageList: xxx, // you can change the dropdown list for size per page
       sizePerPage: 20,  // which size per page you want to locate as default
@@ -301,8 +325,13 @@ enumFormatter(cell, row, enumObject) {
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")}  dataField='education_level'>Education level</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}  dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.last_menstruation_date} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "last_menstruation_date")} dataField='last_menstruation_date'>Last menstruation date</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>           
-              <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "voucher_id")}  dataField='voucher_id'>Voucher ID</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.dob} 
+              dataFormat={ this.ageFormatter } 
+              dataSort={true}
+              sortFunc={this.sortByAge}
+              dataField="dob"
+              >Age</TableHeaderColumn>           
+              <TableHeaderColumn hidden={this.state.manageColomns.voucher_id} dataField='voucher_number'>Voucher ID</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.attended_anc_visits} dataFormat={this.enumFormatter}
                    formatExtraData={YesNoFormat} dataField='attended_anc_visit'>Has attended ANC visits</TableHeaderColumn> 
