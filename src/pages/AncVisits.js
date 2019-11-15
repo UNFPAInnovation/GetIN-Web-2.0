@@ -17,8 +17,10 @@ startOFDay.setHours(0, 0, 0, 0);
 
 let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
 
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
+// Setting end of day to the next day because of a bug in the backend that ommits todays dates data
+// if the query is from=2019-10-01&to=todaysDate
+// So setting the end date manually to the next day so todays data can be seen instantly once mapped.
+let endOfDay = moment(new Date()).add(1,'days');
 export default class AncVisits extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -31,7 +33,7 @@ export default class AncVisits extends React.Component {
     handleClose(modal) {
         this.setState({ [modal]: false });
       }
-    
+
       handleShow(modal) {
         this.setState({ [modal]: true });
       }
@@ -43,16 +45,16 @@ export default class AncVisits extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value
         });
       }
-     
+
     render() {
       return (
         <React.Fragment>
-      
+
           <div className="col-md-12">
           <div className="col-md-12 title">
               <h4 className="pull-left"> <span><FontAwesomeIcon icon={faStethoscope} /></span> ANC Visits</h4>
@@ -85,11 +87,11 @@ export default class AncVisits extends React.Component {
     }
   }
 
-  
+
   class MissedAppointments extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             appointments: [],
             appointments_copy:[],
@@ -122,7 +124,7 @@ export default class AncVisits extends React.Component {
       componentDidMount() {
         this.getData();
       }
-   
+
       getData() {
           const thisApp = this;
           thisApp.setState({
@@ -155,12 +157,12 @@ export default class AncVisits extends React.Component {
               );
               }
         });
-    
+
       }
       updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
-    
+
         if (this.state.manageColomns[colomn] === true) {
           manageColomns[colomn] = false;
           this.setState({
@@ -172,14 +174,14 @@ export default class AncVisits extends React.Component {
             manageColomns: manageColomns
           })
         }
-    
+
       }
 
       handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value,
           isLoaded: false
@@ -188,7 +190,7 @@ export default class AncVisits extends React.Component {
         );
       }
 
-  
+
 
       nameFormatter(cell, row) {
         return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
@@ -209,7 +211,7 @@ export default class AncVisits extends React.Component {
         else{
           return row.girl.trimester;
         }
-        
+
       }
       onFilterChange(filter){
         let results = [];
@@ -235,7 +237,7 @@ export default class AncVisits extends React.Component {
     }
         });
   }
-      
+
       // trim(cell, row){
       //   //row.girl.trimester
       //      '1': '1st',
@@ -245,9 +247,9 @@ export default class AncVisits extends React.Component {
       dateFormatter(cell){
         //console.log(cell);
         return moment(new Date(cell)).format('Do MMM YY hh a');
-       
+
       }
-      
+
       search(event) {
         this.setState({ search: event.target.value });
         if (event.target.value.length <= 0) {
@@ -255,7 +257,7 @@ export default class AncVisits extends React.Component {
             appointments: this.state.appointments_copy
           });
         } else {
-    
+
           let options = {
             shouldSort: true,
             threshold: 0.6,
@@ -291,13 +293,13 @@ export default class AncVisits extends React.Component {
             appointments: result
           });
         }
-    
+
       }
 
       enumFormatter(cell, row, enumObject) {
         return enumObject[cell];
       }
-      
+
       render() {
         let data_table =this.state.appointments;
         const trimesterType = {
@@ -339,14 +341,14 @@ export default class AncVisits extends React.Component {
                 </div>
 
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
-                  <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
-                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
-                  <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
+                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                  <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>
+                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>
+                  <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>
                   {/* <MenuItem onClick={(e, missed_appointments) => this.updateTable("missed_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.missed_appointments} /> Missed Appointments</MenuItem>              */}
-                  <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
+                  <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>
                 </NavDropdown>
-    
+
               </form>
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
@@ -367,17 +369,17 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn 
-                  hidden={this.state.manageColomns.trimester} 
-                  // dataSort={true} 
+                  <TableHeaderColumn
+                  hidden={this.state.manageColomns.trimester}
+                  // dataSort={true}
                   filterFormatted dataFormat={ this.enumFormatter }
-                  dataFormat={this.trimesterFormatter} 
+                  dataFormat={this.trimesterFormatter}
                   filter={ { type: 'SelectFilter', options: trimesterType } }
                   dataField='trimester'>Trimester</TableHeaderColumn>
                   {/* <TableHeaderColumn hidden={this.state.manageColomns.missed_appointments} dataSort={true} dataField='missed_appointments'>Missed Appointments</TableHeaderColumn> */}
                   <TableHeaderColumn hidden={this.state.manageColomns.data} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
                 </BootstrapTable>
-               
+
               ) : (
                   <span>Loading</span>
                 )}
@@ -424,7 +426,7 @@ export default class AncVisits extends React.Component {
     componentDidMount() {
      this.getData();
     }
- 
+
     getData() {
       const thisApp = this;
       thisApp.setState({
@@ -462,7 +464,7 @@ export default class AncVisits extends React.Component {
     updateTable(colomn) {
       //make a copy of state
       let manageColomns = this.state.manageColomns;
-  
+
       if (this.state.manageColomns[colomn] === true) {
         manageColomns[colomn] = false;
         this.setState({
@@ -474,7 +476,7 @@ export default class AncVisits extends React.Component {
           manageColomns: manageColomns
         })
       }
-  
+
     }
     nameFormatter(cell, row) {
       return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
@@ -492,7 +494,7 @@ export default class AncVisits extends React.Component {
       else{
         return row.girl.trimester;
       }
-      
+
     }
     remainingVisitsFormatter(cell, row) {
       return row.girl.pending_visits;
@@ -505,7 +507,7 @@ export default class AncVisits extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value,
         isLoaded: false
@@ -516,7 +518,7 @@ export default class AncVisits extends React.Component {
     dateFormatter(cell){
       console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
-     
+
     }
     search(event) {
       this.setState({ search: event.target.value });
@@ -525,7 +527,7 @@ export default class AncVisits extends React.Component {
           appointments: this.state.appointments_copy
         });
       } else {
-  
+
         let options = {
           shouldSort: true,
           threshold: 0.6,
@@ -557,7 +559,7 @@ export default class AncVisits extends React.Component {
           appointments: result
         });
       }
-  
+
     }
     onFilterChange(filter){
       let results = [];
@@ -590,9 +592,9 @@ export default class AncVisits extends React.Component {
         '2': '2nd',
         '3': '3rd'
       };
-  
-     
-  
+
+
+
       const options = {
         page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
@@ -625,16 +627,16 @@ export default class AncVisits extends React.Component {
                 <label htmlFor="email">To:</label>
                 <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
               </div>
- 
+
               <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
-                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
-                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
-                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
+                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>
+                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>
+                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>
                 {/* <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>              */}
-                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>
               </NavDropdown>
-  
+
             </form>
           <div className="padding-top content-container col-md-12">
             {this.state.isLoaded === true ? (
@@ -655,18 +657,18 @@ export default class AncVisits extends React.Component {
                 <TableHeaderColumn width="300px" hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn 
-                  hidden={this.state.manageColomns.trimester} 
-                  // dataSort={true} 
+                  <TableHeaderColumn
+                  hidden={this.state.manageColomns.trimester}
+                  // dataSort={true}
                   filterFormatted dataFormat={ this.enumFormatter }
-                  dataFormat={this.trimesterFormatter} 
+                  dataFormat={this.trimesterFormatter}
                   filter={ { type: 'SelectFilter', options: trimesterType } }
                   dataField='trimester'>Trimester</TableHeaderColumn>
                 {/* <TableHeaderColumn hidden={this.state.manageColomns.remaining_visits} dataSort={true} dataFormat={this.remainingVisitsFormatter} dataField='pending_visits'>Remaining Visits</TableHeaderColumn> */}
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataFormat={this.dateFormatter} dataField='date'>Date</TableHeaderColumn>
-  
+
               </BootstrapTable>
-             
+
             ) : (
                 <span>Loading</span>
               )}
@@ -680,7 +682,7 @@ export default class AncVisits extends React.Component {
   class AttendedAppointments extends Component {
     constructor(props) {
       super(props);
-  
+
       this.state = {
           appointments: [],
           appointments_copy:[],
@@ -713,7 +715,7 @@ export default class AncVisits extends React.Component {
     componentDidMount() {
       this.getData();
     }
- 
+
     getData() {
         const thisApp = this;
         thisApp.setState({
@@ -746,13 +748,13 @@ export default class AncVisits extends React.Component {
             );
             }
       });
-  
+
     }
 
     updateTable(colomn) {
       //make a copy of state
       let manageColomns = this.state.manageColomns;
-  
+
       if (this.state.manageColomns[colomn] === true) {
         manageColomns[colomn] = false;
         this.setState({
@@ -764,14 +766,14 @@ export default class AncVisits extends React.Component {
           manageColomns: manageColomns
         })
       }
-  
+
     }
 
     handleInputChange(event) {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value,
         isLoaded: false
@@ -779,7 +781,7 @@ export default class AncVisits extends React.Component {
          this.getData()
       );
     }
-  
+
 
     nameFormatter(cell, row) {
       return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
@@ -800,12 +802,12 @@ export default class AncVisits extends React.Component {
       else{
         return row.girl.trimester;
       }
-      
+
     }
     dateFormatter(cell){
       console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
-     
+
     }
     search(event) {
       this.setState({ search: event.target.value });
@@ -814,7 +816,7 @@ export default class AncVisits extends React.Component {
           appointments: this.state.appointments_copy
         });
       } else {
-  
+
         let options = {
           shouldSort: true,
           threshold: 0.6,
@@ -850,7 +852,7 @@ export default class AncVisits extends React.Component {
           appointments: result
         });
       }
-  
+
     }
     onFilterChange(filter){
       let results = [];
@@ -878,7 +880,7 @@ export default class AncVisits extends React.Component {
 }
 
     render() {
-      let data_table =this.state.appointments;    
+      let data_table =this.state.appointments;
       const trimesterType = {
         '1': '1st',
         '2': '2nd',
@@ -917,14 +919,14 @@ export default class AncVisits extends React.Component {
                 <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
               </div>
               <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
-                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
-                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
-                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
-                <MenuItem onClick={(e, attended_appointments) => this.updateTable("attended_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.attended_appointments} /> Attended Appointments</MenuItem>             
-                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>             
+                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>
+                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>
+                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>
+                <MenuItem onClick={(e, attended_appointments) => this.updateTable("attended_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.attended_appointments} /> Attended Appointments</MenuItem>
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>
               </NavDropdown>
-  
+
             </form>
           <div className="padding-top content-container col-md-12">
             {this.state.isLoaded === true ? (
@@ -945,17 +947,17 @@ export default class AncVisits extends React.Component {
                 <TableHeaderColumn hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn 
-                  hidden={this.state.manageColomns.trimester} 
-                  // dataSort={true} 
+                  <TableHeaderColumn
+                  hidden={this.state.manageColomns.trimester}
+                  // dataSort={true}
                   filterFormatted dataFormat={ this.enumFormatter }
-                  dataFormat={this.trimesterFormatter} 
+                  dataFormat={this.trimesterFormatter}
                   filter={ { type: 'SelectFilter', options: trimesterType } }
                   dataField='trimester'>Trimester</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.attended_appointments} dataSort={true} dataField='attended_appointments'>Attended Appointments</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataFormat={this.dateFormatter} dataSort={true} dataField='date'>Date</TableHeaderColumn>
               </BootstrapTable>
-             
+
             ) : (
                 <span>Loading</span>
               )}
@@ -969,7 +971,7 @@ export default class AncVisits extends React.Component {
   class CompletedAppointments extends Component {
     constructor(props) {
       super(props);
-  
+
       this.state = {
           appointments: [],
           appointments_copy:[],
@@ -1001,7 +1003,7 @@ export default class AncVisits extends React.Component {
     componentDidMount() {
      this.getData();
     }
- 
+
     getData() {
       const thisApp = this;
       thisApp.setState({
@@ -1038,7 +1040,7 @@ export default class AncVisits extends React.Component {
     updateTable(colomn) {
       //make a copy of state
       let manageColomns = this.state.manageColomns;
-  
+
       if (this.state.manageColomns[colomn] === true) {
         manageColomns[colomn] = false;
         this.setState({
@@ -1050,13 +1052,13 @@ export default class AncVisits extends React.Component {
           manageColomns: manageColomns
         })
       }
-  
+
     }
     handleInputChange(event) {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value,
         isLoaded: false
@@ -1064,7 +1066,7 @@ export default class AncVisits extends React.Component {
          this.getData()
       );
     }
-  
+
 
     nameFormatter(cell, row) {
       return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
@@ -1085,7 +1087,7 @@ export default class AncVisits extends React.Component {
       else{
         return row.girl.trimester;
       }
-      
+
     }
     onFilterChange(filter){
       let results = [];
@@ -1111,11 +1113,11 @@ export default class AncVisits extends React.Component {
   }
       });
 }
-    
+
     dateFormatter(cell){
       console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
-     
+
     }
     search(event) {
       this.setState({ search: event.target.value });
@@ -1124,7 +1126,7 @@ export default class AncVisits extends React.Component {
           appointments: this.state.appointments_copy
         });
       } else {
-  
+
         let options = {
           shouldSort: true,
           threshold: 0.6,
@@ -1156,7 +1158,7 @@ export default class AncVisits extends React.Component {
           appointments: result
         });
       }
-  
+
     }
     enumFormatter(cell, row, enumObject) {
       return enumObject[cell];
@@ -1193,7 +1195,7 @@ export default class AncVisits extends React.Component {
                   <label htmlFor="email">Search:</label>
                   <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div><div className="form-group">
-              
+
                 <label htmlFor="email">From:</label>
                 <input name="from" value={this.state.from} onChange={this.handleInputChange} className="form-control" type="date" />
               </div>
@@ -1203,13 +1205,13 @@ export default class AncVisits extends React.Component {
               </div>
 
               <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
-                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>             
-                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>             
-                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>             
-                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>                         
+                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                <MenuItem onClick={(e, vht) => this.updateTable("vht")} eventKey={3.1}> <Check state={this.state.manageColomns.vht} /> Chew</MenuItem>
+                <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health Facility</MenuItem>
+                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>
+                <MenuItem onClick={(e, date) => this.updateTable("date")} eventKey={3.1}> <Check state={this.state.manageColomns.date} /> Date</MenuItem>
               </NavDropdown>
-  
+
             </form>
           <div className="padding-top content-container col-md-12">
             {this.state.isLoaded === true ? (
@@ -1230,17 +1232,17 @@ export default class AncVisits extends React.Component {
                 <TableHeaderColumn hidden={this.state.manageColomns.name} dataSort={true} dataFormat={this.nameFormatter} dataField='name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.vht} dataSort={true} dataFormat={this.chewFormatter}  dataField='vht'>Chew</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health Facility</TableHeaderColumn>
-                  <TableHeaderColumn 
-                  hidden={this.state.manageColomns.trimester} 
-                  // dataSort={true} 
+                  <TableHeaderColumn
+                  hidden={this.state.manageColomns.trimester}
+                  // dataSort={true}
                   filterFormatted dataFormat={ this.enumFormatter }
-                  dataFormat={this.trimesterFormatter} 
+                  dataFormat={this.trimesterFormatter}
                   filter={ { type: 'SelectFilter', options: trimesterType } }
                   dataField='trimester'>Trimester</TableHeaderColumn>
                 <TableHeaderColumn hidden={this.state.manageColomns.date} dataSort={true} dataField='date'>Date</TableHeaderColumn>
-  
+
               </BootstrapTable>
-             
+
             ) : (
                 <span>Loading</span>
               )}
@@ -1254,7 +1256,7 @@ export default class AncVisits extends React.Component {
   class Check extends React.Component {
     constructor(props) {
       super(props);
-  
+
     }
     render() {
       return (

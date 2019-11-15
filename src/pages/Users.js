@@ -16,8 +16,11 @@ startOFDay.setHours(0, 0, 0, 0);
 
 let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
 
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
+// Setting end of day to the next day because of a bug in the backend that ommits todays dates data
+// if the query is from=2019-10-01&to=todaysDate
+// So setting the end date manually to the next day so todays data can be seen instantly once mapped.
+let endOfDay = moment(new Date()).add(1,'days');
+
 export default class Users extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -37,7 +40,7 @@ export default class Users extends React.Component {
     handleClose(modal) {
         this.setState({ [modal]: false });
       }
-    
+
       handleShow(modal) {
         this.setState({ [modal]: true });
       }
@@ -49,16 +52,16 @@ export default class Users extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value
         });
       }
-     
+
     render() {
       return (
         <React.Fragment>
-      
+
           <div className="col-md-12">
           <div className="col-md-12 title">
               <h4 className="pull-left"> <span><FontAwesomeIcon icon={faUsers} /></span> Users</h4>
@@ -73,9 +76,9 @@ export default class Users extends React.Component {
                   <MenuItem onClick={()=>this.handleShow("chew")} eventKey="1">CHEW</MenuItem>
                   <MenuItem onClick={()=>this.handleShow("midwife")} eventKey="2">Midwives</MenuItem>
                   <MenuItem onClick={()=>this.handleShow("ambulance")} eventKey="3">Ambulance</MenuItem>
-                </DropdownButton> 
+                </DropdownButton>
               </div>
-              
+
               <br className="clear-both"/>
               <br className="clear-both"/>
             </div>
@@ -126,7 +129,7 @@ export default class Users extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value
       });
@@ -242,11 +245,11 @@ export default class Users extends React.Component {
                     <label>Username</label>
                     <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
                 </div>
-                
+
                 <div className="form-group col-md-6">
                 <label>Password</label>
                     <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
-                    
+
                     </div>
             </div>
         <div className="col-md-12">
@@ -262,15 +265,15 @@ export default class Users extends React.Component {
                       {value.name}
                         </option>
                     ))}
-                        
+
                     </select>
-                    
+
                     </div>
                     <br className="clear-both"/>
                     <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Chew" : "Submit"}</button>
                     <br className="clear-both"/>
                     </div>
-                     
+
             </form>
           </Modal.Body>
           <Modal.Footer>
@@ -283,7 +286,7 @@ export default class Users extends React.Component {
   class VHT extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             users: [],
             users_copy:[],
@@ -325,7 +328,7 @@ export default class Users extends React.Component {
     //       sizePerPage: sizePerPage
     //     });
     //   }
-    
+
       getData() {
           const thisApp = this;
           thisApp.setState({
@@ -357,9 +360,9 @@ export default class Users extends React.Component {
               );
               }
         });
-    
+
       }
-      
+
       search(event) {
         this.setState({ search: event.target.value });
         if (event.target.value.length <= 0) {
@@ -367,7 +370,7 @@ export default class Users extends React.Component {
             users: this.state.users_copy
           });
         } else {
-      
+
           let options = {
             shouldSort: true,
             threshold: 0.6,
@@ -383,20 +386,20 @@ export default class Users extends React.Component {
               "phone"
             ]
           };
-      
+
           var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
           var result = fuse.search(event.target.value);
           this.setState({
             users: result
           });
         }
-      
+
       }
 
       updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
-    
+
         if (this.state.manageColomns[colomn] === true) {
           manageColomns[colomn] = false;
           this.setState({
@@ -408,7 +411,7 @@ export default class Users extends React.Component {
             manageColomns: manageColomns
           })
         }
-    
+
       }
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
@@ -417,7 +420,7 @@ export default class Users extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value,
           isLoaded: false
@@ -427,10 +430,10 @@ export default class Users extends React.Component {
       }
       render() {
         let users = this.state.users
-  
-    
-       
-    
+
+
+
+
         const options = {
           page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
@@ -456,17 +459,17 @@ export default class Users extends React.Component {
                   <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
-                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
-                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>        
-                  <MenuItem onClick={(e, sub_county) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
-                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
+                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>
+                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>
+                  <MenuItem onClick={(e, sub_county) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>
+                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>
                 </NavDropdown>
-    
+
               </form>
-    
-           
-    
+
+
+
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
                 <BootstrapTable data={users}
@@ -488,12 +491,12 @@ export default class Users extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataField='village'>Village</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
-                 
-                  
-    
-    
+
+
+
+
                 </BootstrapTable>
-               
+
               ) : (
                   <span>Loading</span>
                 )}
@@ -502,7 +505,7 @@ export default class Users extends React.Component {
             </div>
         );
       }
-    
+
 
   }
 
@@ -510,7 +513,7 @@ export default class Users extends React.Component {
   class Midwives extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
           users: [],
           users_copy:[],
@@ -553,7 +556,7 @@ export default class Users extends React.Component {
     //       sizePerPage: sizePerPage
     //     });
     //   }
-    
+
     getData() {
       const thisApp = this;
       thisApp.setState({
@@ -594,7 +597,7 @@ export default class Users extends React.Component {
         users: this.state.users_copy
       });
     } else {
-  
+
       let options = {
         shouldSort: true,
         threshold: 0.6,
@@ -610,24 +613,24 @@ export default class Users extends React.Component {
           "phone"
         ]
       };
-  
+
       var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
       var result = fuse.search(event.target.value);
       this.setState({
         users: result
       });
     }
-  
+
   }
-    
-    
-        
-        
-   
+
+
+
+
+
       updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
-    
+
         if (this.state.manageColomns[colomn] === true) {
           manageColomns[colomn] = false;
           this.setState({
@@ -639,7 +642,7 @@ export default class Users extends React.Component {
             manageColomns: manageColomns
           })
         }
-    
+
       }
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
@@ -648,7 +651,7 @@ export default class Users extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value,
           isLoaded: false
@@ -658,10 +661,10 @@ export default class Users extends React.Component {
       }
       render() {
         let users = this.state.users;
-  
-    
-       
-    
+
+
+
+
         const options = {
           page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
@@ -686,19 +689,19 @@ export default class Users extends React.Component {
                   <label htmlFor="email">Search:</label>
                   <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
-    
+
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
-                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
-                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>        
-                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
-                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
+                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>
+                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>
+                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>
+                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>
                 </NavDropdown>
-    
+
               </form>
-    
-           
-    
+
+
+
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
                 <BootstrapTable data={users}
@@ -720,12 +723,12 @@ export default class Users extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
-                 
-                  
-    
-    
+
+
+
+
                 </BootstrapTable>
-               
+
               ) : (
                   <span>Loading</span>
                 )}
@@ -734,14 +737,14 @@ export default class Users extends React.Component {
             </div>
         );
       }
-    
+
 
   }
 
   class AmbulanceDrivers extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
           users: [],
           users_copy:[],
@@ -775,8 +778,8 @@ export default class Users extends React.Component {
       componentDidMount() {
        this.getData();
       }
-    
-    
+
+
     getData() {
       const thisApp = this;
       thisApp.setState({
@@ -818,7 +821,7 @@ export default class Users extends React.Component {
           users: this.state.users_copy
         });
       } else {
-    
+
         let options = {
           shouldSort: true,
           threshold: 0.6,
@@ -834,20 +837,20 @@ export default class Users extends React.Component {
             "phone"
           ]
         };
-    
+
         var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
         var result = fuse.search(event.target.value);
         this.setState({
           users: result
         });
       }
-    
+
     }
-   
+
       updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
-    
+
         if (this.state.manageColomns[colomn] === true) {
           manageColomns[colomn] = false;
           this.setState({
@@ -859,7 +862,7 @@ export default class Users extends React.Component {
             manageColomns: manageColomns
           })
         }
-    
+
       }
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
@@ -868,7 +871,7 @@ export default class Users extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value,
           isLoaded: false
@@ -878,10 +881,10 @@ export default class Users extends React.Component {
       }
       render() {
         let users = this.state.users
-  
-    
-       
-    
+
+
+
+
         const options = {
           page: 1,  // which page you want to show as default
           // onPageChange: this.onPageChange,
@@ -905,20 +908,20 @@ export default class Users extends React.Component {
                   <label htmlFor="email">Search:</label>
                   <input name="from" value={this.state.search} onChange={this.search} placeholder="Type something here" className="search form-control" type="text" />
                 </div>
-    
+
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
-                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
-                  <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>        
-                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
-                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
-                  <MenuItem onClick={(e, number_place) => this.updateTable("number_place")} eventKey={3.1}> <Check state={this.state.manageColomns.number_place} /> Number plate</MenuItem>               
+                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                  <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>
+                  <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>
+                  <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>
+                  <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>
+                  <MenuItem onClick={(e, number_place) => this.updateTable("number_place")} eventKey={3.1}> <Check state={this.state.manageColomns.number_place} /> Number plate</MenuItem>
                 </NavDropdown>
-    
+
               </form>
-    
-           
-    
+
+
+
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
                 <BootstrapTable data={users}
@@ -941,12 +944,12 @@ export default class Users extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.number_place} dataField='number_place'>Number plate</TableHeaderColumn>
 
-                 
-                  
-    
-    
+
+
+
+
                 </BootstrapTable>
-               
+
               ) : (
                   <span>Loading</span>
                 )}
@@ -955,14 +958,14 @@ export default class Users extends React.Component {
             </div>
         );
       }
-    
+
 
   }
 
   class Check extends React.Component {
     constructor(props) {
       super(props);
-  
+
     }
     render() {
       return (
@@ -997,7 +1000,7 @@ export default class Users extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value
       });
@@ -1113,11 +1116,11 @@ export default class Users extends React.Component {
                     <label>Username</label>
                     <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
                 </div>
-                
+
                 <div className="form-group col-md-6">
                 <label>Password</label>
                     <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
-                    
+
                     </div>
             </div>
         <div className="col-md-12">
@@ -1133,15 +1136,15 @@ export default class Users extends React.Component {
                       {value.name}
                         </option>
                     ))}
-                        
+
                     </select>
-                    
+
                     </div>
                     <br className="clear-both"/>
                     <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Midwife" : "Submit"}</button>
                     <br className="clear-both"/>
                     </div>
-                     
+
             </form>
           </Modal.Body>
           <Modal.Footer>
@@ -1175,7 +1178,7 @@ export default class Users extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value
       });
@@ -1292,16 +1295,16 @@ export default class Users extends React.Component {
                     <label>Username</label>
                     <input required type="text" className="form-control" name="username"  onChange={this.handleChange} value={this.state.username} placeholder="jmusoke"></input>
                 </div>
-                
+
                 <div className="form-group col-md-6">
                 <label>Password</label>
                     <input required className="form-control" name="password" onChange={this.handleChange} value={this.state.password} type="password" placeholder="Password"></input>
-                    
+
                     </div>
                     <div className="form-group col-md-6">
                 <label>Number plate</label>
                     <input required className="form-control" name="number_place" onChange={this.handleChange} value={this.state.number_place} type="text" placeholder="Number plate"></input>
-                    
+
                     </div>
 
             </div>
@@ -1318,15 +1321,15 @@ export default class Users extends React.Component {
                       {value.name}
                         </option>
                     ))}
-                        
+
                     </select>
-                    
+
                     </div>
                     <br className="clear-both"/>
                     <button type="submit" className="btn btn-primary">{this.state.loading ? "Adding Ambulance" : "Submit"}</button>
                     <br className="clear-both"/>
                     </div>
-                     
+
             </form>
           </Modal.Body>
           <Modal.Footer>

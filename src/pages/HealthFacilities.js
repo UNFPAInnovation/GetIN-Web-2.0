@@ -15,8 +15,10 @@ startOFDay.setHours(0, 0, 0, 0);
 
 let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
 
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
+// Setting end of day to the next day because of a bug in the backend that ommits todays dates data
+// if the query is from=2019-10-01&to=todaysDate
+// So setting the end date manually to the next day so todays data can be seen instantly once mapped.
+let endOfDay = moment(new Date()).add(1,'days');
 
 
 
@@ -44,7 +46,7 @@ export default class AncVisits extends React.Component {
         // remote pagination
         currentPage: 1,
         sizePerPage: 20,
-        totalDataSize: 0   
+        totalDataSize: 0
       };
       this.getData = this.getData.bind(this);
       this.updateTable = this.updateTable.bind(this);
@@ -56,7 +58,7 @@ export default class AncVisits extends React.Component {
     handleClose(modal) {
         this.setState({ [modal]: false });
       }
-    
+
       handleShow(modal) {
         this.setState({ [modal]: true });
       }
@@ -68,7 +70,7 @@ export default class AncVisits extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+
       this.setState({
         [name]: value,
         isLoaded: false
@@ -80,7 +82,7 @@ export default class AncVisits extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
           [name]: value
         });
@@ -121,7 +123,7 @@ export default class AncVisits extends React.Component {
     updateTable(colomn) {
         //make a copy of state
         let manageColomns = this.state.manageColomns;
-    
+
         if (this.state.manageColomns[colomn] === true) {
           manageColomns[colomn] = false;
           this.setState({
@@ -133,7 +135,7 @@ export default class AncVisits extends React.Component {
             manageColomns: manageColomns
           })
         }
-    
+
       }
       search(event) {
         this.setState({ search: event.target.value });
@@ -142,7 +144,7 @@ export default class AncVisits extends React.Component {
             health_facilities: this.state.health_facilities_copy
           });
         } else {
-      
+
           let options = {
             shouldSort: true,
             threshold: 0.6,
@@ -155,14 +157,14 @@ export default class AncVisits extends React.Component {
               "parish"
             ]
           };
-      
+
           var fuse = new Fuse(this.state.health_facilities_copy, options); // "list" is the item array
           var result = fuse.search(event.target.value);
           this.setState({
             health_facilities: result
           });
         }
-      
+
       }
       enumFormatter(cell, row, enumObject) {
         return enumObject[cell];
@@ -186,7 +188,7 @@ export default class AncVisits extends React.Component {
 
       return (
         <React.Fragment>
-      
+
           <div className="col-md-12">
           <div className="col-md-12 title">
               <h4 className="pull-left"> <span><FontAwesomeIcon icon={faHospital} /></span> Health Facilities</h4>
@@ -218,15 +220,15 @@ export default class AncVisits extends React.Component {
               recently_missed_appointments:false
             */}
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>             
-                  <MenuItem onClick={(e, subcounty) => this.updateTable("subcounty")} eventKey={3.1}> <Check state={this.state.manageColomns.subcounty} /> Subcounty</MenuItem>             
-                  <MenuItem onClick={(e, midwives) => this.updateTable("midwives")} eventKey={3.1}> <Check state={this.state.manageColomns.midwives} /> Midwives</MenuItem>             
-                  <MenuItem onClick={(e, vhts) => this.updateTable("vhts")} eventKey={3.1}> <Check state={this.state.manageColomns.vhts} /> Chews</MenuItem>             
-                  <MenuItem onClick={(e, level) => this.updateTable("level")} eventKey={3.1}> <Check state={this.state.manageColomns.level} /> Level</MenuItem>             
-                  <MenuItem onClick={(e, av_deliveries) => this.updateTable("av_deliveries")} eventKey={3.1}> <Check state={this.state.manageColomns.av_deliveries} /> GETIN Average deliveries</MenuItem>             
-                  <MenuItem onClick={(e, ambulances) => this.updateTable("ambulances")} eventKey={3.1}> <Check state={this.state.manageColomns.ambulances} /> Ambulances</MenuItem>             
+                  <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                  <MenuItem onClick={(e, subcounty) => this.updateTable("subcounty")} eventKey={3.1}> <Check state={this.state.manageColomns.subcounty} /> Subcounty</MenuItem>
+                  <MenuItem onClick={(e, midwives) => this.updateTable("midwives")} eventKey={3.1}> <Check state={this.state.manageColomns.midwives} /> Midwives</MenuItem>
+                  <MenuItem onClick={(e, vhts) => this.updateTable("vhts")} eventKey={3.1}> <Check state={this.state.manageColomns.vhts} /> Chews</MenuItem>
+                  <MenuItem onClick={(e, level) => this.updateTable("level")} eventKey={3.1}> <Check state={this.state.manageColomns.level} /> Level</MenuItem>
+                  <MenuItem onClick={(e, av_deliveries) => this.updateTable("av_deliveries")} eventKey={3.1}> <Check state={this.state.manageColomns.av_deliveries} /> GETIN Average deliveries</MenuItem>
+                  <MenuItem onClick={(e, ambulances) => this.updateTable("ambulances")} eventKey={3.1}> <Check state={this.state.manageColomns.ambulances} /> Ambulances</MenuItem>
                 </NavDropdown>
-    
+
               </form>
             <div className="padding-top content-container col-md-12">
               {this.state.isLoaded === true ? (
@@ -251,9 +253,9 @@ export default class AncVisits extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.level} dataSort={true} dataField='level'>Level</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.av_deliveries} dataSort={true} dataField='av_deliveries'>GETIN Average deliveries</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.ambulances} dataSort={true} dataField='ambulances'>Ambulances</TableHeaderColumn>
-    
+
                 </BootstrapTable>
-               
+
               ) : (
                   <span>Loading</span>
                 )}
@@ -269,7 +271,7 @@ export default class AncVisits extends React.Component {
   class Check extends React.Component {
     constructor(props) {
       super(props);
-  
+
     }
     render() {
       return (

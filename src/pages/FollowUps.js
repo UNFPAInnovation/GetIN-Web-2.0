@@ -14,8 +14,10 @@ startOFDay.setHours(0, 0, 0, 0);
 
 let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
 
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
+// Setting end of day to the next day because of a bug in the backend that ommits todays dates data
+// if the query is from=2019-10-01&to=todaysDate
+// So setting the end date manually to the next day so todays data can be seen instantly once mapped.
+let endOfDay = moment(new Date()).add(1,'days');
 
 export default class FollowUps extends Component {
   constructor(props) {
@@ -121,11 +123,11 @@ export default class FollowUps extends Component {
   }
   getVillageItem(cell, row, item){
     return row.girl.village[item];
-    
+
   }
   getGirlItem(cell, row, item){
       return row.girl[item];
-    
+
   }
   getSubcountyItem(cell, row, item){
     return row.girl.village.parish.sub_county[item];
@@ -153,7 +155,7 @@ export default class FollowUps extends Component {
   dateFormatter(cell){
     console.log(cell);
     return moment(new Date(cell)).format('Do MMM YY hh a');
-   
+
   }
   enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
@@ -202,8 +204,8 @@ export default class FollowUps extends Component {
     }
 
   }
-  
-  
+
+
 
   render() {
     let followUps = this.state.followUps
@@ -246,30 +248,30 @@ export default class FollowUps extends Component {
               <input name="to" value={this.state.to} onChange={this.handleInputChange} className="form-control" type="date" />
             </div>
               <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
-              
-                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
-                <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
+
+                <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>
+                <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>
                 {/* <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>         */}
-                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>  
+                <MenuItem onClick={(e, trimester) => this.updateTable("trimester")} eventKey={3.1}> <Check state={this.state.manageColomns.trimester} /> Trimester</MenuItem>
                 <MenuItem onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin")} eventKey={3.1}> <Check state={this.state.manageColomns.next_of_kin} /> Next of kin</MenuItem>
                 <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>
                 <MenuItem onClick={(e, last_menstruation_date) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>
-                <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>   
-                <MenuItem onClick={(e, followup_reason) => this.updateTable("followup_reason")} eventKey={3.1}> <Check state={this.state.manageColomns.followup_reason} />Follow up reason</MenuItem>   
-                <MenuItem onClick={(e, name) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>  
-                <MenuItem onClick={(e, action_taken) => this.updateTable("action_taken")} eventKey={3.1}> <Check state={this.state.manageColomns.action_taken} /> Action taken</MenuItem>        
-                <MenuItem onClick={(e, blurred_vision) => this.updateTable("blurred_vision")} eventKey={3.1}> <Check state={this.state.manageColomns.blurred_vision} /> Blurred vision</MenuItem>        
-                <MenuItem onClick={(e, bleeding_heavily) => this.updateTable("bleeding_heavily")} eventKey={3.1}> <Check state={this.state.manageColomns.bleeding_heavily} /> Bleeding heavily</MenuItem>        
-                <MenuItem onClick={(e, fever) => this.updateTable("fever")} eventKey={3.1}> <Check state={this.state.manageColomns.fever} /> Fever</MenuItem>        
-                <MenuItem onClick={(e, swollen_feet) => this.updateTable("swollen_feet")} eventKey={3.1}> <Check state={this.state.manageColomns.swollen_feet} /> Swollen feet</MenuItem>        
-                <MenuItem onClick={(e, next_appointment) => this.updateTable("next_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Next Appointment</MenuItem>        
-                <MenuItem onClick={(e, follow_date) => this.updateTable("follow_date")} eventKey={3.1}> <Check state={this.state.manageColomns.follow_date} /> Follow up date</MenuItem>        
-                    
+                <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>
+                <MenuItem onClick={(e, followup_reason) => this.updateTable("followup_reason")} eventKey={3.1}> <Check state={this.state.manageColomns.followup_reason} />Follow up reason</MenuItem>
+                <MenuItem onClick={(e, name) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>
+                <MenuItem onClick={(e, action_taken) => this.updateTable("action_taken")} eventKey={3.1}> <Check state={this.state.manageColomns.action_taken} /> Action taken</MenuItem>
+                <MenuItem onClick={(e, blurred_vision) => this.updateTable("blurred_vision")} eventKey={3.1}> <Check state={this.state.manageColomns.blurred_vision} /> Blurred vision</MenuItem>
+                <MenuItem onClick={(e, bleeding_heavily) => this.updateTable("bleeding_heavily")} eventKey={3.1}> <Check state={this.state.manageColomns.bleeding_heavily} /> Bleeding heavily</MenuItem>
+                <MenuItem onClick={(e, fever) => this.updateTable("fever")} eventKey={3.1}> <Check state={this.state.manageColomns.fever} /> Fever</MenuItem>
+                <MenuItem onClick={(e, swollen_feet) => this.updateTable("swollen_feet")} eventKey={3.1}> <Check state={this.state.manageColomns.swollen_feet} /> Swollen feet</MenuItem>
+                <MenuItem onClick={(e, next_appointment) => this.updateTable("next_appointment")} eventKey={3.1}> <Check state={this.state.manageColomns.next_appointment} /> Next Appointment</MenuItem>
+                <MenuItem onClick={(e, follow_date) => this.updateTable("follow_date")} eventKey={3.1}> <Check state={this.state.manageColomns.follow_date} /> Follow up date</MenuItem>
+
               </NavDropdown>
 
           </form>
 
-       
+
 
         <div className="padding-top content-container col-md-12">
           {this.state.isLoaded === true ? (
@@ -306,7 +308,7 @@ export default class FollowUps extends Component {
               <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataField='next_appointment'>Next Appointment</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>
             </BootstrapTable>
-           
+
           ) : (
               <span>Loading</span>
             )}
