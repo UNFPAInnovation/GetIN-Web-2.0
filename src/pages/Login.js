@@ -29,11 +29,12 @@ export  default class Login extends Component {
             alertifyjs.error('Email / password combination is not valid.', 5, function(){  console.log('dismissed'); });
           }
           else{
-           sessionStorage.removeItem('token');
-           sessionStorage.setItem('token', token);
-           console.log(token);
+           
+         //  console.log(token);
            alertifyjs.success('Signed Successfully', 5, function(){  console.log('dismissed'); });
-          window.location.href="/dashboard";
+         // window.location.href="/dashboard";
+         // Temporary Fix
+         window.location.href="/anc_visits";
           }
     });
   }

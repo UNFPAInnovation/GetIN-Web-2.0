@@ -55,15 +55,17 @@ class App extends Component {
         );
         sessionStorage.removeItem("token");
       } else {
-        sessionStorage.removeItem("username");
-        sessionStorage.setItem("username", response.data && response.data.username && response.data.username);
+        // sessionStorage.removeItem("username");
+        // sessionStorage.setItem("username", response.data && response.data.username && response.data.username);
         thisApp.setState(
           {
             isLoggedIn: true
           },
           () => console.log(thisApp.state)
         );
-        window.location.href = "/dashboard";
+        window.location.href = "/anc_visits";
+       // temporary disable untill dashbaord is ready
+        // window.location.href = "/dashboard";
         console.log("Authenticated");
       }
     });
@@ -205,7 +207,9 @@ class App extends Component {
             path="/"
             render={() =>
               this.state.isLoggedIn ? (
-                <Redirect to="/dashboard" />
+                // <Redirect to="/dashboard" />
+                //temporary fix until dashboard is sorted
+                <Redirect to="/anc_visits" />
               ) : (
                 <LoginPage>
                   {" "}

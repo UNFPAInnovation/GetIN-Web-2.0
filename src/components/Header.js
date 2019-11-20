@@ -17,13 +17,15 @@ export default class Header extends Component{
     logout() {
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('username');
-      alertifyjs.message('Loggin out', 5, function(){  console.log('dismissed'); });
+      sessionStorage.removeItem('district');
+      alertifyjs.message('Logging out', 5, function(){  console.log('dismissed'); });
       window.location.href="/";
     }
     componentDidMount(){
+      let username = sessionStorage.getItem("username");
       this.setState({
-        loggedInAs:sessionStorage.getItem("username"),
-      })
+        loggedInAs:username,
+      });
     }
     render(){
         return(

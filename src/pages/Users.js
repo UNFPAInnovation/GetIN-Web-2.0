@@ -234,7 +234,7 @@ export default class Users extends React.Component {
                         </option>
                     </select>
                 </div>
-                <div className="form-group col-md-6">
+                <div className="form-group col-md-12">
                     <label>Email address</label>
                     <input required type="email" className="form-control" name="email"  onChange={this.handleChange} value={this.state.email} placeholder="jmusoke@gmail.com"></input>
                 </div>
