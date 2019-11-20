@@ -220,11 +220,11 @@ class HealthFacility extends Component {
     familyPlanningFormatter(cell, row) {
       // console.log(cell);
       let familyPlanning = "";
-       if(row.using_family_planning){
-           return familyPlanning = "Yes, "+row.family_planning_type;
+       if(row.family_planning[0].using_family_planning===true){
+           return familyPlanning = "Yes, "+row.family_planning[0].method;
        }
       else{
-           return familyPlanning = "None, "+row.no_family_planning_reason;
+           return familyPlanning = "None, "+row.family_planning[0].no_family_planning_reason;
        }
      }
     enumFormatter(cell, row, enumObject) {
@@ -708,11 +708,11 @@ class Home extends Component {
   familyPlanningFormatter(cell, row) {
     // console.log(cell);
     let familyPlanning = "";
-     if(row.using_family_planning){
-         return familyPlanning = "Yes, "+row.family_planning_type;
+     if(row.family_planning[0].using_family_planning===true){
+         return familyPlanning = "Yes, "+row.family_planning[0].method;
      }
     else{
-         return familyPlanning = "None, "+row.no_family_planning_reason;
+         return familyPlanning = "None, "+row.family_planning[0].no_family_planning_reason;
      }
    }
   enumFormatter(cell, row, enumObject) {
