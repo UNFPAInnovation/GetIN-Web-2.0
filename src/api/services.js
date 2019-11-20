@@ -8,14 +8,22 @@ exports.login = function(data, callback) {
     addr + "/auth/login/",
     { "content-type": "application/json" },
     data,
-    function(error, token_) {
+    function(error, response) {
       //callback of the method here
       console.log("error", error);
       if (error) {
         console.log(error);
         return callback(error);
       } else {
-        return callback(null, token_.auth_token);
+        console.log(JSON.stringify(response))
+        let district = response.user && response.user.village && response.user.village.parish && response.user.village.parish.sub_county && response.user.village.parish.sub_county.county && response.user.village.parish.sub_county.county.district && response.user.village.parish.sub_county.county.district;
+          sessionStorage.removeItem('district');
+          sessionStorage.removeItem('username');
+          sessionStorage.removeItem('token')
+          sessionStorage.setItem('district', district.name);
+          sessionStorage.setItem('username', response.user && response.user.username);
+           sessionStorage.setItem('token', response.auth_token);
+        return callback(null, response.auth_token);
       }
     }
   );

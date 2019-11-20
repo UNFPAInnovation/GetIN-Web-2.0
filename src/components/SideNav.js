@@ -8,7 +8,8 @@ export default class SideNav extends Component{
       super(props);
       this.state = {
         mini:false,
-        show:true
+        show:true,
+        district:""
       }
       this.ToggleMenu = this.ToggleMenu.bind(this);
     }
@@ -50,7 +51,7 @@ export default class SideNav extends Component{
       }
     activeMenu(){
          document.getElementById("girlsLink").classList.remove("active");
-         document.getElementById("dashboardLink").classList.remove("active");
+         //document.getElementById("dashboardLink").classList.remove("active");
          document.getElementById("usersLink").classList.remove("active");
          document.getElementById("anc_visitsLink").classList.remove("active");
          document.getElementById("follow_upsLink").classList.remove("active");
@@ -60,7 +61,7 @@ export default class SideNav extends Component{
          document.getElementById("deliveriesLink").classList.remove("active");
          
         if(window.location.pathname == "/dashboard"){
-            document.getElementById("dashboardLink").classList.add("active");
+            //document.getElementById("dashboardLink").classList.add("active");
         }
         else if(window.location.pathname == "/girls"){
             document.getElementById("girlsLink").classList.add("active");
@@ -80,6 +81,9 @@ export default class SideNav extends Component{
         else if(window.location.pathname == "/health_facilities"){
           document.getElementById("healthFacilitiesLink").classList.add("active");
       }
+      else if(window.location.pathname == "/messages"){
+        document.getElementById("messagesLink").classList.add("active");
+    }
       }
     componentDidUpdate(prevProps) {
       this.activeMenu();
@@ -87,6 +91,10 @@ export default class SideNav extends Component{
     }
     componentDidMount(){
         this.activeMenu();
+        let district = sessionStorage.getItem("district");
+      this.setState({
+        district:district,
+      });
     }
     render(){
         return(
@@ -96,7 +104,7 @@ export default class SideNav extends Component{
                      <a className="navbar-brand" href="/dashboard">
                      <img src={require('../assets/images/Logo.png')}/>
                      <span className="brand">GetIN</span>
-                     <span className="district">Arua</span>
+                     <span className="district">{this.state.district}</span>
                      </a>
           <button type="button" className="btn onMobile" onClick={this.ToggleMenu} id="handleSidebar">
           <FontAwesomeIcon icon={faAlignRight}/>
@@ -105,7 +113,7 @@ export default class SideNav extends Component{
     </nav>
 <div id="listMenu" className="col-md-12">
 <ListGroup>
-  <ListGroupItem id="dashboardLink"><Link to="/dashboard">{this.state.mini === false && "Dashboard & Reports"}   <FontAwesomeIcon icon={faHome} /></Link></ListGroupItem>
+  {/* <ListGroupItem id="dashboardLink"><Link to="/dashboard">{this.state.mini === false && "Dashboard & Reports"}   <FontAwesomeIcon icon={faHome} /></Link></ListGroupItem> */}
   <ListGroupItem id="anc_visitsLink"><Link to="/anc_visits">{ this.state.mini ===false && "ANC Visits"} <FontAwesomeIcon icon={faStethoscope}/></Link></ListGroupItem>
   <ListGroupItem id="girlsLink"><Link to="/girls">{ this.state.mini ===false && "Mapped girls"} <FontAwesomeIcon icon={faFemale}/></Link></ListGroupItem>
   <ListGroupItem id="follow_upsLink"><Link to="/follow_ups">{ this.state.mini ===false && "Follow ups"} <FontAwesomeIcon icon={faSync}/></Link></ListGroupItem>
