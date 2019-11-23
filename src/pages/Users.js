@@ -290,7 +290,7 @@ export default class Users extends React.Component {
             search:null,
             isLoaded: false,
             loadingText:"Loading ..",
-            role: 3,
+            role: "chew",
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -413,6 +413,9 @@ export default class Users extends React.Component {
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
       }
+      villageFormatter(cell, row) {
+        return row.village && row.village.name;
+      }
       handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -485,7 +488,7 @@ export default class Users extends React.Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataField='village'>Village</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataFormat ={this.villageFormatter} dataField='village'>Village</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
                  
@@ -518,7 +521,7 @@ export default class Users extends React.Component {
             isLoaded: false,
             loadingText:"Loading ..",
             status: "All",
-            role:4,
+            role:"midwives",
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
@@ -750,7 +753,7 @@ export default class Users extends React.Component {
             loadingText:"Loading ..",
             status: "All",
             from: prevMonthFirstDay,
-            role:5,
+            role:"ambulance",
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
             manageColomns: {
@@ -842,6 +845,9 @@ export default class Users extends React.Component {
         });
       }
     
+    }
+    parishFormatter(cell, row) {
+      return row.village && row.village.parish.name;
     }
    
       updateTable(colomn) {
@@ -936,7 +942,7 @@ export default class Users extends React.Component {
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataField='parish'>Parish</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataFormatter={this.parishFormatter} dataField='parish'>Parish</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.number_place} dataField='number_place'>Number plate</TableHeaderColumn>
