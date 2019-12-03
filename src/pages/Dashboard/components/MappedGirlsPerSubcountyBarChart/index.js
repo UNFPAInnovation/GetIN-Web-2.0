@@ -1,30 +1,39 @@
 import React, { useState, useMemo } from 'react';
 
-// Chart componets
-import { Bar } from 'react-chartjs-2';
+// Chart Stuff
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import Drilldown from 'highcharts/modules/drilldown.js';
 
 // Chart Card Component
 import ChartCard from '../../../../components/ChartCard';
 
-// Chart options
-import { options } from '../../../../components/Charts/chartOptions';
+// Utils
+import { getDistrict } from '../../../../components/Charts/utils/utils';
 
 // Chart + Chart Data
 import { MappedGirlsPerSubcountyBarChart } from '../../../../components/Charts/MappedGirlsPerSubcountyBarChart';
 
 const MappedGirlsPerSubcountyBarChartCard = ({ data }) => {
   const [chart, setChart] = useState();
+  const [district, setDistrict] = useState();
 
   useMemo(() => {
     if (data && data) {
+      setDistrict(getDistrict(data));
       setChart(MappedGirlsPerSubcountyBarChart(data));
     }
   }, [data]);
 
   return (
     <ChartCard
-      title={'Mapped girls per subcounty'}
-      content={<Bar data={chart} width={100} height={400} options={options} />}
+      title={'Mappeg girls per subcounty from ' + district}
+      content={
+        <HighchartsReact
+          highcharts={Drilldown(Highcharts)}
+          options={chart && chart}
+        />
+      }
     />
   );
 };
