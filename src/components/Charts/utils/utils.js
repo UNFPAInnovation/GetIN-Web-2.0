@@ -1,3 +1,5 @@
+import { MappedGirlsPerSubcountyBarChart } from '../MappedGirlsPerSubcountyBarChart';
+
 // Various utility functions for graphs
 
 const getDistrict = data => {
