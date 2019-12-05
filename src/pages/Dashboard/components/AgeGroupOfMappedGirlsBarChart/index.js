@@ -1,32 +1,35 @@
 import React, { useState, useMemo } from 'react';
 
+// Chart Stuff
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+
 // Chart componets
 import { Bar } from 'react-chartjs-2';
 
 // Chart Card Component
 import ChartCard from '../../../../components/ChartCard';
 
-// Chart options
-import { options } from '../../../../components/Charts/chartOptions';
-
 // Chart + Chart Data
-import { AgeGroupOfMappedGirlsBarChart } from '../../../../components/Charts/AgeGroupOfMappedGirlsBarChart';
+import { AgeGroupOfMappedGirlsPieChart } from '../../../../components/Charts/AgeGroupOfMappedGirlsPieChart';
 
-const AgeGroupOfMappedGirlsBarChartCard = ({ data }) => {
+const AgeGroupOfMappedGirlsPieChartCard = ({ data }) => {
   const [chart, setChart] = useState();
 
   useMemo(() => {
     if (data && data) {
-      setChart(AgeGroupOfMappedGirlsBarChart(data));
+      setChart(AgeGroupOfMappedGirlsPieChart(data));
     }
   }, [data]);
 
   return (
     <ChartCard
       title={'Age group of mapped girls'}
-      content={<Bar data={chart} width={100} height={400} options={options} />}
+      content={
+        <HighchartsReact highcharts={Highcharts} options={chart && chart} />
+      }
     />
   );
 };
 
-export default AgeGroupOfMappedGirlsBarChartCard;
+export default AgeGroupOfMappedGirlsPieChartCard;

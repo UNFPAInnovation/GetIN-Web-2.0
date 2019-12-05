@@ -1,30 +1,53 @@
-// Import utility functions
-import { aggregateAgesByMonth, getMonths } from './utils/utils';
-
-// Import subcounties
-import { BUNDIBUGYO_SUBCOUNTIES } from '../../constants/subcounties';
+// Util functions
+import {
+  aggregateSubcountyData,
+  getMonthCount,
+  getMonths
+} from './utils/utils';
 
 const MappedGirlsPerSubcountyBarChart = data => {
-  let months = getMonths(data);
+  const months = getMonths(data);
+  const totalGirlsMappedObject = getMonthCount(data, months);
+  const subcountyDataObject = aggregateSubcountyData(data);
+  const district = [...new Set(data.map(month => month.district))];
 
-  const BUBANDI = aggregateAgesByMonth(
-    data,
-    months,
-    'totalNumberOfGirlsMappedFromBUBANDI'
-  );
-
-  console.log(BUBANDI);
-
-  return {
-    labels: [...months],
-    datasets: [
-      {
-        label: 'BUBANDI',
-        backgroundColor: '#A4A1FB',
-        data: BUBANDI
+  let chart = {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ''
+    },
+    xAxis: {
+      type: 'category'
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Total number of girls mapped from ' + district
       }
-    ]
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0,
+        minPointLength: 3,
+        pointWidth: 4,
+        shadow: false
+      }
+    },
+
+    series: [totalGirlsMappedObject],
+    drilldown: {
+      allowPointDrilldown: false,
+      xAxis: 0,
+      series: subcountyDataObject
+    }
   };
+  return chart;
 };
 
 export { MappedGirlsPerSubcountyBarChart };
