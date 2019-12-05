@@ -1,25 +1,24 @@
-import React, { Component, Suspense } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import React, { Component, Suspense } from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import ScrollToTop from "./components/ScrollToTop";
-import Seo from "./components/Seo";
-import "./styles/global.scss";
+import ScrollToTop from './components/ScrollToTop';
+import Seo from './components/Seo';
+import './styles/global.scss';
 
-const HomePage = React.lazy(() => import("./pages/HomePage"));
-const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
-const MappedGirls = React.lazy(() => import("./pages/MappedGirls"));
-const FollowUps = React.lazy(() => import("./pages/FollowUps"));
-const Users = React.lazy(() => import("./pages/Users"));
-const AncVisits = React.lazy(() => import("./pages/AncVisits"));
-const Login = React.lazy(() => import("./pages/Login"));
-const Layout = React.lazy(() => import("./components/Layout"));
-const NotFound = React.lazy(() => import("./components/NotFound"));
-const Deliveries = React.lazy(() => import("./pages/Deliveries"));
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const MappedGirls = React.lazy(() => import('./pages/MappedGirls'));
+const FollowUps = React.lazy(() => import('./pages/FollowUps'));
+const Users = React.lazy(() => import('./pages/Users'));
+const AncVisits = React.lazy(() => import('./pages/AncVisits'));
+const Login = React.lazy(() => import('./pages/Login'));
+const Layout = React.lazy(() => import('./components/Layout'));
+const NotFound = React.lazy(() => import('./components/NotFound'));
+const Deliveries = React.lazy(() => import('./pages/Deliveries'));
 const Messages = React.lazy(() => import('./pages/Messages'));
 const HealthFacilities = React.lazy(() => import('./pages/HealthFacilities'));
 
-
-const service = require("./api/services");
+const service = require('./api/services');
 
 class App extends Component {
   constructor(props) {
@@ -27,12 +26,12 @@ class App extends Component {
     this.state = {
       isLoaded: false,
       isLoggedIn: false,
-      token: ""
+      token: ''
     };
     this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     this.IsAdminLoggedin.bind(this);
     this.loginValidate.bind(this);
-    if (window.location.pathname == "/") {
+    if (window.location.pathname == '/') {
       this.loginValidate();
     } else {
       this.IsAdminLoggedin();
@@ -48,12 +47,12 @@ class App extends Component {
         thisApp.setState(
           {
             isLoggedIn: false,
-            token: "",
+            token: '',
             isLoaded: false
           },
           () => console.log(thisApp.state)
         );
-        sessionStorage.removeItem("token");
+        sessionStorage.removeItem('token');
       } else {
         // sessionStorage.removeItem("username");
         // sessionStorage.setItem("username", response.data && response.data.username && response.data.username);
@@ -63,10 +62,8 @@ class App extends Component {
           },
           () => console.log(thisApp.state)
         );
-        window.location.href = "/anc_visits";
-       // temporary disable untill dashbaord is ready
-        // window.location.href = "/dashboard";
-        console.log("Authenticated");
+        window.location.href = '/dashboard';
+        console.log('Authenticated');
       }
     });
   }
@@ -80,23 +77,23 @@ class App extends Component {
         thisApp.setState(
           {
             isLoggedIn: false,
-            token: "",
+            token: '',
             isLoaded: false
           },
           () => console.log(thisApp.state)
         );
-        sessionStorage.removeItem("token");
-        window.location.href = "/";
+        sessionStorage.removeItem('token');
+        window.location.href = '/';
       } else {
-        sessionStorage.removeItem("username");
-        sessionStorage.setItem("username", response.username);
+        sessionStorage.removeItem('username');
+        sessionStorage.setItem('username', response.username);
         thisApp.setState(
           {
             isLoggedIn: true
           },
           () => console.log(thisApp.state)
         );
-        console.log("Authenticated");
+        console.log('Authenticated');
       }
     });
   }
@@ -106,21 +103,21 @@ class App extends Component {
   }
   componentDidMount() {
     // NProgress.done();
-    window.addEventListener("offline", function(e) {
-      console.log("Offline, please check your internet connection");
+    window.addEventListener('offline', function(e) {
+      console.log('Offline, please check your internet connection');
       // alertifyjs.error('You are offline, please check your internet connection', 3, function () { console.log('dismissed'); });
     });
   }
   render() {
     return (
-      <BrowserRouter basename="/">
+      <BrowserRouter basename='/'>
         <Switch>
           <Route
             exact
-            path="/dashboard"
+            path='/dashboard'
             render={() => (
               <SF>
-                <Seo title="GetIn Dashboard" description="" keywords="" />
+                <Seo title='GetIn Dashboard' description='' keywords='' />
 
                 <Dashboard />
               </SF>
@@ -128,13 +125,13 @@ class App extends Component {
           />
           <Route
             exact
-            path="/anc_visits"
+            path='/anc_visits'
             render={() => (
               <SF>
                 <Seo
-                  title="ANC Visits - GetIn Dashboard"
-                  description=""
-                  keywords=""
+                  title='ANC Visits - GetIn Dashboard'
+                  description=''
+                  keywords=''
                 />
                 <AncVisits />
               </SF>
@@ -142,13 +139,13 @@ class App extends Component {
           />
           <Route
             exact
-            path="/follow_ups"
+            path='/follow_ups'
             render={() => (
               <SF>
                 <Seo
-                  title="Follow ups - GetIn Dashboard"
-                  description=""
-                  keywords=""
+                  title='Follow ups - GetIn Dashboard'
+                  description=''
+                  keywords=''
                 />
                 <FollowUps />
               </SF>
@@ -156,13 +153,13 @@ class App extends Component {
           />
           <Route
             exact
-            path="/girls"
+            path='/girls'
             render={() => (
               <SF>
                 <Seo
-                  title="Mapped girls - GetIn Dashboard"
-                  description=""
-                  keywords=""
+                  title='Mapped girls - GetIn Dashboard'
+                  description=''
+                  keywords=''
                 />
                 <MappedGirls />
               </SF>
@@ -170,13 +167,13 @@ class App extends Component {
           />
           <Route
             exact
-            path="/users"
+            path='/users'
             render={() => (
               <SF>
                 <Seo
-                  title="Users - GetIn Dashboard"
-                  description=""
-                  keywords=""
+                  title='Users - GetIn Dashboard'
+                  description=''
+                  keywords=''
                 />
                 <Users />
               </SF>
@@ -184,53 +181,69 @@ class App extends Component {
           />
           <Route
             exact
-            path="/deliveries"
+            path='/deliveries'
             render={() => (
               <SF>
                 <Seo
-                  title="Deliveries - GetIn Dashboard"
-                  description=""
-                  keywords=""
+                  title='Deliveries - GetIn Dashboard'
+                  description=''
+                  keywords=''
                 />
                 <Deliveries />
               </SF>
             )}
           />
-          <Route exact path="/health_facilities" render={() => (
-          <SF>
-            <Seo title="Health facilities - GetIn Dashboard" description="" keywords=""/>
-            <HealthFacilities />      
-          </SF>
-        )} />
           <Route
             exact
-            path="/"
+            path='/health_facilities'
+            render={() => (
+              <SF>
+                <Seo
+                  title='Health facilities - GetIn Dashboard'
+                  description=''
+                  keywords=''
+                />
+                <HealthFacilities />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path='/'
             render={() =>
               this.state.isLoggedIn ? (
                 // <Redirect to="/dashboard" />
                 //temporary fix until dashboard is sorted
-                <Redirect to="/anc_visits" />
+                <Redirect to='/anc_visits' />
               ) : (
                 <LoginPage>
-                  {" "}
+                  {' '}
                   <Login />
                 </LoginPage>
               )
             }
           />
-          <Route exact path="/messages" render={() => (
-          <SF>
-            <Seo title="Messages - GetIn Dashboard" description="" keywords=""/>
-            <Messages />      
-          </SF>
-        )} />
+          <Route
+            exact
+            path='/messages'
+            render={() => (
+              <SF>
+                <Seo
+                  title='Messages - GetIn Dashboard'
+                  description=''
+                  keywords=''
+                />
+                <Messages />
+              </SF>
+            )}
+          />
           <Route
             render={() => (
               <SF>
                 <Seo
-                  title="Not found"
-                  description="We are sorry the page you are looking for was not found"
-                  keywords=""
+                  title='Not found'
+                  description='We are sorry the page you are looking for was not found'
+                  keywords=''
                 />
                 <NotFound />
               </SF>
@@ -249,10 +262,10 @@ class SF extends Component {
         <ErrorBoundary>
           <Suspense
             fallback={
-              <div className="loading text-center">
-                <div className="spacer"></div>
-                <div className="spacer"></div>
-                <div className="spacer"></div>
+              <div className='loading text-center'>
+                <div className='spacer'></div>
+                <div className='spacer'></div>
+                <div className='spacer'></div>
                 {/* <Logo/> */}
                 <span>Loading...</span>
               </div>
@@ -272,10 +285,10 @@ class LoginPage extends Component {
         <ErrorBoundary>
           <Suspense
             fallback={
-              <div className="loading text-center">
-                <div className="spacer"></div>
-                <div className="spacer"></div>
-                <div className="spacer"></div>
+              <div className='loading text-center'>
+                <div className='spacer'></div>
+                <div className='spacer'></div>
+                <div className='spacer'></div>
                 {/* <Logo/> */}
                 <span>Loading...</span>
               </div>
@@ -308,9 +321,9 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <React.Fragment>
-          <div className="container-custom text-center">
-            <h1 className="page-header text-center">Something went wrong.</h1>
-            <a className="btn btn-primary text-center" href="/">
+          <div className='container-custom text-center'>
+            <h1 className='page-header text-center'>Something went wrong.</h1>
+            <a className='btn btn-primary text-center' href='/'>
               Reload
             </a>
           </div>
