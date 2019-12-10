@@ -158,7 +158,13 @@ export default class MappedGirls extends Component {
     return row.girl.village.parish && row.girl.village.parish[item];
   }
   getGirlItem(cell, row, item) {
-    return row.girl[item];
+
+    let data =  row.girl[item];
+    if(item ==="last_menstruation_date"){
+      return moment(new Date(data)).format('Do MMM YY');
+    }else{
+      return data;
+    }
   }
   nameFormatter(cell, row) {
     return (
@@ -174,7 +180,8 @@ export default class MappedGirls extends Component {
   }
 
   dateFormatter(cell, row) {
-    return row.girl.created_at.substring(0, 10);
+    return moment(new Date(cell)).format('Do MMM YY hh a');
+  //  return row.girl.created_at.substring(0, 10);
   }
 
   search(event) {
@@ -212,11 +219,21 @@ export default class MappedGirls extends Component {
   familyPlanningFormatter(cell, row) {
     // console.log(cell);
     let familyPlanning = '';
-    if (row.using_family_planning) {
-      return (familyPlanning = 'Yes, ' + row.family_planning_type);
+    if (row.family_planning[0].using_family_planning) {
+      return (familyPlanning = 'Yes, ' + row.family_planning[0].method);
     } else {
-      return (familyPlanning = 'None, ' + row.no_family_planning_reason);
+      return (familyPlanning = 'None, ' + row.family_planning[0].no_family_planning_reason);
     }
+  }
+  observationFormatter(cell, row, item) {
+
+      let observation = row.observation[item];
+      if (observation){
+        return "Yes"
+      }
+      else{
+        return "No"
+      }
   }
   enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
@@ -632,32 +649,28 @@ export default class MappedGirls extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.fever}
-                  dataFormat={this.enumFormatter}
-                  formatExtraData={YesNoFormat}
+                  dataFormat={(cell, row, item)=>this.observationFormatter(cell, row, "fever")}
                   dataField='fever'
                 >
                   Has fever
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.bleeding_heavily}
-                  dataFormat={this.enumFormatter}
-                  formatExtraData={YesNoFormat}
+                  dataFormat={(cell, row, item)=>this.observationFormatter(cell, row, "bleeding_heavily")}
                   dataField='bleeding_heavily'
                 >
                   Bleeding heavily
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.blurred_vision}
-                  dataFormat={this.enumFormatter}
-                  formatExtraData={YesNoFormat}
+                  dataFormat={(cell, row, item)=>this.observationFormatter(cell, row, "blurred_vision")}
                   dataField='blurred_vision'
                 >
                   Blurred vision
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.swollen_feet}
-                  dataFormat={this.enumFormatter}
-                  formatExtraData={YesNoFormat}
+                  dataFormat={(cell, row, item)=>this.observationFormatter(cell, row, "swollen_feet")}
                   dataField='swollen_feet'
                 >
                   Has swollen feet

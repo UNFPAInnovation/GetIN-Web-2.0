@@ -6,6 +6,7 @@ import {Tabs, Tab} from 'react-bootstrap';
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn, ExportCSVButton } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import _ from 'underscore';
 const alertifyjs = require('alertifyjs');
 const service = require('../api/services');
 const Fuse = require("fuse.js");
@@ -70,7 +71,7 @@ export default class Users extends React.Component {
                   key={4}
                   id={"add-user-btn"}
                 >
-                  <MenuItem onClick={()=>this.handleShow("chew")} eventKey="1">CHEW</MenuItem>
+                  <MenuItem onClick={()=>this.handleShow("chew")} eventKey="1">VHT</MenuItem>
                   <MenuItem onClick={()=>this.handleShow("midwife")} eventKey="2">Midwives</MenuItem>
                   <MenuItem onClick={()=>this.handleShow("ambulance")} eventKey="3">Ambulance</MenuItem>
                 </DropdownButton> 
@@ -85,7 +86,7 @@ export default class Users extends React.Component {
           activeKey={this.state.key}
           onSelect={key => this.setState({ key })}
         >
-          <Tab eventKey="chews" title="CHEWS">
+          <Tab eventKey="chews" title="VHTs">
             <VHT />
           </Tab>
           <Tab eventKey="midwives" title="Midwives">
@@ -117,18 +118,27 @@ export default class Users extends React.Component {
         email:null,
         phone_number:null,
         village:null,
+        subcounty:null,
         villages:[],
+        villages_copy:[],
+        sub_counties:[],
         loading: false
       }
       this.handleChange = this.handleChange.bind(this);
+      this.updateVillagesList = this.updateVillagesList.bind(this);
     }
     handleChange(event) {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-  
+      //console.log(name);
       this.setState({
         [name]: value
+      }, function(){
+        if(name ===  "sub_county"){
+          console.log(value)
+          this.updateVillagesList()
+        }
       });
     }
     addChew(e){
@@ -147,14 +157,17 @@ export default class Users extends React.Component {
         village:this.state.village,
         password:this.state.password,
         phone:this.state.phone_number,
-        role:"vht"
-      }, function(error, token){
+        role:"chew"
+      }, function(error, response){
           if (error){
               console.log(error);
               thisApp.setState({
                 loading:false
               });
-              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+          //    console.log(response);
+            //  let error_message = response[Object.keys(response)[0]];
+             //console.log(error_message);
+              alertifyjs.error('Request failed, try again ', function(){  console.log('dismissed'); });
             }
             else{
               thisApp.setState({
@@ -168,8 +181,8 @@ export default class Users extends React.Component {
     getVillages() {
       const thisApp = this;
       thisApp.setState({
-      sub_counties: [],
-      sub_counties_copy: [],
+        villages: [],
+        villages_copy: [],
       loadingText:"Loading...",
     });
       service.getVillages(function(error, response){
@@ -188,7 +201,8 @@ export default class Users extends React.Component {
             thisApp.setState(
             {
               isLoaded: true,
-              villages:response.results
+              villages:response.results,
+              villages_copy:response.results
             },
             () => console.log(thisApp.state)
           );
@@ -196,14 +210,63 @@ export default class Users extends React.Component {
     });
 
   }
+  getSubCounties() {
+    const thisApp = this;
+    thisApp.setState({
+    sub_counties: [],
+    sub_counties_copy: [],
+    loadingText:"Loading...",
+  });
+ 
+    service.getSubCounties(function(error, response){
+    console.log(response);
+      if (error){
+          console.log(error);
+          thisApp.setState(
+          {
+            isLoaded: true,
+            sub_counties:[]
+          },
+          () => console.log(thisApp.state)
+        );
+        }
+        else{
+          thisApp.setState(
+          {
+            isLoaded: true,
+            sub_counties:response.results
+          },
+          () => console.log(thisApp.state)
+        );
+        }
+  });
+
+}
+updateVillagesList(){
+  const thisApp = this;
+  console.log("Updating village list", this.state.sub_county);
+  if(thisApp.state.sub_county){
+    let subcounty_villages = _.filter(thisApp.state.villages_copy, function(village){ return village.parish.sub_county.id === parseInt(thisApp.state.sub_county)} 
+    
+    //village.parish.sub_county.id === this.state.sub_county; 
+  );
+    console.log("Returned subcounty villages",subcounty_villages);
+    thisApp.setState({
+      villages:subcounty_villages,
+      village:null,
+    })
+  }
+
+}
     componentDidMount(){
       this.getVillages();
+      this.getSubCounties();
     }
     render(){
       return(
         <Modal show={this.props.show} onHide={()=>this.props.handleClose("chew")}>
           <Modal.Header closeButton>
-            <Modal.Title>Add a new CHEW</Modal.Title>
+            <Modal.Title>Add a new VHT</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={e =>this.addChew(e)}>
@@ -226,10 +289,10 @@ export default class Users extends React.Component {
                     <option defaultValue value={null}>
                       Select gender
                         </option>
-                        <option value={1}>
+                        <option value={"female"}>
                             Female
                         </option>
-                        <option value={0}>
+                        <option value={"male"}>
                             Male
                         </option>
                     </select>
@@ -252,8 +315,24 @@ export default class Users extends React.Component {
         <div className="col-md-12">
                 <br className="clear-both"/>
                 <div className="form-group col-md-6">
+                <label>Sub counties</label>
+                    <select required className="form-control" name="sub_county" onChange={this.handleChange} value={this.state.sub_county}>
+                    <option defaultValue value={null}>
+                      Select subcounty
+                        </option>
+                    { this.state.sub_counties.map( (value, key)=>(
+                      <option key={key} value={value.id}>
+                      {value.name}
+                        </option>
+                    ))}
+                        
+                    </select>
+                    
+                    </div>
+
+                <div className="form-group col-md-6">
                 <label>Villages</label>
-                    <select className="form-control" name="sub_county" onChange={this.handleChange} value={this.state.village}>
+                    <select required className="form-control" name="village" onChange={this.handleChange} value={this.state.village}>
                     <option defaultValue value={null}>
                       Select Village
                         </option>
@@ -297,6 +376,7 @@ export default class Users extends React.Component {
             manageColomns: {
               email: false,
               name:false,
+              phone:false,
               gender:false,
               village:false,
               username:false,
@@ -378,7 +458,7 @@ export default class Users extends React.Component {
             keys: [
               "first_name",
               "last_name",
-              "phone_number",
+              "phone",
               "email",
               "phone"
             ]
@@ -460,6 +540,7 @@ export default class Users extends React.Component {
                 </div>
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+                  <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>        
                   <MenuItem onClick={(e, sub_county) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
@@ -486,6 +567,7 @@ export default class Users extends React.Component {
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataFormat ={this.villageFormatter} dataField='village'>Village</TableHeaderColumn>
@@ -521,13 +603,14 @@ export default class Users extends React.Component {
             isLoaded: false,
             loadingText:"Loading ..",
             status: "All",
-            role:"midwives",
+            role:"midwife",
             from: prevMonthFirstDay,
             to: moment(endOfDay).local().format('YYYY-MM-DD'),
             showCoords: true,
             manageColomns: {
               email: false,
               name:false,
+              phone:false,
               gender:false,
               username:false,
               health_facility:false
@@ -692,6 +775,7 @@ export default class Users extends React.Component {
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+                  <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
@@ -718,6 +802,7 @@ export default class Users extends React.Component {
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
@@ -762,7 +847,8 @@ export default class Users extends React.Component {
               gender:false,
               username:false,
               parish:false,
-              number_place:false
+              phone:false,
+              number_plate:false
             },
             // remote pagination
             currentPage: 1,
@@ -847,7 +933,8 @@ export default class Users extends React.Component {
     
     }
     parishFormatter(cell, row) {
-      return row.village && row.village.parish.name;
+      console.log(row.village && row.village.parish.name)
+      return row.village && row.village.parish && row.village.parish.name;
     }
    
       updateTable(colomn) {
@@ -914,11 +1001,12 @@ export default class Users extends React.Component {
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+                  <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
                   <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
-                  <MenuItem onClick={(e, number_place) => this.updateTable("number_place")} eventKey={3.1}> <Check state={this.state.manageColomns.number_place} /> Number plate</MenuItem>               
+                  <MenuItem onClick={(e, number_plate) => this.updateTable("number_plate")} eventKey={3.1}> <Check state={this.state.manageColomns.number_plate} /> Number plate</MenuItem>               
                 </NavDropdown>
     
               </form>
@@ -941,11 +1029,12 @@ export default class Users extends React.Component {
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataFormatter={this.parishFormatter} dataField='parish'>Parish</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataFormat={this.parishFormatter} dataField='parish'>Parish</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.number_place} dataField='number_place'>Number plate</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.number_place} dataField='number_plate'>Number plate</TableHeaderColumn>
 
                  
                   
@@ -1103,10 +1192,10 @@ export default class Users extends React.Component {
                     <option defaultValue value={null}>
                       Select gender
                         </option>
-                        <option value={1}>
+                        <option value={"female"}>
                             Female
                         </option>
-                        <option value={0}>
+                        <option value={"male"}>
                             Male
                         </option>
                     </select>
@@ -1170,7 +1259,7 @@ export default class Users extends React.Component {
         gender:null,
         email:null,
         phone_number:null,
-        number_place:null,
+        number_plate:null,
         parish:null,
         parishes:[],
         loading: false
@@ -1200,7 +1289,7 @@ export default class Users extends React.Component {
         email:this.state.email,
         gender:this.state.gender,
         parish:this.state.parish,
-        number_place:this.state.number_place,
+        number_plate:this.state.number_plate,
         password:this.state.password,
         phone:this.state.phone_number,
         role:"ambulance"
@@ -1282,10 +1371,10 @@ export default class Users extends React.Component {
                     <option defaultValue value={null}>
                       Select gender
                         </option>
-                        <option value={1}>
+                        <option value={"female"}>
                             Female
                         </option>
-                        <option value={0}>
+                        <option value={"male"}>
                             Male
                         </option>
                     </select>
@@ -1306,7 +1395,7 @@ export default class Users extends React.Component {
                     </div>
                     <div className="form-group col-md-6">
                 <label>Number plate</label>
-                    <input required className="form-control" name="number_place" onChange={this.handleChange} value={this.state.number_place} type="text" placeholder="Number plate"></input>
+                    <input required className="form-control" name="number_plate" onChange={this.handleChange} value={this.state.number_plate} type="text" placeholder="Number plate"></input>
                     
                     </div>
 

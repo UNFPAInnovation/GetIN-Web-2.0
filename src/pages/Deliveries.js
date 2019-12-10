@@ -525,7 +525,7 @@ class HealthFacility extends Component {
                   hidden={this.state.manageColomns.received_postnatal_care}
                    dataFormat={this.enumFormatter}
                    formatExtraData={YesNoFormat}
-                  dataField="received_postnatal_care"
+                  dataField="postnatal_care"
                 >
                   Received postnatal care
                 </TableHeaderColumn>
