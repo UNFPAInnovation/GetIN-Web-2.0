@@ -220,11 +220,11 @@ class HealthFacility extends Component {
     familyPlanningFormatter(cell, row) {
       // console.log(cell);
       let familyPlanning = "";
-       if(row.family_planning[0].using_family_planning===true){
-           return familyPlanning = "Yes, "+row.family_planning[0].method;
+       if(row.family_planning && row.family_planning[0] && row.family_planning[0].using_family_planning===true){
+           return familyPlanning = "Yes, "+row.family_planning && row.family_planning[0].method;
        }
       else{
-           return familyPlanning = "None, "+row.family_planning[0].no_family_planning_reason;
+           return familyPlanning = "None, "+row.family_planning && row.family_planning[0] && row.family_planning[0].no_family_planning_reason;
        }
      }
     enumFormatter(cell, row, enumObject) {
@@ -1014,7 +1014,7 @@ class Home extends Component {
                 hidden={this.state.manageColomns.received_postnatal_care}
                  dataFormat={this.enumFormatter}
                  formatExtraData={YesNoFormat}
-                dataField="received_postnatal_care"
+                dataField="postnatal_care"
               >
                 Received postnatal care
               </TableHeaderColumn>
