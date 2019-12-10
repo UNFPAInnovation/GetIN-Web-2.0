@@ -72,7 +72,7 @@ exports.addMidwife = function(data, callback) {
       console.log("error", error);
       if (error) {
         console.log(error);
-        return callback(error);
+        return callback(error, response);
       } else {
         return callback(null, response);
       }
@@ -356,7 +356,7 @@ exports.deliveries = function(delivery_location, from, to, callback) {
  };
 exports.getSubCounties = function(callback) {
   api.get(
-    addr + "/api/v1/subcountys",
+    addr + "/api/v1/subcounties",
     {
       "content-type": "application/json",
       Authorization: "Token " + token
