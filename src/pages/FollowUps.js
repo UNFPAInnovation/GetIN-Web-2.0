@@ -47,8 +47,8 @@ export default class FollowUps extends Component {
         fever:true,
         swollen_feet:true,
         next_appointment:true,
-        follow_date:false
-
+        follow_date:false,
+        anc:false
       },
       // remote pagination
       currentPage: 1,
@@ -128,6 +128,14 @@ export default class FollowUps extends Component {
   }
   getSubcountyItem(cell, row, item){
     return row.girl.village.parish.sub_county[item];
+  }
+  ancFormatter(cell, row){
+    if(row.missed_anc_before){
+      return "Yes, "+ row.missed_anc_reason
+    }
+    else{
+      return "No"
+    }
   }
   updateTable(colomn) {
     //make a copy of state
@@ -254,7 +262,7 @@ export default class FollowUps extends Component {
                 <MenuItem onClick={(e, marital_status) => this.updateTable("marital_status")} eventKey={3.1}> <Check state={this.state.manageColomns.marital_status} /> Marital status</MenuItem>
                 <MenuItem onClick={(e, last_menstruation_date) => this.updateTable("last_menstruation_date")} eventKey={3.1}> <Check state={this.state.manageColomns.last_menstruation_date} /> Last menstruation date</MenuItem>
                 <MenuItem onClick={(e, education_level) => this.updateTable("education_level")} eventKey={3.1}> <Check state={this.state.manageColomns.education_level} /> Education level</MenuItem>   
-                {/* <MenuItem onClick={(e, followup_reason) => this.updateTable("followup_reason")} eventKey={3.1}> <Check state={this.state.manageColomns.followup_reason} />Follow up reason</MenuItem>    */}
+                <MenuItem onClick={(e, anc) => this.updateTable("anc")} eventKey={3.1}> <Check state={this.state.manageColomns.anc} />Missed ANC</MenuItem>   
                 <MenuItem onClick={(e, name) => this.updateTable("dob")} eventKey={3.1}> <Check state={this.state.manageColomns.dob} /> Age</MenuItem>  
                 <MenuItem onClick={(e, action_taken) => this.updateTable("action_taken")} eventKey={3.1}> <Check state={this.state.manageColomns.action_taken} /> Action taken</MenuItem>        
                 <MenuItem onClick={(e, blurred_vision) => this.updateTable("blurred_vision")} eventKey={3.1}> <Check state={this.state.manageColomns.blurred_vision} /> Blurred vision</MenuItem>        
@@ -295,8 +303,8 @@ export default class FollowUps extends Component {
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")} dataField='education_level'>Education level</TableHeaderColumn>
 
-              <TableHeaderColumn hidden={this.state.manageColomns.followup_reason} dataField='followup_reason'>Follow up reason</TableHeaderColumn>
-              {/* <TableHeaderColumn hidden={this.state.manageColomns.follow_date} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn> */}
+              <TableHeaderColumn hidden={this.state.manageColomns.anc} dataFormat={this.ancFormatter} dataField='anc'>Missed ANC</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.follow_date} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.action_taken} dataField='follow_up_action_taken'>Action taken</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} formatExtraData={ YesNoFormat } dataFormat={ this.enumFormatter }  dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>
