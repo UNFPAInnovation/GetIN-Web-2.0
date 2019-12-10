@@ -610,6 +610,7 @@ updateVillagesList(){
             manageColomns: {
               email: false,
               name:false,
+              phone:false,
               gender:false,
               username:false,
               health_facility:false
@@ -774,6 +775,7 @@ updateVillagesList(){
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+                  <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
@@ -800,6 +802,7 @@ updateVillagesList(){
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health facility</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
@@ -844,6 +847,7 @@ updateVillagesList(){
               gender:false,
               username:false,
               parish:false,
+              phone:false,
               number_plate:false
             },
             // remote pagination
@@ -929,7 +933,8 @@ updateVillagesList(){
     
     }
     parishFormatter(cell, row) {
-      return row.village && row.village.parish.name;
+      console.log(row.village && row.village.parish.name)
+      return row.village && row.village.parish && row.village.parish.name;
     }
    
       updateTable(colomn) {
@@ -996,6 +1001,7 @@ updateVillagesList(){
     
                 <NavDropdown eventKey={3} className="pull-right" title="Manage columns" id="basic-nav-dropdown">
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
+                  <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, parish) => this.updateTable("parish")} eventKey={3.1}> <Check state={this.state.manageColomns.parish} /> Parish</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
@@ -1023,8 +1029,9 @@ updateVillagesList(){
                 //   exportCSV
                   pagination>
                   <TableHeaderColumn hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataFormatter={this.parishFormatter} dataField='parish'>Parish</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.parish} dataSort={true} dataFormat={this.parishFormatter} dataField='parish'>Parish</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.number_place} dataField='number_plate'>Number plate</TableHeaderColumn>
