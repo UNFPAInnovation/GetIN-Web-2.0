@@ -86,17 +86,14 @@ export default class MappedGirls extends Component {
       error,
       response
     ) {
-      console.log(response);
       if (error) {
-        console.log(error);
         thisApp.setState(
           {
             isLoaded: true,
             girls: [],
             girls_copy: [],
             isLoaded: false
-          },
-          () => console.log(thisApp.state)
+          }
         );
       } else {
         thisApp.setState(
@@ -104,8 +101,7 @@ export default class MappedGirls extends Component {
             isLoaded: true,
             girls: response.results,
             girls_copy: response.results
-          },
-          () => console.log(thisApp.state)
+          }
         );
       }
     });
@@ -217,7 +213,6 @@ export default class MappedGirls extends Component {
     }
   }
   familyPlanningFormatter(cell, row) {
-    // console.log(cell);
     let familyPlanning = '';
     if (row.family_planning[0].using_family_planning) {
       return (familyPlanning = 'Yes, ' + row.family_planning[0].method);
@@ -240,17 +235,6 @@ export default class MappedGirls extends Component {
   }
 
   sortByAge(a, b, order) {
-    // console.log(c);
-    // if (order === 'desc') {
-    // //  _.sortBy(a, 'name');
-    // return this.state.girls.sort((a,b) => (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
-    //   order = 'asc';
-    // } else {
-    // //  this.refs.table.handleSort('desc', 'dob');
-    // return this.state.girls.sort((a,b) <= (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
-    //   order = 'desc';
-    // }
-
     if (order === 'desc') {
       return a.girl.age - b.girl.age;
     } else {

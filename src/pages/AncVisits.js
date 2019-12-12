@@ -132,16 +132,13 @@ export default class AncVisits extends React.Component {
           isLoaded: false
                 });
           service.Appointments(this.state.status, this.state.from, this.state.to, function(error, response){
-          console.log(response);
             if (error){
-                console.log(error);
                 thisApp.setState(
                 {
                   isLoaded: true,
                   appointments:[],
                   appointments_copy:[]
-                },
-                () => console.log(thisApp.state)
+                }
               );
               }
               else{
@@ -150,8 +147,7 @@ export default class AncVisits extends React.Component {
                   isLoaded: true,
                   appointments:response.results,
                   appointments_copy:response.results
-                },
-                () => console.log(thisApp.state)
+                }
               );
               }
         });
@@ -218,10 +214,8 @@ export default class AncVisits extends React.Component {
         },function(){
           if(filter && filter.trimester && filter.trimester.value){
         this.state.appointments.forEach(function(element){
-          console.log(element.girl.trimester+ " --- " +filter.trimester.value);
           if(element.girl.trimester.toString() === filter.trimester.value.toString()){
             results.push(element);
-          //  console.log(element+" KAboom");
           }
       });
         this.setState({
@@ -235,15 +229,8 @@ export default class AncVisits extends React.Component {
     }
         });
   }
-      
-      // trim(cell, row){
-      //   //row.girl.trimester
-      //      '1': '1st',
-      //     '2': '2nd',
-      //     '3': '3rd'
-      // }
+
       dateFormatter(cell){
-        //console.log(cell);
         return moment(new Date(cell)).format('Do MMM YY hh a');
        
       }
@@ -434,16 +421,13 @@ export default class AncVisits extends React.Component {
       isLoaded: false
             });
       service.Appointments(this.state.status, this.state.from, this.state.to, function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               appointments:[],
                   appointments_copy:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -452,8 +436,7 @@ export default class AncVisits extends React.Component {
               isLoaded: true,
               appointments:response.results,
               appointments_copy:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -514,7 +497,6 @@ export default class AncVisits extends React.Component {
       );
     }
     dateFormatter(cell){
-      console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
      
     }
@@ -566,10 +548,8 @@ export default class AncVisits extends React.Component {
       },function(){
         if(filter && filter.trimester && filter.trimester.value){
       this.state.appointments.forEach(function(element){
-        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
         if(element.girl.trimester.toString() === filter.trimester.value.toString()){
           results.push(element);
-        //  console.log(element+" KAboom");
         }
     });
       this.setState({
@@ -723,16 +703,13 @@ export default class AncVisits extends React.Component {
         isLoaded: false
               });
         service.Appointments(this.state.status, this.state.from, this.state.to, function(error, response){
-        console.log(response);
           if (error){
-              console.log(error);
               thisApp.setState(
               {
                 isLoaded: true,
                 appointments:[],
                 appointments_copy: []
-              },
-              () => console.log(thisApp.state)
+              }
             );
             }
             else{
@@ -741,8 +718,7 @@ export default class AncVisits extends React.Component {
                 isLoaded: true,
                 appointments:response.results,
                 appointments_copy:response.results
-              },
-              () => console.log(thisApp.state)
+              }
             );
             }
       });
@@ -803,7 +779,6 @@ export default class AncVisits extends React.Component {
       
     }
     dateFormatter(cell){
-      console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
      
     }
@@ -859,10 +834,8 @@ export default class AncVisits extends React.Component {
       },function(){
         if(filter && filter.trimester && filter.trimester.value){
       this.state.appointments.forEach(function(element){
-        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
         if(element.girl.trimester.toString() === filter.trimester.value.toString()){
           results.push(element);
-        //  console.log(element+" KAboom");
         }
     });
       this.setState({
@@ -1011,15 +984,12 @@ export default class AncVisits extends React.Component {
       isLoaded: false
             });
       service.Appointments(this.state.status, this.state.from, this.state.to, function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               appointments:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -1028,8 +998,7 @@ export default class AncVisits extends React.Component {
               isLoaded: true,
               appointments:response.results,
               appointments_copy:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -1094,10 +1063,8 @@ export default class AncVisits extends React.Component {
       },function(){
         if(filter && filter.trimester && filter.trimester.value){
       this.state.appointments.forEach(function(element){
-        console.log(element.girl.trimester+ " --- " +filter.trimester.value);
         if(element.girl.trimester.toString() === filter.trimester.value.toString()){
           results.push(element);
-        //  console.log(element+" KAboom");
         }
     });
       this.setState({
@@ -1113,7 +1080,6 @@ export default class AncVisits extends React.Component {
 }
     
     dateFormatter(cell){
-      console.log(cell);
       return moment(new Date(cell)).format('Do MMM YY hh a');
      
     }

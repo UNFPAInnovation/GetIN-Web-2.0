@@ -41,16 +41,13 @@ class App extends Component {
   loginValidate() {
     const thisApp = this;
     service.verifyToken(function(error, response) {
-      console.log(response);
       if (error) {
-        console.log(error);
         thisApp.setState(
           {
             isLoggedIn: false,
             token: '',
             isLoaded: false
-          },
-          () => console.log(thisApp.state)
+          }
         );
         sessionStorage.removeItem('token');
       } else {
@@ -59,11 +56,9 @@ class App extends Component {
         thisApp.setState(
           {
             isLoggedIn: true
-          },
-          () => console.log(thisApp.state)
+          }
         );
         window.location.href = '/dashboard';
-        console.log('Authenticated');
       }
     });
   }
@@ -71,16 +66,13 @@ class App extends Component {
     const thisApp = this;
 
     service.verifyToken(function(error, response) {
-      console.log(response);
       if (error) {
-        console.log(error);
         thisApp.setState(
           {
             isLoggedIn: false,
             token: '',
             isLoaded: false
-          },
-          () => console.log(thisApp.state)
+          }
         );
         sessionStorage.removeItem('token');
         window.location.href = '/';
@@ -90,10 +82,8 @@ class App extends Component {
         thisApp.setState(
           {
             isLoggedIn: true
-          },
-          () => console.log(thisApp.state)
-        );
-        console.log('Authenticated');
+          }
+        )
       }
     });
   }
@@ -103,9 +93,7 @@ class App extends Component {
   }
   componentDidMount() {
     // NProgress.done();
-    window.addEventListener('offline', function(e) {
-      console.log('Offline, please check your internet connection');
-      // alertifyjs.error('You are offline, please check your internet connection', 3, function () { console.log('dismissed'); });
+    window.addEventListener('offline', function(e) {    
     });
   }
   render() {
@@ -314,7 +302,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     // You can also log the error to an error reporting service
-    console.log(error, info);
+  
   }
 
   render() {

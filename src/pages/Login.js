@@ -18,7 +18,7 @@ export default class Login extends Component {
     e.preventDefault();
     //const thisApp = this;
     alertifyjs.message('Signing in ..', 2, function() {
-      console.log('dismissed');
+     
     });
     let data = {
       username: this.state.username,
@@ -26,18 +26,16 @@ export default class Login extends Component {
     };
     service.login(data, function(error, token) {
       if (error) {
-        console.log(error);
         alertifyjs.error(
           'Email / password combination is not valid.',
           5,
           function() {
-            console.log('dismissed');
+            
           }
         );
       } else {
-        //  console.log(token);
         alertifyjs.success('Signed Successfully', 5, function() {
-          console.log('dismissed');
+         
         });
         window.location.href = '/dashboard';
       }

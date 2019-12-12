@@ -82,17 +82,14 @@ export default class FollowUps extends Component {
       loadingText:"Loading...",
     });
       service.followUps(this.state.from, this.state.to, function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               followUps:[],
               followUps_copy:response.results
 
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -101,8 +98,7 @@ export default class FollowUps extends Component {
               isLoaded: true,
               followUps:response.results,
               followUps_copy:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -158,7 +154,6 @@ export default class FollowUps extends Component {
     return moment().diff(row.girl.dob, 'years')+" Years";
   }
   dateFormatter(cell){
-    console.log(cell);
     return moment(new Date(cell)).format('Do MMM YY hh a');
    
   }

@@ -94,16 +94,13 @@ export default class AncVisits extends React.Component {
         loadingText:"Loading...",
       });
         service.getHealthFacilities(function(error, response){
-        console.log(response);
           if (error){
-              console.log(error);
               thisApp.setState(
               {
                 isLoaded: true,
                 health_facilities:[],
                 health_facilities_copy:[]
-              },
-              () => console.log(thisApp.state)
+              }
             );
             }
             else{
@@ -112,8 +109,7 @@ export default class AncVisits extends React.Component {
                 isLoaded: true,
                 health_facilities:response.results,
                 health_facilities_copy:response.results
-              },
-              () => console.log(thisApp.state)
+              }
             );
             }
       });

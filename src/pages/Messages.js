@@ -48,16 +48,13 @@ export default class Messages extends Component {
     });
 
    service.listSms(function(error, response){
-    console.log(response);
       if (error){
-          console.log(error);
           thisApp.setState(
           {
             isLoaded: true,
             messages:[],
             messages_copy: []
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
         else{
@@ -66,8 +63,7 @@ export default class Messages extends Component {
             isLoaded: true,
             messages:response.results,
             messages_copy:response.results
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
   });
@@ -217,8 +213,7 @@ class ComposeModal extends Component{
   }
   handleChangeSelect = selectedOption => {
     this.setState(
-      { selectedOption },
-      () => console.log(`Option selected:`, this.state.selectedOption)
+      { selectedOption }
     );
   };
   submit(e){
@@ -227,7 +222,7 @@ class ComposeModal extends Component{
     thisApp.setState({
       loading:true
     });
-    alertifyjs.message('Sending message ..', 2, function(){  console.log('dismissed'); });
+    alertifyjs.message('Sending message ..', 2, function(){ });
     let ids = [];
     this.state.selectedOption.map((v,k)=>
       ids.push(v.value)
@@ -237,17 +232,16 @@ class ComposeModal extends Component{
       message:this.state.message,
     }, function(error, token){
         if (error){
-            console.log(error);
             thisApp.setState({
               loading:false
             });
-            alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+            alertifyjs.error('Request failed, try again', 5, function(){ });
           }
           else{
             thisApp.setState({
               loading:false
             });
-           alertifyjs.success('Message sent..', 2, function(){  console.log('dismissed'); });
+           alertifyjs.success('Message sent..', 2, function(){});
            window.location.reload();
           }
     });
@@ -255,16 +249,13 @@ class ComposeModal extends Component{
   getData() {
     const thisApp = this;
     service.getAllUsers(function(error, response){
-    console.log(response);
       if (error){
-          console.log(error);
           thisApp.setState(
           {
             isLoaded: true,
             users:[],
             options:[]
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
         else{
@@ -277,8 +268,7 @@ class ComposeModal extends Component{
             isLoaded: true,
             users:response.results,
             options:options
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
   });

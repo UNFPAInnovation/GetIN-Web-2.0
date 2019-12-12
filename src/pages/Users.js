@@ -131,12 +131,10 @@ export default class Users extends React.Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-      //console.log(name);
       this.setState({
         [name]: value
       }, function(){
         if(name ===  "sub_county"){
-          console.log(value)
           this.updateVillagesList()
         }
       });
@@ -147,7 +145,7 @@ export default class Users extends React.Component {
       thisApp.setState({
         loading:true
       });
-      alertifyjs.message('Adding CHEW..', 2, function(){  console.log('dismissed'); });
+      alertifyjs.message('Adding CHEW..', 2, function(){ });
       service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
@@ -160,20 +158,16 @@ export default class Users extends React.Component {
         role:"chew"
       }, function(error, response){
           if (error){
-              console.log(error);
               thisApp.setState({
                 loading:false
               });
-          //    console.log(response);
-            //  let error_message = response[Object.keys(response)[0]];
-             //console.log(error_message);
-              alertifyjs.error('Request failed, try again ', function(){  console.log('dismissed'); });
+              alertifyjs.error('Request failed, try again ', function(){});
             }
             else{
               thisApp.setState({
                 loading:false
               });
-             alertifyjs.success('Added successfully', 2, function(){  console.log('dismissed'); });
+             alertifyjs.success('Added successfully', 2, function(){ });
              window.location.reload();
             }
       });
@@ -186,15 +180,12 @@ export default class Users extends React.Component {
       loadingText:"Loading...",
     });
       service.getVillages(function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               villages:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -203,8 +194,7 @@ export default class Users extends React.Component {
               isLoaded: true,
               villages:response.results,
               villages_copy:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -219,15 +209,12 @@ export default class Users extends React.Component {
   });
  
     service.getSubCounties(function(error, response){
-    console.log(response);
       if (error){
-          console.log(error);
           thisApp.setState(
           {
             isLoaded: true,
             sub_counties:[]
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
         else{
@@ -235,8 +222,7 @@ export default class Users extends React.Component {
           {
             isLoaded: true,
             sub_counties:response.results
-          },
-          () => console.log(thisApp.state)
+          }
         );
         }
   });
@@ -244,13 +230,11 @@ export default class Users extends React.Component {
 }
 updateVillagesList(){
   const thisApp = this;
-  console.log("Updating village list", this.state.sub_county);
   if(thisApp.state.sub_county){
     let subcounty_villages = _.filter(thisApp.state.villages_copy, function(village){ return village.parish.sub_county.id === parseInt(thisApp.state.sub_county)} 
     
     //village.parish.sub_county.id === this.state.sub_county; 
   );
-    console.log("Returned subcounty villages",subcounty_villages);
     thisApp.setState({
       villages:subcounty_villages,
       village:null,
@@ -394,18 +378,7 @@ updateVillagesList(){
       }
       componentDidMount() {
        this.getData();
-      }
-    //   onPageChange(page, sizePerPage) {
-    //     console.log("Page:" + page + " sizePerPage " + sizePerPage);
-    //     const currentIndex = (page - 1) * sizePerPage;
-    //     this.getData("api/jobs?records=" + page + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + sizePerPage)
-    //     this.setState({
-    //       currentPage: page,
-    //       isLoaded: false,
-    //       sizePerPage: sizePerPage
-    //     });
-    //   }
-    
+      }    
       getData() {
           const thisApp = this;
           thisApp.setState({
@@ -414,16 +387,13 @@ updateVillagesList(){
           loadingText:"Loading...",
         });
           service.users(this.state.role, function(error, response){
-          console.log(response);
             if (error){
-                console.log(error);
                 thisApp.setState(
                 {
                   isLoaded: true,
                   users:[],
                   users_copy: [],
-                },
-                () => console.log(thisApp.state)
+                }
               );
               }
               else{
@@ -432,8 +402,7 @@ updateVillagesList(){
                   isLoaded: true,
                   users:response.results,
                   users_copy: response.results,
-                },
-                () => console.log(thisApp.state)
+                }
               );
               }
         });
@@ -629,16 +598,6 @@ updateVillagesList(){
       componentDidMount() {
        this.getData();
       }
-    //   onPageChange(page, sizePerPage) {
-    //     console.log("Page:" + page + " sizePerPage " + sizePerPage);
-    //     const currentIndex = (page - 1) * sizePerPage;
-    //     this.getData("api/jobs?records=" + page + "&status=" + this.state.status + "&from=" + this.state.from + "&to=" + this.state.to + "&facility_type=" + this.state.facility_type + "&limit=" + sizePerPage)
-    //     this.setState({
-    //       currentPage: page,
-    //       isLoaded: false,
-    //       sizePerPage: sizePerPage
-    //     });
-    //   }
     
     getData() {
       const thisApp = this;
@@ -648,16 +607,13 @@ updateVillagesList(){
       loadingText:"Loading...",
     });
       service.users(this.state.role, function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               users:[],
               users_copy: [],
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -666,8 +622,7 @@ updateVillagesList(){
               isLoaded: true,
               users:response.results,
               users_copy: response.results,
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -874,16 +829,13 @@ updateVillagesList(){
       loadingText:"Loading...",
     });
       service.users(this.state.role, function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               users:[],
               users_copy: [],
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -892,8 +844,7 @@ updateVillagesList(){
               isLoaded: true,
               users:response.results,
               users_copy: response.results,
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -933,7 +884,6 @@ updateVillagesList(){
     
     }
     parishFormatter(cell, row) {
-      console.log(row.village && row.village.parish.name)
       return row.village && row.village.parish && row.village.parish.name;
     }
    
@@ -1103,7 +1053,7 @@ updateVillagesList(){
       thisApp.setState({
         loading:true
       });
-      alertifyjs.message('Adding Midwife..', 2, function(){  console.log('dismissed'); });
+      alertifyjs.message('Adding Midwife..', 2, function(){ });
       service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
@@ -1116,17 +1066,16 @@ updateVillagesList(){
         role:"midwife"
       }, function(error, token){
           if (error){
-              console.log(error);
               thisApp.setState({
                 loading:false
               });
-              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+              alertifyjs.error('Request failed, try again', 5, function(){ });
             }
             else{
               thisApp.setState({
                 loading:false
               });
-             alertifyjs.success('Added successfully', 2, function(){  console.log('dismissed'); });
+             alertifyjs.success('Added successfully', 2, function(){});
              window.location.reload();
             }
       });
@@ -1139,15 +1088,12 @@ updateVillagesList(){
       loadingText:"Loading...",
     });
       service.getHealthFacilities(function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               health_facilities:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -1155,8 +1101,7 @@ updateVillagesList(){
             {
               isLoaded: true,
               health_facilities:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });
@@ -1281,7 +1226,7 @@ updateVillagesList(){
       thisApp.setState({
         loading:true
       });
-      alertifyjs.message('Adding Ambulance..', 2, function(){  console.log('dismissed'); });
+      alertifyjs.message('Adding Ambulance..', 2, function(){ });
       service.addUser({
         first_name:this.state.first_name,
         last_name:this.state.last_name,
@@ -1295,17 +1240,16 @@ updateVillagesList(){
         role:"ambulance"
       }, function(error, token){
           if (error){
-              console.log(error);
               thisApp.setState({
                 loading:false
               });
-              alertifyjs.error('Request failed, try again', 5, function(){  console.log('dismissed'); });
+              alertifyjs.error('Request failed, try again', 5, function(){ });
             }
             else{
               thisApp.setState({
                 loading:false
               });
-             alertifyjs.success('Added successfully', 3, function(){  console.log('dismissed'); });
+             alertifyjs.success('Added successfully', 3, function(){  });
              window.location.reload();
             }
       });
@@ -1318,15 +1262,12 @@ updateVillagesList(){
         loadingText:"Loading...",
     });
       service.getParishes(function(error, response){
-      console.log(response);
         if (error){
-            console.log(error);
             thisApp.setState(
             {
               isLoaded: true,
               health_facilities:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
           else{
@@ -1334,8 +1275,7 @@ updateVillagesList(){
             {
               isLoaded: true,
               parishes:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
           }
     });

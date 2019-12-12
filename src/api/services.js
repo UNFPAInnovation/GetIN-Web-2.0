@@ -9,13 +9,9 @@ exports.login = function(data, callback) {
     { "content-type": "application/json" },
     data,
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
-        console.log(JSON.stringify(response))
         let district = response.user && response.user.village && response.user.village.parish && response.user.village.parish.sub_county && response.user.village.parish.sub_county.county && response.user.village.parish.sub_county.county.district && response.user.village.parish.sub_county.county.district;
           sessionStorage.removeItem('district');
           sessionStorage.removeItem('username');
@@ -34,10 +30,7 @@ exports.addUser = function(data, callback) {
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         return callback(null, response);
@@ -51,10 +44,7 @@ exports.addChew = function(data, callback) {
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         return callback(null, response);
@@ -68,10 +58,7 @@ exports.addMidwife = function(data, callback) {
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error, response);
       } else {
         return callback(null, response);
@@ -85,10 +72,7 @@ exports.addAmbulance = function(data, callback) {
     { "content-type": "application/json", Authorization: "Token " + token },
     data,
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         return callback(null, response);
@@ -105,10 +89,7 @@ exports.verifyToken = function(callback) {
       Authorization: "Token " + token
     },
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -128,10 +109,7 @@ exports.usersChew = function(callback) {
        "content-type": "application/json",
        "Authorization": "Token "+token
    },function(error, response){
-        //callback of the method here
-        console.log("error", error);
          if(error){
-            console.log(error);
             return callback(error);
          }else{
               if (response.status != 200) {
@@ -150,10 +128,7 @@ exports.getHealthFacilities =  function(callback){
       "content-type": "application/json",
       "Authorization": "Token "+token
   },function(error, response){
-       //callback of the method here
-       console.log("error", error);
         if(error){
-           console.log(error);
            return callback(error);
         }else{
              if (response.status != 200) {
@@ -174,10 +149,7 @@ exports.usersMidwives =  function(callback){
       Authorization: "Token " + token
     },
     function(error, response) {
-      //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -198,9 +170,7 @@ exports.usersMidwives = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -222,9 +192,7 @@ exports.usersAmbulanceDrivers = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -244,9 +212,7 @@ exports.followUps =  function(from, to, callback){
       "Authorization": "Token "+token
   },function(error, response){
        //callback of the method here
-       console.log("error", error);
         if(error){
-           console.log(error);
            return callback(error);
         }else{
              if (response.status != 200) {
@@ -268,9 +234,7 @@ exports.getVillages = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -291,9 +255,7 @@ exports.mappedGirls = function(from, to, callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -316,9 +278,7 @@ exports.mappedGirlsEncounter = function(from, to, callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -340,9 +300,7 @@ exports.deliveries = function(delivery_location, from, to, callback) {
      },
      function(error, response) {
        //callback of the method here
-       console.log("error", error);
        if (error) {
-         console.log(error);
          return callback(error);
        } else {
          if (response.status != 200) {
@@ -363,9 +321,7 @@ exports.getSubCounties = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -387,9 +343,7 @@ exports.getHealthFacilities = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -411,9 +365,7 @@ exports.getParishes = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -436,9 +388,7 @@ exports.Appointments = function(status, from, to, callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -460,9 +410,7 @@ exports.users = function(role, callback) {
        "Authorization": "Token "+token
    },function(error, response){
         //callback of the method here
-        console.log("error", error);
          if(error){
-            console.log(error);
             return callback(error);
          }else{
               if (response.status != 200) {
@@ -485,9 +433,7 @@ exports.listSms = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -509,9 +455,7 @@ exports.getAllUsers = function(callback) {
     },
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         if (response.status != 200) {
@@ -531,9 +475,7 @@ exports.sendSms = function(data, callback) {
     data,
     function(error, response) {
       //callback of the method here
-      console.log("error", error);
       if (error) {
-        console.log(error);
         return callback(error);
       } else {
         return callback(null, response);

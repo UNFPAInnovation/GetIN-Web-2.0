@@ -2,7 +2,6 @@ const serverUrl = require('./config.json');
 
 
 function env_config(){
-    console.log(window.location.hostname)
     if (window.location.hostname==="dash.getinmobile.org" || window.location.hostname==="www.dash.getinmobile.org"){
         return serverUrl.BASE_URL;
     }

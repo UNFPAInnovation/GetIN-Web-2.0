@@ -18,7 +18,7 @@ export default class Header extends Component{
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('district');
-      alertifyjs.message('Logging out', 5, function(){  console.log('dismissed'); });
+      alertifyjs.message('Logging out', 5);
       window.location.href="/";
     }
     componentDidMount(){

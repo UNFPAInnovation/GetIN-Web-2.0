@@ -126,16 +126,13 @@ class HealthFacility extends Component {
         loadingText: "Loading..."
       });
       service.deliveries(this.state.delivery_location, this.state.from, this.state.to, function(error, response) {
-        console.log(response);
         if (error) {
-          console.log(error);
           thisApp.setState(
             {
               isLoaded: true,
               deliveries: [],
               deliveries_copy:[]
-            },
-            () => console.log(thisApp.state)
+            }
           );
         } else {
           thisApp.setState(
@@ -143,8 +140,7 @@ class HealthFacility extends Component {
               isLoaded: true,
               deliveries: response.results,
               deliveries_copy:response.results
-            },
-            () => console.log(thisApp.state)
+            }
           );
         }
       });
@@ -196,11 +192,9 @@ class HealthFacility extends Component {
       return moment().diff(row.girl.dob, "years");
     }
     dateFormatter(cell) {
-      //console.log(cell);
       return moment(new Date(cell)).format("Do MMM YY hh a");
     }
     deliveryFormatter(cell, row) {
-      // console.log(cell);
       let delivery = "";
        if(row.mother_alive && row.baby_alive){
            return delivery = "Mother Alive, Baby Alive";
@@ -218,7 +212,6 @@ class HealthFacility extends Component {
        }
     }
     familyPlanningFormatter(cell, row) {
-      // console.log(cell);
       let familyPlanning = "";
        if(row.family_planning && row.family_planning[0] && row.family_planning[0].using_family_planning===true){
            return familyPlanning = "Yes, "+row.family_planning && row.family_planning[0].method;
@@ -614,16 +607,13 @@ class Home extends Component {
       loadingText: "Loading..."
     });
     service.deliveries(this.state.delivery_location, this.state.from, this.state.to, function(error, response) {
-      console.log(response);
       if (error) {
-        console.log(error);
         thisApp.setState(
           {
             isLoaded: true,
             deliveries: [],
             deliveries_copy:[]
-          },
-          () => console.log(thisApp.state)
+          }
         );
       } else {
         thisApp.setState(
@@ -631,8 +621,7 @@ class Home extends Component {
             isLoaded: true,
             deliveries: response.results,
             deliveries_copy:response.results
-          },
-          () => console.log(thisApp.state)
+          }
         );
       }
     });
@@ -684,11 +673,9 @@ class Home extends Component {
     return moment().diff(row.girl.dob, "years");
   }
   dateFormatter(cell) {
-    console.log(cell);
     return moment(new Date(cell)).format("Do MMM YY hh a");
   }
   deliveryFormatter(cell, row) {
-   // console.log(cell);
    let delivery = "";
     if(row.mother_alive && row.baby_alive){
         return delivery = "Mother Alive, Baby Alive";
@@ -706,7 +693,6 @@ class Home extends Component {
     }
   }
   familyPlanningFormatter(cell, row) {
-    // console.log(cell);
     let familyPlanning = "";
      if(row.family_planning && row.family_planning[0].using_family_planning===true){
          return familyPlanning = "Yes, "+row.family_planning[0].method;
