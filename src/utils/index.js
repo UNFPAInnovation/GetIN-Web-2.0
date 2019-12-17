@@ -70,6 +70,18 @@ export const getData = function(action, callback) {
         }
       });
       break;
+      case "getHealthFacilities":
+      service.getHealthFacilities(function(
+        error,
+        response
+      ) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
     default:
       service[action.name](action.from, action.to, function(error, response) {
         if (error) {
