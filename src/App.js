@@ -7,13 +7,13 @@ import "./styles/global.scss";
 const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
 const MappedGirls = React.lazy(() => import("./pages/MappedGirls"));
 const FollowUps = React.lazy(() => import("./pages/FollowUps"));
-const Users = React.lazy(() => import("./pages/Users"));
+const Users = React.lazy(() => import("./pages/Users/Users"));
 const AncVisits = React.lazy(() => import("./pages/ANC/AncVisits"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Layout = React.lazy(() => import("./components/Layout"));
 const NotFound = React.lazy(() => import("./components/NotFound"));
 const Deliveries = React.lazy(() => import("./pages/Deliveries/Deliveries"));
-const Messages = React.lazy(() => import("./pages/Messages"));
+const Messages = React.lazy(() => import("./pages/Messages/Messages"));
 const HealthFacilities = React.lazy(() => import("./pages/HealthFacilities"));
 
 const service = require("./api/services");

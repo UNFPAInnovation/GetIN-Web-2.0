@@ -59,10 +59,33 @@ export const getData = function(action, callback) {
       });
       break;
     case "deliveries":
-      service.deliveries(action.delivery_location, action.from, action.to, function(
-        error,
-        response
-      ) {
+      service.deliveries(
+        action.delivery_location,
+        action.from,
+        action.to,
+        function(error, response) {
+          if (error) {
+            return callback(error);
+          } else {
+            return callback(null, response);
+          }
+        }
+      );
+      break;
+    case "users":
+      service.users(
+        action.role,
+        function(error, response) {
+          if (error) {
+            return callback(error);
+          } else {
+            return callback(null, response);
+          }
+        }
+      );
+      break;
+    case "getHealthFacilities":
+      service.getHealthFacilities(function(error, response) {
         if (error) {
           return callback(error);
         } else {
@@ -70,18 +93,15 @@ export const getData = function(action, callback) {
         }
       });
       break;
-      case "getHealthFacilities":
-      service.getHealthFacilities(function(
-        error,
-        response
-      ) {
-        if (error) {
-          return callback(error);
-        } else {
-          return callback(null, response);
-        }
-      });
-      break;
+      case "listSms":
+          service.listSms(function(error, response) {
+            if (error) {
+              return callback(error);
+            } else {
+              return callback(null, response);
+            }
+          });
+          break;
     default:
       service[action.name](action.from, action.to, function(error, response) {
         if (error) {
