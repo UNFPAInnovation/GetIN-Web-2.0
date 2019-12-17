@@ -12,7 +12,7 @@ const AncVisits = React.lazy(() => import("./pages/ANC/AncVisits"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Layout = React.lazy(() => import("./components/Layout"));
 const NotFound = React.lazy(() => import("./components/NotFound"));
-const Deliveries = React.lazy(() => import("./pages/Deliveries"));
+const Deliveries = React.lazy(() => import("./pages/Deliveries/Deliveries"));
 const Messages = React.lazy(() => import("./pages/Messages"));
 const HealthFacilities = React.lazy(() => import("./pages/HealthFacilities"));
 

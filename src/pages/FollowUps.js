@@ -6,8 +6,7 @@ import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import Check from '../components/Check';
-import {prevMonthFirstDay, endOfDay, dateFormatter, enumFormatter, ageFormatter} from '../utils/index';
-const service = require('../api/services');
+import {prevMonthFirstDay, endOfDay, dateFormatter, enumFormatter, getData, nameFormatter, ageFormatter, trimesterFormatter} from '../utils/index';
 const Fuse = require("fuse.js");
 
 
@@ -49,14 +48,34 @@ export default class FollowUps extends Component {
       sizePerPage: 20,
       totalDataSize: 0
     }
-    this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
   }
   componentDidMount() {
-   this.getData();
+    this.loadData();
   }
+  loadData(){
+    const thisApp = this;
+getData({
+    name:"followUps",
+    from:this.state.from,
+    to:this.state.to
+}, function(error, response){
+    if(error){
+        thisApp.setState({
+            isLoaded:true,
+        })
+    }else{
+        thisApp.setState({
+            isLoaded:true,
+            followUps: response.results,
+            followUps_copy: response.results,
+        })
+    }
+})
+}
   handleInputChange(event) {
+    const thisApp =this;
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -64,46 +83,8 @@ export default class FollowUps extends Component {
     this.setState({
       [name]: value,
       isLoaded: false
-    }, () =>
-       this.getData()
+    }, () =>thisApp.loadData()
     );
-  }
-  getData() {
-      const thisApp = this;
-      thisApp.setState({
-        followUps: [],
-        followUps_copy: [],
-      loadingText:"Loading...",
-    });
-      service.followUps(this.state.from, this.state.to, function(error, response){
-        if (error){
-            thisApp.setState(
-            {
-              isLoaded: true,
-              followUps:[],
-              followUps_copy:response.results
-
-            }
-          );
-          }
-          else{
-            thisApp.setState(
-            {
-              isLoaded: true,
-              followUps:response.results,
-              followUps_copy:response.results
-            }
-          );
-          }
-    });
-
-  }
-  nameFormatter(cell, row) {
-    return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
-  }
-
-  trimesterFormatter(cell, row) {
-    return row.girl.trimester;
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -273,10 +254,10 @@ export default class FollowUps extends Component {
               condensed
               pagination>
 
-              <TableHeaderColumn width="220px" hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+              <TableHeaderColumn width="220px" hidden={this.state.manageColomns.name} dataFormat ={nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
               <TableHeaderColumn hidden={true} dataSort={true} isKey dataField='id'>Phone number</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.village} dataFormat ={(cell, row, item)=>this.getVillageItem(cell, row, "name")} dataField='village'>Village</TableHeaderColumn>
-              <TableHeaderColumn width="80px" hidden={this.state.manageColomns.trimester} dataFormat ={this.trimesterFormatter} dataField={"trimester"}>Trimester</TableHeaderColumn>
+              <TableHeaderColumn width="80px" hidden={this.state.manageColomns.trimester} dataFormat ={trimesterFormatter} dataField={"trimester"}>Trimester</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin} dataFormat ={this.nextOfKinFormatter} dataField='next_of_kin'>Next of Kin</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")} dataField='marital_status'>Marital status</TableHeaderColumn>
