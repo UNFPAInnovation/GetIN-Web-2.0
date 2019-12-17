@@ -10,23 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBaby } from "@fortawesome/free-solid-svg-icons";
 import { Tabs, Tab } from "react-bootstrap";
 import moment from "moment";
+import Check from '../components/Check';
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
+import {prevMonthFirstDay, endOfDay, dateFormatter, enumFormatter, ageFormatter} from '../utils/index';
 const Fuse = require("fuse.js");
 const service = require("../api/services");
 
-let order = "desc";
-let startOFDay = new Date();
-startOFDay.setHours(0, 0, 0, 0);
 
-let prevMonthFirstDay = moment()
-  .subtract(1, "months")
-  .date(1)
-  .local()
-  .format("YYYY-MM-DD");
-
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
 
 export default class Deliveries extends React.Component {
   constructor(props, context) {
@@ -188,12 +179,6 @@ class HealthFacility extends Component {
         });
       }
     }
-    ageFormatter(cell, row) {
-      return moment().diff(row.girl.dob, "years");
-    }
-    dateFormatter(cell) {
-      return moment(new Date(cell)).format("Do MMM YY hh a");
-    }
     deliveryFormatter(cell, row) {
       let delivery = "";
        if(row.mother_alive && row.baby_alive){
@@ -220,9 +205,6 @@ class HealthFacility extends Component {
            return familyPlanning = "None, "+row.family_planning && row.family_planning[0] && row.family_planning[0].no_family_planning_reason;
        }
      }
-    enumFormatter(cell, row, enumObject) {
-      return enumObject[cell];
-    }
     handleInputChange(event) {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -360,18 +342,7 @@ class HealthFacility extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.marital_status} /> Marital
                 status
-              </MenuItem>
-               {/* <MenuItem
-                onClick={(e, followup_reason) =>
-                  this.updateTable("followup_reason")
-                }
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.followup_reason} />{" "}
-                Follow up reason
-              </MenuItem> */}
-  
+              </MenuItem>  
               <MenuItem
                 onClick={(e, action_taken) =>
                   this.updateTable("action_taken")
@@ -483,17 +454,11 @@ class HealthFacility extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.dob}
-                  dataFormat={this.ageFormatter}
+                  dataFormat={ageFormatter}
                   dataField="dob"
                 >
                   Age (Years)
                 </TableHeaderColumn>
-                {/* <TableHeaderColumn
-                  hidden={this.state.manageColomns.followup_reason}
-                  dataField="followup_reason"
-                >
-                  Follow up reason
-                </TableHeaderColumn> */}
                 <TableHeaderColumn
                 dataFormat={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}
                   hidden={this.state.manageColomns.marital_status}
@@ -503,7 +468,7 @@ class HealthFacility extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.delivery_date}
-                  dataFormat={this.dateFormatter}
+                  dataFormat={dateFormatter}
                   dataField="baby_birth_date"
                 >
                   Delivery date
@@ -516,7 +481,7 @@ class HealthFacility extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.received_postnatal_care}
-                   dataFormat={this.enumFormatter}
+                   dataFormat={enumFormatter}
                    formatExtraData={YesNoFormat}
                   dataField="postnatal_care"
                 >
@@ -669,12 +634,6 @@ class Home extends Component {
       });
     }
   }
-  ageFormatter(cell, row) {
-    return moment().diff(row.girl.dob, "years");
-  }
-  dateFormatter(cell) {
-    return moment(new Date(cell)).format("Do MMM YY hh a");
-  }
   deliveryFormatter(cell, row) {
    let delivery = "";
     if(row.mother_alive && row.baby_alive){
@@ -701,9 +660,6 @@ class Home extends Component {
          return familyPlanning = "None, "+row.family_planning && row.family_planning[0].no_family_planning_reason;
      }
    }
-  enumFormatter(cell, row, enumObject) {
-    return enumObject[cell];
-  }
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -825,7 +781,6 @@ class Home extends Component {
               {" "}
               <Check state={this.state.manageColomns.village} /> Village
             </MenuItem>
-            {/* <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>         */}
             <MenuItem
               onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin")}
               eventKey={3.1}
@@ -843,17 +798,6 @@ class Home extends Component {
               <Check state={this.state.manageColomns.marital_status} /> Marital
               status
             </MenuItem>
-             {/* <MenuItem
-              onClick={(e, followup_reason) =>
-                this.updateTable("followup_reason")
-              }
-              eventKey={3.1}
-            >
-              {" "}
-              <Check state={this.state.manageColomns.followup_reason} />{" "}
-              Follow up reason
-            </MenuItem> */}
-
             <MenuItem
               onClick={(e, action_taken) =>
                 this.updateTable("action_taken")
@@ -901,15 +845,7 @@ class Home extends Component {
             >
               {" "}
               <Check state={this.state.manageColomns.delivery_date} /> Date of delivery
-            </MenuItem>
-            {/* <MenuItem
-              onClick={(e, health_facility) => this.updateTable("health_facility")}
-              eventKey={3.1}
-            >
-              {" "}
-              <Check state={this.state.manageColomns.health_facility} /> Health facility
-            </MenuItem> */}
-           
+            </MenuItem>          
           </NavDropdown>
         </form>
 
@@ -965,17 +901,11 @@ class Home extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.dob}
-                dataFormat={this.ageFormatter}
+                dataFormat={ageFormatter}
                 dataField="dob"
               >
                 Age (Years)
               </TableHeaderColumn>
-              {/* <TableHeaderColumn
-                hidden={this.state.manageColomns.followup_reason}
-                dataField="followup_reason"
-              >
-                Follow up reason
-              </TableHeaderColumn> */}
               <TableHeaderColumn
               dataFormat={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")}
                 hidden={this.state.manageColomns.marital_status}
@@ -985,7 +915,7 @@ class Home extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.delivery_date}
-                dataFormat={this.dateFormatter}
+                dataFormat={dateFormatter}
                 dataField="baby_birth_date"
               >
                 Delivery date
@@ -998,7 +928,7 @@ class Home extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.received_postnatal_care}
-                 dataFormat={this.enumFormatter}
+                 dataFormat={enumFormatter}
                  formatExtraData={YesNoFormat}
                 dataField="postnatal_care"
               >
@@ -1017,14 +947,7 @@ class Home extends Component {
                 dataField="family_planning"
               >
                 Family planning
-              </TableHeaderColumn>
-              {/* <TableHeaderColumn
-                hidden={this.state.manageColomns.health_facility}
-                dataField="health_facility"
-              >
-                Health Facility
-              </TableHeaderColumn> */}
-              
+              </TableHeaderColumn>            
             </BootstrapTable>
           ) : (
             <span>Loading</span>
@@ -1034,19 +957,5 @@ class Home extends Component {
     );
   }
 }
-// Changed from Class to function component
-function Check(props){
-    return (
-      <React.Fragment>
-        <div className="checkboxWrapper">
-          <div className="disabler"></div>
-          {props.state === false ? (
-            <input type="checkbox" checked={true} />
-          ) : (
-            <input type="checkbox" checked={false} />
-          )}
-        </div>
-      </React.Fragment>
-    );
-  }
+
 

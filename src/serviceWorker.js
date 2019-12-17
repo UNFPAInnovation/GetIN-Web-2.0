@@ -111,7 +111,6 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-\\
     });
 }
 
