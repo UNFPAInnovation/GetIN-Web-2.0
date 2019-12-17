@@ -10,6 +10,6 @@ export default function Seo(props){
       <meta name="robots" content="index, follow"/>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
       <meta name="language" content="English"/><meta name="revisit-after" content="1 days"/>
-      <meta name="author" content="GETIN, Outbox Uganda, outbox.co.ug"/><link rel="canonical" href="https://dashboard.getinmobile.org/" />
+      <meta name="author" content="GetIN, Outbox Uganda, outbox.co.ug"/><link rel="canonical" href="https://dash.getinmobile.org/" />
     </Helmet>);    
   }

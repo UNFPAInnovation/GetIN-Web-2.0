@@ -10,7 +10,6 @@ exports.get =  function(requesturl="", headers={}, callback){
   })
   .then(function(res){
     data_ = res.data;
-    console.log(res);
     return callback(error_, res);
   })
   .catch(function (error) {
@@ -18,9 +17,6 @@ exports.get =  function(requesturl="", headers={}, callback){
     return callback(error_);
   })
   .finally(function () {
-    // always executed
-    console.log("Request done");
-  //  return callback(error_, data_);
   });
 }
 exports.html =  function(requesturl="", headers={}, callback){
@@ -34,7 +30,6 @@ exports.html =  function(requesturl="", headers={}, callback){
   })
   .then(function(res){
     data_ = res.data;
-    console.log("Request done");
     return callback(error_, data_);
   })
   .catch(function (error) {
@@ -42,9 +37,6 @@ exports.html =  function(requesturl="", headers={}, callback){
     return callback(error_);
   })
   .finally(function () {
-    // always executed
-    console.log("Request done");
-  //  return callback(error_, data_);
   });
 }
 
@@ -70,12 +62,8 @@ exports.post =  function(requesturl="", headers={}, data_sent={}, callback){
   })
   .catch(function (error) {
     error_ = error;
-    console.log("Error", error_)
     return callback(error_);
   })
   .finally(function () {
-    // always executed
-    console.log("Request done");
-   // return callback(error_, data_);
   });
 }

@@ -5,17 +5,10 @@ import { faSync } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
-const service = require('../api/services');
+import Check from '../components/Check';
+import {prevMonthFirstDay, endOfDay, dateFormatter, enumFormatter, getData, nameFormatter, ageFormatter, trimesterFormatter} from '../utils/index';
 const Fuse = require("fuse.js");
 
-let order = 'desc';
-let startOFDay = new Date();
-startOFDay.setHours(0, 0, 0, 0);
-
-let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
-
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
 
 export default class FollowUps extends Component {
   constructor(props) {
@@ -55,14 +48,34 @@ export default class FollowUps extends Component {
       sizePerPage: 20,
       totalDataSize: 0
     }
-    this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
   }
   componentDidMount() {
-   this.getData();
+    this.loadData();
   }
+  loadData(){
+    const thisApp = this;
+getData({
+    name:"followUps",
+    from:this.state.from,
+    to:this.state.to
+}, function(error, response){
+    if(error){
+        thisApp.setState({
+            isLoaded:true,
+        })
+    }else{
+        thisApp.setState({
+            isLoaded:true,
+            followUps: response.results,
+            followUps_copy: response.results,
+        })
+    }
+})
+}
   handleInputChange(event) {
+    const thisApp =this;
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -70,50 +83,8 @@ export default class FollowUps extends Component {
     this.setState({
       [name]: value,
       isLoaded: false
-    }, () =>
-       this.getData()
+    }, () =>thisApp.loadData()
     );
-  }
-  getData() {
-      const thisApp = this;
-      thisApp.setState({
-        followUps: [],
-        followUps_copy: [],
-      loadingText:"Loading...",
-    });
-      service.followUps(this.state.from, this.state.to, function(error, response){
-      console.log(response);
-        if (error){
-            console.log(error);
-            thisApp.setState(
-            {
-              isLoaded: true,
-              followUps:[],
-              followUps_copy:response.results
-
-            },
-            () => console.log(thisApp.state)
-          );
-          }
-          else{
-            thisApp.setState(
-            {
-              isLoaded: true,
-              followUps:response.results,
-              followUps_copy:response.results
-            },
-            () => console.log(thisApp.state)
-          );
-          }
-    });
-
-  }
-  nameFormatter(cell, row) {
-    return row.girl.first_name+" "+row.girl.last_name+" - "+row.girl.phone_number;
-  }
-
-  trimesterFormatter(cell, row) {
-    return row.girl.trimester;
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -153,17 +124,6 @@ export default class FollowUps extends Component {
       })
     }
 
-  }
-  ageFormatter(cell, row){
-    return moment().diff(row.girl.dob, 'years')+" Years";
-  }
-  dateFormatter(cell){
-    console.log(cell);
-    return moment(new Date(cell)).format('Do MMM YY hh a');
-   
-  }
-  enumFormatter(cell, row, enumObject) {
-    return enumObject[cell];
   }
   search(event) {
     this.setState({ search: event.target.value });
@@ -294,24 +254,24 @@ export default class FollowUps extends Component {
               condensed
               pagination>
 
-              <TableHeaderColumn width="220px" hidden={this.state.manageColomns.name} dataFormat ={this.nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
+              <TableHeaderColumn width="220px" hidden={this.state.manageColomns.name} dataFormat ={nameFormatter} dataSort={true} dataField='first_name'>Name</TableHeaderColumn>
               <TableHeaderColumn hidden={true} dataSort={true} isKey dataField='id'>Phone number</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.village} dataFormat ={(cell, row, item)=>this.getVillageItem(cell, row, "name")} dataField='village'>Village</TableHeaderColumn>
-              <TableHeaderColumn width="80px" hidden={this.state.manageColomns.trimester} dataFormat ={this.trimesterFormatter} dataField={"trimester"}>Trimester</TableHeaderColumn>
+              <TableHeaderColumn width="80px" hidden={this.state.manageColomns.trimester} dataFormat ={trimesterFormatter} dataField={"trimester"}>Trimester</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.next_of_kin} dataFormat ={this.nextOfKinFormatter} dataField='next_of_kin'>Next of Kin</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.marital_status} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "marital_status")} dataField='marital_status'>Marital status</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.education_level} dataFormat ={(cell, row, item)=>this.getGirlItem(cell, row, "education_level")} dataField='education_level'>Education level</TableHeaderColumn>
 
               <TableHeaderColumn hidden={this.state.manageColomns.anc} dataFormat={this.ancFormatter} dataField='anc'>Missed ANC</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.follow_date} dataFormat={this.dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.follow_date} dataFormat={dateFormatter} dataField='created_at'>Follow up date</TableHeaderColumn>
               <TableHeaderColumn hidden={this.state.manageColomns.action_taken} dataField='follow_up_action_taken'>Action taken</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} formatExtraData={ YesNoFormat } dataFormat={ this.enumFormatter }  dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.fever} formatExtraData={ YesNoFormat }  dataFormat={ this.enumFormatter } dataField='fever'>Fever</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.swollen_feet} formatExtraData={ YesNoFormat } dataFormat={ this.enumFormatter } dataField='swollen_feet'>Swollen feet</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={this.dateFormatter} dataField='next_appointment'>Next Appointment</TableHeaderColumn>
-              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={this.ageFormatter} dataField='dob'>Age</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.blurred_vision} formatExtraData={ YesNoFormat }  dataFormat={ enumFormatter } dataField='blurred_vision'>Blurred vision</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.bleeding_heavily} formatExtraData={ YesNoFormat } dataFormat={ enumFormatter }  dataField='bleeding_heavily'>Bleeding heavily</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.fever} formatExtraData={ YesNoFormat }  dataFormat={ enumFormatter } dataField='fever'>Fever</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.swollen_feet} formatExtraData={ YesNoFormat } dataFormat={ enumFormatter } dataField='swollen_feet'>Swollen feet</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.next_appointment} dataFormat={dateFormatter} dataField='next_appointment'>Next Appointment</TableHeaderColumn>
+              <TableHeaderColumn hidden={this.state.manageColomns.dob} dataFormat={ageFormatter} dataField='dob'>Age</TableHeaderColumn>
             </BootstrapTable>
            
           ) : (
@@ -325,25 +285,6 @@ export default class FollowUps extends Component {
 
 
 }
-
-
-class Check extends React.Component {
-  constructor(props) {
-    super(props);
-
-  }
-  render() {
-    return (
-      <React.Fragment>
-        <div className="checkboxWrapper">
-          <div className="disabler"></div>
-          {this.props.state === false ? (<input type="checkbox" checked={true} />) : (<input type="checkbox" checked={false} />)}
-        </div>
-      </React.Fragment>
-    );
-  }
-}
-
 
 
 

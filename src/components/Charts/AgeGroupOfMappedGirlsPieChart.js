@@ -60,8 +60,6 @@ const AgeGroupOfMappedGirlsPieChart = data => {
       }
     ]
   };
-
-  console.log(chart);
   return chart;
 
   // const mappedGirlsInAgeGroup12_15 = aggregateAgesByMonth(

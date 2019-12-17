@@ -1,33 +1,26 @@
 import React, { Component } from 'react';
-import { NavDropdown, MenuItem,DropdownButton, Modal } from 'react-bootstrap';
+import { NavDropdown, MenuItem} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHospital } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
-import { BootstrapTable, TableHeaderColumn, ExportCSVButton } from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
-const alertifyjs = require('alertifyjs');
+import {prevMonthFirstDay, endOfDay, getData} from '../utils/index';
 const Fuse = require("fuse.js");
-const service = require('../api/services');
-
-let order = 'desc';
-let startOFDay = new Date();
-startOFDay.setHours(0, 0, 0, 0);
-
-let prevMonthFirstDay = moment().subtract(1, 'months').date(1).local().format('YYYY-MM-DD');
-
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
 
 
 
-export default class AncVisits extends React.Component {
+
+
+
+export default class HealthFacilities extends React.Component {
     constructor(props, context) {
       super(props, context);
       this.state = {
         health_facilities:[],
         health_facilities_copy:[],
         search:null,
-        isLoaded: true,
+        isLoaded: false,
         loadingText:"Loading ..",
         from: prevMonthFirstDay,
         to: moment(endOfDay).local().format('YYYY-MM-DD'),
@@ -46,23 +39,13 @@ export default class AncVisits extends React.Component {
         sizePerPage: 20,
         totalDataSize: 0   
       };
-      this.getData = this.getData.bind(this);
       this.updateTable = this.updateTable.bind(this);
-      this.handleShow = this.handleShow.bind(this);
-      this.handleClose = this.handleClose.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
     }
-    handleClose(modal) {
-        this.setState({ [modal]: false });
-      }
-    
-      handleShow(modal) {
-        this.setState({ [modal]: true });
-      }
 
-    componentDidMount(){
-      this.getData();
+    componentDidMount() {
+      this.loadData();
     }
     handleInputChange(event) {
       const target = event.target;
@@ -85,38 +68,23 @@ export default class AncVisits extends React.Component {
           [name]: value
         });
       }
-
-      getData() {
+      loadData(){
         const thisApp = this;
-        thisApp.setState({
-        health_facilities: [],
-        health_facilities_copy: [],
-        loadingText:"Loading...",
-      });
-        service.getHealthFacilities(function(error, response){
-        console.log(response);
-          if (error){
-              console.log(error);
-              thisApp.setState(
-              {
-                isLoaded: true,
-                health_facilities:[],
-                health_facilities_copy:[]
-              },
-              () => console.log(thisApp.state)
-            );
-            }
-            else{
-              thisApp.setState(
-              {
-                isLoaded: true,
-                health_facilities:response.results,
-                health_facilities_copy:response.results
-              },
-              () => console.log(thisApp.state)
-            );
-            }
-      });
+    getData({
+        name:"getHealthFacilities",
+    }, function(error, response){
+        if(error){
+            thisApp.setState({
+                isLoaded:true,
+            })
+        }else{
+            thisApp.setState({
+                isLoaded:true,
+                health_facilities: response.results,
+                health_facilities_copy: response.results,
+            })
+        }
+    })
     }
     updateTable(colomn) {
         //make a copy of state
@@ -163,9 +131,6 @@ export default class AncVisits extends React.Component {
           });
         }
       
-      }
-      enumFormatter(cell, row, enumObject) {
-        return enumObject[cell];
       }
     render() {
         let data_table =this.state.health_facilities;

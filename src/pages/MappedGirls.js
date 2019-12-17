@@ -5,25 +5,13 @@ import { faFemale } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import {
   BootstrapTable,
-  TableHeaderColumn,
-  ExportCSVButton
+  TableHeaderColumn
 } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import Check from '../components/Check';
+import {prevMonthFirstDay, endOfDay, dateFormatter, enumFormatter, getData, nameFormatter} from '../utils/index';
 const Fuse = require('fuse.js');
-const service = require('../api/services');
 
-let order = 'desc';
-let startOFDay = new Date();
-startOFDay.setHours(0, 0, 0, 0);
-
-let prevMonthFirstDay = moment()
-  .subtract(1, 'months')
-  .date(1)
-  .local()
-  .format('YYYY-MM-DD');
-
-var endOfDay = new Date();
-endOfDay.setHours(23, 59, 59, 999);
 
 export default class MappedGirls extends Component {
   constructor(props) {
@@ -66,51 +54,35 @@ export default class MappedGirls extends Component {
       sizePerPage: 20,
       totalDataSize: 0
     };
-    this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
   }
   componentDidMount() {
-    this.getData();
+    this.loadData();
   }
-
-  getData() {
+  loadData(){
     const thisApp = this;
-    thisApp.setState({
-      girls: [],
-      girls_copy: [],
-      loadingText: 'Loading...'
-    });
-    service.mappedGirlsEncounter(this.state.from, this.state.to, function(
-      error,
-      response
-    ) {
-      console.log(response);
-      if (error) {
-        console.log(error);
-        thisApp.setState(
-          {
-            isLoaded: true,
-            girls: [],
-            girls_copy: [],
-            isLoaded: false
-          },
-          () => console.log(thisApp.state)
-        );
-      } else {
-        thisApp.setState(
-          {
-            isLoaded: true,
+getData({
+    name:"mappedGirlsEncounter",
+    from:this.state.from,
+    to:this.state.to
+}, function(error, response){
+    if(error){
+        thisApp.setState({
+            isLoaded:true,
+        })
+    }else{
+        thisApp.setState({
+            isLoaded:true,
             girls: response.results,
-            girls_copy: response.results
-          },
-          () => console.log(thisApp.state)
-        );
-      }
-    });
-  }
+            girls_copy: response.results,
+        })
+    }
+})
+}
   handleInputChange(event) {
+    const thisApp = this;
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -120,7 +92,7 @@ export default class MappedGirls extends Component {
         [name]: value,
         isLoaded: false
       },
-      () => this.getData()
+      () => thisApp.loadData()
     );
   }
 
@@ -166,24 +138,9 @@ export default class MappedGirls extends Component {
       return data;
     }
   }
-  nameFormatter(cell, row) {
-    return (
-      row.girl.first_name +
-      ' ' +
-      row.girl.last_name +
-      ' - ' +
-      row.girl.phone_number
-    );
-  }
   ageFormatter(cell, row) {
     return row.girl.age + ' Years';
   }
-
-  dateFormatter(cell, row) {
-    return moment(new Date(cell)).format('Do MMM YY hh a');
-  //  return row.girl.created_at.substring(0, 10);
-  }
-
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -217,7 +174,6 @@ export default class MappedGirls extends Component {
     }
   }
   familyPlanningFormatter(cell, row) {
-    // console.log(cell);
     let familyPlanning = '';
     if (row.family_planning[0].using_family_planning) {
       return (familyPlanning = 'Yes, ' + row.family_planning[0].method);
@@ -235,22 +191,8 @@ export default class MappedGirls extends Component {
         return "No"
       }
   }
-  enumFormatter(cell, row, enumObject) {
-    return enumObject[cell];
-  }
 
   sortByAge(a, b, order) {
-    // console.log(c);
-    // if (order === 'desc') {
-    // //  _.sortBy(a, 'name');
-    // return this.state.girls.sort((a,b) => (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
-    //   order = 'asc';
-    // } else {
-    // //  this.refs.table.handleSort('desc', 'dob');
-    // return this.state.girls.sort((a,b) <= (a.girl.age > b.girl.age) ? 1 : ((b.girl.age > a.girl.age) ? -1 : 0));
-    //   order = 'desc';
-    // }
-
     if (order === 'desc') {
       return a.girl.age - b.girl.age;
     } else {
@@ -523,7 +465,7 @@ export default class MappedGirls extends Component {
                 <TableHeaderColumn
                   width='300px'
                   hidden={this.state.manageColomns.name}
-                  dataFormat={this.nameFormatter}
+                  dataFormat={nameFormatter}
                   dataSort={true}
                   dataField='first_name'
                 >
@@ -618,7 +560,7 @@ export default class MappedGirls extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.created_at}
-                  dataFormat={this.dateFormatter}
+                  dataFormat={dateFormatter}
                   dataSort={true}
                   dataField='created_at'
                 >
@@ -634,7 +576,7 @@ export default class MappedGirls extends Component {
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.attended_anc_visits}
-                  dataFormat={this.enumFormatter}
+                  dataFormat={enumFormatter}
                   formatExtraData={YesNoFormat}
                   dataField='attended_anc_visit'
                 >
@@ -686,22 +628,3 @@ export default class MappedGirls extends Component {
   }
 }
 
-class Check extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <React.Fragment>
-        <div className='checkboxWrapper'>
-          <div className='disabler'></div>
-          {this.props.state === false ? (
-            <input type='checkbox' checked={true} />
-          ) : (
-            <input type='checkbox' checked={false} />
-          )}
-        </div>
-      </React.Fragment>
-    );
-  }
-}

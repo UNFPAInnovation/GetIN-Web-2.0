@@ -1,23 +1,18 @@
-const serverUrl = require('./config.json');
-
-
-function env_config(){
-    console.log(window.location.hostname)
-    if (window.location.hostname==="dash.getinmobile.org" || window.location.hostname==="www.dash.getinmobile.org"){
-        return serverUrl.BASE_URL;
-    }
-    else if(window.location.hostname==="testdash.getinmobile.org"){
-        return serverUrl.BASE_URL_TEST;
-    }
-    else if(window.location.hostname==="localhost"){
-        return serverUrl.BASE_URL_TEST;
-    }
-    else{
-        return serverUrl.BASE_URL_TEST;
-    }
-   
+const serverUrl = require("./config.json");
+// Determines the host and redirects traffic respective from production to test /staging
+function env_config() {
+  if (
+    window.location.hostname === serverUrl.PRODUCTION_URL ||
+    window.location.hostname === serverUrl.ALT_PRODUCTION_URL
+  ) {
+    return serverUrl.BASE_URL;
+  } else if (window.location.hostname === serverUrl.TEST_URL) {
+    return serverUrl.BASE_URL_TEST;
+  } else if (window.location.hostname === serverUrl.LOCAL_URL) {
+    return serverUrl.BASE_URL_TEST;
+  } else {
+    return serverUrl.BASE_URL_TEST;
+  }
 }
 let addr = env_config();
-
-
-export default  addr;
+export default addr;
