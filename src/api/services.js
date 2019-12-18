@@ -2,11 +2,17 @@ const api = require("./index");
 const addr = require("../env_config").default;
 const sessionStorage = window.sessionStorage;
 const token = sessionStorage.getItem("token");
+const OPTIONS = {
+  "content-type": "application/json", Authorization: "Token " + token
+};
+const OPTIONS_UNSECURE = {
+  "content-type": "application/json",
+};
 
 exports.login = function(data, callback) {
   api.post(
     addr + "/auth/login/",
-    { "content-type": "application/json" },
+    OPTIONS_UNSECURE,
     data,
     function(error, response) {
       if (error) {
@@ -27,7 +33,7 @@ exports.login = function(data, callback) {
 exports.addUser = function(data, callback) {
   api.post(
     addr + "/auth/register/",
-    { "content-type": "application/json", Authorization: "Token " + token },
+    OPTIONS,
     data,
     function(error, response) {
       if (error) {
@@ -41,7 +47,7 @@ exports.addUser = function(data, callback) {
 exports.addChew = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
-    { "content-type": "application/json", Authorization: "Token " + token },
+    OPTIONS,
     data,
     function(error, response) {
       if (error) {
@@ -55,7 +61,7 @@ exports.addChew = function(data, callback) {
 exports.addMidwife = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
-    { "content-type": "application/json", Authorization: "Token " + token },
+    OPTIONS,
     data,
     function(error, response) {
       if (error) {
@@ -69,7 +75,7 @@ exports.addMidwife = function(data, callback) {
 exports.addAmbulance = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
-    { "content-type": "application/json", Authorization: "Token " + token },
+    OPTIONS,
     data,
     function(error, response) {
       if (error) {
@@ -84,10 +90,7 @@ exports.addAmbulance = function(data, callback) {
 exports.verifyToken = function(callback) {
   api.get(
     addr + "/auth/me/",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       if (error) {
         return callback(error);
@@ -105,10 +108,7 @@ exports.verifyToken = function(callback) {
 exports.usersChew = function(callback) {
   api.get(
     addr + "/api/v1/chews",
-    {
-       "content-type": "application/json",
-       "Authorization": "Token "+token
-   },function(error, response){
+    OPTIONS,function(error, response){
          if(error){
             return callback(error);
          }else{
@@ -124,10 +124,7 @@ exports.usersChew = function(callback) {
 }
 exports.getHealthFacilities =  function(callback){
    api.get(addr+"/api/v1/healthfacilities",
-   {
-      "content-type": "application/json",
-      "Authorization": "Token "+token
-  },function(error, response){
+   OPTIONS,function(error, response){
         if(error){
            return callback(error);
         }else{
@@ -144,10 +141,7 @@ exports.getHealthFacilities =  function(callback){
 
 exports.usersMidwives =  function(callback){
    api.get(addr+"/api/v1/midwives",
-   {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+   OPTIONS,
     function(error, response) {
       if (error) {
         return callback(error);
@@ -164,10 +158,7 @@ exports.usersMidwives =  function(callback){
 exports.usersMidwives = function(callback) {
   api.get(
     addr + "/api/v1/midwives",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -186,10 +177,7 @@ exports.usersMidwives = function(callback) {
 exports.usersAmbulanceDrivers = function(callback) {
   api.get(
     addr + "/api/v1/ambulances",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -207,10 +195,7 @@ exports.usersAmbulanceDrivers = function(callback) {
 
 exports.followUps =  function(from, to, callback){
    api.get(addr+"/api/v1/followups?created_from="+from+"&created_to="+to,
-   {
-      "content-type": "application/json",
-      "Authorization": "Token "+token
-  },function(error, response){
+   OPTIONS,function(error, response){
        //callback of the method here
         if(error){
            return callback(error);
@@ -228,10 +213,7 @@ exports.followUps =  function(from, to, callback){
 exports.getVillages = function(callback) {
   api.get(
     addr + "/api/v1/villages",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -249,10 +231,7 @@ exports.getVillages = function(callback) {
 exports.mappedGirls = function(from, to, callback) {
   api.get(
     addr + "/api/v1/girls?created_from="+from+"&created_to="+to,
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -272,10 +251,7 @@ exports.mappedGirls = function(from, to, callback) {
 exports.mappedGirlsEncounter = function(from, to, callback) {
   api.get(
     addr + "/api/v1/mapping_encounters?created_from="+from+"&created_to="+to,
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -294,10 +270,7 @@ exports.mappedGirlsEncounter = function(from, to, callback) {
 exports.deliveries = function(delivery_location, from, to, callback) {
    api.get(
      addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&date_from="+from+"&date_to="+to,
-     {
-       "content-type": "application/json",
-       Authorization: "Token " + token
-     },
+     OPTIONS,
      function(error, response) {
        //callback of the method here
        if (error) {
@@ -315,10 +288,7 @@ exports.deliveries = function(delivery_location, from, to, callback) {
 exports.getSubCounties = function(callback) {
   api.get(
     addr + "/api/v1/subcounties",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -337,10 +307,7 @@ exports.getSubCounties = function(callback) {
 exports.getHealthFacilities = function(callback) {
   api.get(
     addr + "/api/v1/healthfacilities",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -359,10 +326,7 @@ exports.getHealthFacilities = function(callback) {
 exports.getParishes = function(callback) {
   api.get(
     addr + "/api/v1/parishes",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -382,10 +346,7 @@ exports.getParishes = function(callback) {
 exports.Appointments = function(status, from, to, callback) {
   api.get(
     addr + "/api/v1/appointments?status="+status+"&created_from="+from+"&created_to="+to,
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -405,10 +366,7 @@ exports.Appointments = function(status, from, to, callback) {
 exports.users = function(role, callback) {
   api.get(
     addr + "/api/v1/users?role="+role,
-    {
-       "content-type": "application/json",
-       "Authorization": "Token "+token
-   },function(error, response){
+    OPTIONS,function(error, response){
         //callback of the method here
          if(error){
             return callback(error);
@@ -427,10 +385,7 @@ exports.users = function(role, callback) {
 exports.listSms = function(callback) {
   api.get(
     addr + "/api/v1/sms",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -449,10 +404,7 @@ exports.listSms = function(callback) {
 exports.getAllUsers = function(callback) {
   api.get(
     addr + "/api/v1/users",
-    {
-      "content-type": "application/json",
-      Authorization: "Token " + token
-    },
+    OPTIONS,
     function(error, response) {
       //callback of the method here
       if (error) {
@@ -471,7 +423,7 @@ exports.getAllUsers = function(callback) {
 exports.sendSms = function(data, callback) {
   api.post(
     addr + "/api/v1/sms",
-    { "content-type": "application/json", Authorization: "Token " + token },
+    OPTIONS,
     data,
     function(error, response) {
       //callback of the method here
@@ -483,6 +435,3 @@ exports.sendSms = function(data, callback) {
     }
   );
 };
-
-//get //url
-//post url data
