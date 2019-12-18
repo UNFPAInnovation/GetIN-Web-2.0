@@ -5,11 +5,14 @@ const token = sessionStorage.getItem("token");
 const OPTIONS = {
   "content-type": "application/json", Authorization: "Token " + token
 };
+const OPTIONS_UNSECURE = {
+  "content-type": "application/json",
+};
 
 exports.login = function(data, callback) {
   api.post(
     addr + "/auth/login/",
-    OPTIONS,
+    OPTIONS_UNSECURE,
     data,
     function(error, response) {
       if (error) {
