@@ -74,10 +74,6 @@ class App extends Component {
       }
     });
   }
-  componentDidMount() {
-    // Event Listener if offline
-    //window.addEventListener("offline", function(e) {});
-  }
   render() {
     return (
       <BrowserRouter basename="/">
@@ -281,10 +277,6 @@ class ErrorBoundary extends React.Component {
   static getDerivedStateFromError(error) {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
-  }
-
-  componentDidCatch(error, info) {
-    // You can also log the error to an error reporting service
   }
 
   render() {

@@ -16,8 +16,6 @@ exports.get =  function(requesturl="", headers={}, callback){
     error_ = error;
     return callback(error_);
   })
-  .finally(function () {
-  });
 }
 exports.html =  function(requesturl="", headers={}, callback){
   let error_ = null;
@@ -36,8 +34,6 @@ exports.html =  function(requesturl="", headers={}, callback){
     error_ = error;
     return callback(error_);
   })
-  .finally(function () {
-  });
 }
 
 
@@ -64,6 +60,4 @@ exports.post =  function(requesturl="", headers={}, data_sent={}, callback){
     error_ = error;
     return callback(error_);
   })
-  .finally(function () {
-  });
 }
