@@ -27,6 +27,7 @@ export default class VHT extends Component {
               gender:false,
               village:false,
               username:false,
+              sub_county:false
             },
             // remote pagination
             currentPage: 1,
@@ -115,6 +116,9 @@ componentDidMount() {
       villageFormatter(cell, row) {
         return row.village && row.village.name;
       }
+      subCountyFormatter(cell, row){
+        return row.village && row.village.parish && row.village.parish.sub_county.name
+      }
       handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -162,7 +166,8 @@ componentDidMount() {
                   <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>        
-                  <MenuItem onClick={(e, sub_county) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
+                  <MenuItem onClick={(e, village) => this.updateTable("village")} eventKey={3.1}> <Check state={this.state.manageColomns.village} /> Village</MenuItem>        
+                  <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>        
                   <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
                 </NavDropdown>
     
@@ -189,7 +194,8 @@ componentDidMount() {
                   <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
-                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataFormat ={this.villageFormatter} dataField='village'>Village</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.village} dataFormat ={this.villageFormatter} dataField='village'>Village</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataFormat ={this.subCountyFormatter} dataField='sub_county'>Sub county</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
                  

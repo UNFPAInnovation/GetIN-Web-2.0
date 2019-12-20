@@ -39,7 +39,6 @@ export default class Home extends Component {
           delivery:false,
           family_planning:false,
           delivery_date: false,
-          health_facility: true
         },
         // remote pagination
         currentPage: 1,
