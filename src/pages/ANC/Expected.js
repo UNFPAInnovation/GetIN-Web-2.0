@@ -24,7 +24,6 @@ export default class ExpectedAppointments extends Component {
         manageColomns: {
           name: false,
           vht: true,
-          health_facility: true,
           trimester: false,
           //  remaining_visits:false,
           date: false
@@ -121,7 +120,6 @@ export default class ExpectedAppointments extends Component {
             "user.village",
             "user.role",
             "user.phone",
-            "health_facility"
           ]
         };
   
@@ -240,16 +238,6 @@ export default class ExpectedAppointments extends Component {
                   <Check state={this.state.manageColomns.vht} /> Chew
                 </MenuItem>
                 <MenuItem
-                  onClick={(e, health_facility) =>
-                    this.updateTable("health_facility")
-                  }
-                  eventKey={3.1}
-                >
-                  {" "}
-                  <Check state={this.state.manageColomns.health_facility} />{" "}
-                  Health Facility
-                </MenuItem>
-                <MenuItem
                   onClick={(e, trimester) => this.updateTable("trimester")}
                   eventKey={3.1}
                 >
@@ -307,13 +295,6 @@ export default class ExpectedAppointments extends Component {
                     dataField="vht"
                   >
                     Chew
-                  </TableHeaderColumn>
-                  <TableHeaderColumn
-                    hidden={this.state.manageColomns.health_facility}
-                    dataSort={true}
-                    dataField="health_facility"
-                  >
-                    Health Facility
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     hidden={this.state.manageColomns.trimester}

@@ -38,7 +38,6 @@ export default class HealthFacility extends Component {
           delivery:false,
           family_planning:false,
           delivery_date: false,
-          health_facility: true
         },
         // remote pagination
         currentPage: 1,
@@ -314,15 +313,7 @@ export default class HealthFacility extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.delivery_date} /> Date of delivery
-              </MenuItem>
-              <MenuItem
-                onClick={(e, health_facility) => this.updateTable("health_facility")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.health_facility} /> Health facility
-              </MenuItem>
-             
+              </MenuItem>             
             </NavDropdown>
           </form>
   
@@ -424,14 +415,7 @@ export default class HealthFacility extends Component {
                   dataField="family_planning"
                 >
                   Family planning
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.health_facility}
-                  dataField="health_facility"
-                >
-                  Health Facility
-                </TableHeaderColumn>
-                
+                </TableHeaderColumn>                
               </BootstrapTable>
             ) : (
               <span>Loading</span>

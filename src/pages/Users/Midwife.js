@@ -27,7 +27,8 @@ export default class Midwives extends Component {
               phone:false,
               gender:false,
               username:false,
-              health_facility:false
+              health_facility:false,
+              sub_county:false
             },
             // remote pagination
             currentPage: 1,
@@ -117,6 +118,9 @@ export default class Midwives extends Component {
       nameFormatter(cell, row) {
         return row.first_name+" "+row.last_name;
       }
+      subCountyFormatter(cell, row){
+        return row.village && row.village.parish && row.village.parish.sub_county.name
+      }
       handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -164,7 +168,8 @@ export default class Midwives extends Component {
                   <MenuItem onClick={(e, name) => this.updateTable("name")} eventKey={3.1}> <Check state={this.state.manageColomns.name} /> Name</MenuItem>        
                   <MenuItem onClick={(e, phone) => this.updateTable("phone")} eventKey={3.1}> <Check state={this.state.manageColomns.phone} /> Phone</MenuItem>        
                   <MenuItem onClick={(e, email) => this.updateTable("email")} eventKey={3.1}> <Check state={this.state.manageColomns.email} /> Email</MenuItem>        
-                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>        
+                  <MenuItem onClick={(e, health_facility) => this.updateTable("health_facility")} eventKey={3.1}> <Check state={this.state.manageColomns.health_facility} /> Health facility</MenuItem>
+                  <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>       
                   <MenuItem onClick={(e, gender) => this.updateTable("gender")} eventKey={3.1}> <Check state={this.state.manageColomns.gender} /> Gender</MenuItem>         
                   <MenuItem onClick={(e, username) => this.updateTable("username")} eventKey={3.1}> <Check state={this.state.manageColomns.username} /> Username</MenuItem>               
                 </NavDropdown>
@@ -192,6 +197,7 @@ export default class Midwives extends Component {
                   <TableHeaderColumn hidden={this.state.manageColomns.phone} dataSort={true} dataField='phone'>Phone</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.email} dataSort={true} dataField='email'>Email</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.health_facility} dataSort={true} dataField='health_facility'>Health facility</TableHeaderColumn>
+                  <TableHeaderColumn hidden={this.state.manageColomns.sub_county} dataFormat ={this.subCountyFormatter} dataField='sub_county'>Sub county</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.gender} dataField='gender'>Gender</TableHeaderColumn>
                   <TableHeaderColumn hidden={this.state.manageColomns.username} isKey dataField='username'>Username</TableHeaderColumn>
 
