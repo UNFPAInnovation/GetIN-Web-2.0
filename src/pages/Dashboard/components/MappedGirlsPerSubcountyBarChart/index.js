@@ -1,18 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 
 // Chart Stuff
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import Drilldown from 'highcharts/modules/drilldown.js';
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import Drilldown from "highcharts/modules/drilldown.js";
 
 // Chart Card Component
-import ChartCard from '../../../../components/ChartCard';
+import ChartCard from "../../../../components/ChartCard";
 
 // Utils
-import { getDistrict } from '../../../../components/Charts/utils/utils';
+import { getDistrict } from "../../../../components/Charts/utils/utils";
 
 // Chart + Chart Data
-import { MappedGirlsPerSubcountyBarChart } from '../../../../components/Charts/MappedGirlsPerSubcountyBarChart';
+import { MappedGirlsPerSubcountyBarChart } from "../../../../components/Charts/MappedGirlsPerSubcountyBarChart";
 
 const MappedGirlsPerSubcountyBarChartCard = ({ data }) => {
   const [chart, setChart] = useState();
@@ -27,7 +27,7 @@ const MappedGirlsPerSubcountyBarChartCard = ({ data }) => {
 
   return (
     <ChartCard
-      title={'Mappeg girls per subcounty from ' + district}
+      title={"Mapped girls per subcounty from " + district}
       content={
         <HighchartsReact
           highcharts={Drilldown(Highcharts)}

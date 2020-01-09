@@ -1,14 +1,8 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import {
-  Navbar,
-  Nav,
-  NavItem,
-  DropdownButton,
-  MenuItem,
-  NavDropdown
-} from "react-bootstrap";
+import { MenuItem, NavDropdown } from "react-bootstrap";
+import { capitalizeFirstLetter } from "../utils/index";
 const alertifyjs = require("alertifyjs");
 const sessionStorage = window.sessionStorage;
 
@@ -35,17 +29,17 @@ export default class Header extends Component {
   }
   render() {
     return (
-      <nav className="headerNav navbar navbar-default navbar-static-top">
-        <div className="container-fluid">
-          <div id="navbar" className="">
-            <ul className="profileNav nav navbar-nav navbar-right">
-              <button type="button" className="btn pull-left">
+      <nav className='headerNav navbar navbar-default navbar-static-top'>
+        <div className='container-fluid'>
+          <div id='navbar' className=''>
+            <ul className='profileNav nav navbar-nav navbar-right'>
+              <button type='button' className='btn pull-left'>
                 <FontAwesomeIcon icon={faUser} />
               </button>
               <NavDropdown
                 eventKey={3}
-                title={this.state.loggedInAs}
-                id="basic-nav-dropdown"
+                title={capitalizeFirstLetter(this.state.loggedInAs)}
+                id='basic-nav-dropdown'
               >
                 <MenuItem onClick={this.logout} eventKey={3.4}>
                   Logout
