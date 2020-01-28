@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  prevMonthFirstDay,
+  fromInitialDate,
   endOfDay,
   dateFormatter,
   enumFormatter,
@@ -26,7 +26,7 @@ export default class AmbulanceDrivers extends Component {
       isLoaded: false,
       loadingText: "Loading ..",
       status: "All",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       role: "ambulance",
       to: moment(endOfDay)
         .local()

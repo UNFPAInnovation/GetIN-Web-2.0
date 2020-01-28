@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  prevMonthFirstDay,
+  fromInitialDate,
   endOfDay,
   dateFormatter,
   enumFormatter,
@@ -26,7 +26,7 @@ export default class HealthFacility extends Component {
       loadingText: "Loading ..",
       status: "All",
       search: null,
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),

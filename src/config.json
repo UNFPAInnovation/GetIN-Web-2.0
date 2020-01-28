@@ -1,6 +1,6 @@
 {
-  "BASE_URL": "http://backend.getinmobile.org",
-  "BASE_URL_TEST": "http://testbackend.getinmobile.org",
+  "BASE_URL": "https://backend.getinmobile.org",
+  "BASE_URL_TEST": "https://testbackend.getinmobile.org",
   "PRODUCTION_URL": "dash.getinmobile.org",
   "ALT_PRODUCTION_URL": "www.dash.getinmobile.org",
   "TEST_URL": "testdash.getinmobile.org",

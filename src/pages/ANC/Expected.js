@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  prevMonthFirstDay,
+  fromInitialDate,
   endOfDay,
   dateFormatter,
   enumFormatter,
@@ -24,7 +24,7 @@ export default class ExpectedAppointments extends Component {
       isLoaded: false,
       loadingText: "Loading ..",
       status: "Expected",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),
