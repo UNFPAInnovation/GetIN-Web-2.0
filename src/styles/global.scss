@@ -1,28 +1,28 @@
-@import '~nprogress/nprogress.css';
-@import '~alertifyjs/build/css/alertify.min.css';
-@import '~alertifyjs/build/css/themes/semantic.min.css';
-@import '~bootstrap3/dist/css/bootstrap.min.css';
+@import "~nprogress/nprogress.css";
+@import "~alertifyjs/build/css/alertify.min.css";
+@import "~alertifyjs/build/css/themes/semantic.min.css";
+@import "~bootstrap3/dist/css/bootstrap.min.css";
 
 @font-face {
   font-family: Light;
   font-display: auto;
-  src: url('../assets/fonts/Montserrat-Light.ttf');
+  src: url("../assets/fonts/Montserrat-Light.ttf");
 }
 
 @font-face {
   font-family: Regular;
   font-display: auto;
-  src: url('../assets/fonts/Montserrat-Regular.ttf');
+  src: url("../assets/fonts/Montserrat-Regular.ttf");
 }
 @font-face {
   font-family: Medium;
   font-display: auto;
-  src: url('../assets/fonts/Montserrat-Medium.ttf');
+  src: url("../assets/fonts/Montserrat-Medium.ttf");
 }
 @font-face {
   font-family: Bold;
   font-display: auto;
-  src: url('../assets/fonts/Montserrat-Bold.ttf');
+  src: url("../assets/fonts/Montserrat-Bold.ttf");
 }
 /* Colors */
 $darkColor: #707070;
@@ -61,7 +61,7 @@ input.form-control {
   box-shadow: unset !important;
   margin-bottom: 12px;
 }
-input[type='date'] {
+input[type="date"] {
   border: 1px solid #ccc !important;
   border-radius: 11px !important;
 }
@@ -69,7 +69,7 @@ input.search {
   border: 1px solid #ccc !important;
   border-radius: 11px !important;
 }
-textarea{
+textarea {
   border: 1px solid #ccc !important;
   border-radius: 11px !important;
 }
@@ -132,7 +132,7 @@ a:focus {
   color: #4cc4d4 !important;
   font-size: 24px;
   font-weight: 700;
-  padding:15px 0 !important;
+  padding: 15px 0 !important;
   img {
     height: 50px;
     display: inline;
@@ -163,12 +163,11 @@ a:focus {
   // min-width: 322px;
 }
 @media screen and (min-width: 995px) {
-
-  #sideNavBar{
+  #sideNavBar {
     width: 27.666667% !important;
   }
-  #detailComponent{
-    width:72.333333% !important;
+  #detailComponent {
+    width: 72.333333% !important;
   }
 }
 .sideNav {
@@ -446,11 +445,7 @@ Dashboard Cards
   }
   &.card-purple {
     background: #da4453; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-      to right,
-      #89216b,
-      #da4453
-    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #89216b, #da4453); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #89216b,
@@ -459,11 +454,7 @@ Dashboard Cards
   }
   &.card-blue {
     background: #56ccf2; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-      to right,
-      #2f80ed,
-      #56ccf2
-    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #2f80ed, #56ccf2); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #2f80ed,
@@ -472,11 +463,7 @@ Dashboard Cards
   }
   &.card-orange {
     background: #ff4b1f; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-      to right,
-      #ff9068,
-      #ff4b1f
-    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #ff9068, #ff4b1f); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #ff9068,
@@ -491,7 +478,7 @@ Dashboard Cards
     position: absolute;
     right: -50px;
     bottom: -100px;
-    content: '';
+    content: "";
   }
   ::before {
     background-color: rgba(255, 255, 255, 0.02);
@@ -501,7 +488,7 @@ Dashboard Cards
     position: absolute;
     right: -100px;
     top: 0px;
-    content: '';
+    content: "";
   }
   &:hover {
     opacity: 0.8;
@@ -658,7 +645,7 @@ Dashboard Cards
           &::after {
             position: absolute;
             bottom: 0;
-            content: '';
+            content: "";
             width: 100%;
             height: 80%;
           }
@@ -699,11 +686,10 @@ Dashboard Cards
           }
           &.msg {
             font-size: 12px;
-            margin-top:10px;
+            margin-top: 10px;
             color: rgba(0, 0, 0, 0.8);
           }
         }
-
       }
       .time {
         font-size: 12px;
@@ -748,13 +734,13 @@ Dashboard Cards
     margin: 0 20px;
   }
 }
-.modal-dialog{
-  width:80%;
+.modal-dialog {
+  width: 80%;
   height: 70vh;
-  .modal-content{
+  .modal-content {
     height: 100%;
   }
-  .modal-body{
+  .modal-body {
     height: 80%;
   }
 }
