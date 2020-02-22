@@ -7,7 +7,8 @@ import {
   getData,
   trimesterFormatter,
   chewFormatter,
-  nameFormatter
+  nameFormatter,
+  hideRowIfRecordExists
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -325,6 +326,9 @@ export default class AttendedAppointments extends Component {
             {this.state.isLoaded === true ? (
               <BootstrapTable
                 data={data_table}
+                trClassName={row =>
+                  hideRowIfRecordExists(row, this.state.appointments)
+                }
                 striped
                 hover
                 csvFileName={

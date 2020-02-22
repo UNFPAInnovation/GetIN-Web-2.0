@@ -7,7 +7,8 @@ import {
   getData,
   trimesterFormatter,
   chewFormatter,
-  nameFormatter
+  nameFormatter,
+  hideRowIfRecordExists
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -59,7 +60,6 @@ export default class ExpectedAppointments extends Component {
     });
     if (girls.length > 0) return true;
     else return false;
-    // return true;
   }
 
   expandComponent(row) {
@@ -204,6 +204,7 @@ export default class ExpectedAppointments extends Component {
       }
     );
   }
+
   render() {
     let data_table = this.state.appointments;
     const trimesterType = {
@@ -306,6 +307,9 @@ export default class ExpectedAppointments extends Component {
             {this.state.isLoaded === true ? (
               <BootstrapTable
                 data={data_table}
+                trClassName={row =>
+                  hideRowIfRecordExists(row, this.state.appointments)
+                }
                 striped
                 hover
                 csvFileName={

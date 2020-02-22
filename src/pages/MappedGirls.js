@@ -36,6 +36,7 @@ export default class MappedGirls extends Component {
         created_at: false,
         phone_number: false,
         village: true,
+        vht: true,
         name: false,
         trimester: false,
         next_of_kin_name: true,
@@ -120,6 +121,9 @@ export default class MappedGirls extends Component {
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
+  }
+  getVHT(cell, row) {
+    return `${row.user.first_name} ${row.user.last_name} ${row.user.phone}`;
   }
   getVillageItem(cell, row, item) {
     return row.girl.village[item];
@@ -224,16 +228,7 @@ export default class MappedGirls extends Component {
       firstPage: "First", // First page button text
       paginationPosition: "bottom" // default is bottom, top and both is all available
     };
-    // let statusList = [
-    //   { name: 'Pending', value: 0 },
-    //   { name: 'Scheduled', value: 1 },
-    //   { name: 'In progress', value: 2 },
-    //   { name: 'Completed', value: 3 }
-    // ];
 
-    // let facilityTypeFilter = ft.map((item) =>
-    //   <option value={item}>{item}</option>
-    // );
     return (
       <div>
         <div className='col-md-8 title'>
@@ -314,6 +309,13 @@ export default class MappedGirls extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.subcounty} /> Sub county
+              </MenuItem>
+              <MenuItem
+                onClick={(e, vht) => this.updateTable("vht")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.vht} /> VHT
               </MenuItem>
               <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
@@ -524,6 +526,15 @@ export default class MappedGirls extends Component {
                   dataField='subcounty'
                 >
                   Sub county
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.vht}
+                  width='300px'
+                  dataFormat={(cell, row, item) => this.getVHT(cell, row)}
+                  csvFormat={(cell, row, item) => this.getVHT(cell, row)}
+                  dataField='vht'
+                >
+                  VHT
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.trimester}

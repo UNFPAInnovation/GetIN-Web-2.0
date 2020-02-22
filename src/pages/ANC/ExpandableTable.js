@@ -9,6 +9,7 @@ const ExpandableTable = ({ data }) => {
         <TableHeaderColumn dataField='id' hidden={true} isKey={true}>
           #id
         </TableHeaderColumn>
+        <TableHeaderColumn width='340px'></TableHeaderColumn>
         <TableHeaderColumn dataField='timester' dataFormat={trimesterFormatter}>
           Timester
         </TableHeaderColumn>

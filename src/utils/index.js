@@ -1,4 +1,6 @@
 import moment from "moment";
+import _ from "underscore";
+
 const service = require("../api/services");
 export const capitalizeFirstLetter = function(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -8,7 +10,7 @@ export const prevMonthFirstDay = moment()
   .date(1)
   .local()
   .format("YYYY-MM-DD");
-export const fromInitialDate = "2019-10-01";
+export const fromInitialDate = "2019-11-01";
 export const endOfDay = new Date().setHours(23, 59, 59, 999);
 export const dateFormatter = function(cell) {
   return moment(new Date(cell)).format("Do MMM YY hh a");
@@ -109,5 +111,19 @@ export const getData = function(action, callback) {
         }
       });
       break;
+  }
+};
+
+export const hideRowIfRecordExists = (row, appointments) => {
+  const girls = _.filter(appointments, appointment => {
+    return appointment.girl.id === row.girl.id;
+  });
+  if (girls.length > 0) {
+    const indexOfGirl = girls
+      .map(function(e) {
+        return e.id;
+      })
+      .indexOf(row.id);
+    return indexOfGirl != 0 && "tr-hidden";
   }
 };
