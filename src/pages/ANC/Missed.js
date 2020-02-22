@@ -7,7 +7,8 @@ import {
   getData,
   trimesterFormatter,
   nameFormatter,
-  chewFormatter
+  chewFormatter,
+  hideRowIfRecordExists
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -199,6 +200,7 @@ export default class MissedAppointments extends Component {
     });
     return <ExpandableTable data={girls} />;
   }
+
   expandColumnComponent({ isExpandableRow, isExpanded }) {
     let content = "";
 
@@ -314,6 +316,9 @@ export default class MissedAppointments extends Component {
             {this.state.isLoaded === true ? (
               <BootstrapTable
                 data={data_table}
+                trClassName={row =>
+                  hideRowIfRecordExists(row, this.state.appointments)
+                }
                 striped
                 hover
                 csvFileName={
