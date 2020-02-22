@@ -1,44 +1,41 @@
-import React, { useState, useMemo } from 'react';
-import moment from 'moment';
+import React, { useState, useMemo } from "react";
+import moment from "moment";
 
 // React bootstrap components
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col } from "react-bootstrap";
 
 // Font Awesome components
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 // Loading data component
-import { LoadingData } from '../../components/Layout';
+import { LoadingData } from "../../components/Layout";
 
 // Our custom dashboard components
-import DeliveriesCard from './components/DeliveriesCard/index';
-import FollowUpsCard from './components/FollowUpsCard/index';
-import MappedGirlsCard from './components/MappedGirlsCard/index';
-import AgeGroupOfMappedGirlsBarChart from './components/AgeGroupOfMappedGirlsBarChart/index';
-import MappedGirlsPerSubcountyBarChart from './components/MappedGirlsPerSubcountyBarChart/index';
+import DeliveriesCard from "./components/DeliveriesCard/index";
+import FollowUpsCard from "./components/FollowUpsCard/index";
+import MappedGirlsCard from "./components/MappedGirlsCard/index";
+import AgeGroupOfMappedGirlsBarChart from "./components/AgeGroupOfMappedGirlsBarChart/index";
+import MappedGirlsPerSubcountyBarChart from "./components/MappedGirlsPerSubcountyBarChart/index";
 
 // Get Data
-import getData from '../../utils/getData';
+import getData from "../../utils/getData";
 
-// Variables
-// const startOfMonth = moment()
-//   .startOf('month')
-//   .format('YYYY-MM-DD');
+import { fromInitialDate } from "../../utils/index";
 
 const startOfMonth = moment()
-  .subtract(1, 'months')
+  .subtract(1, "months")
   .date(1)
   .local()
-  .format('YYYY-MM-DD');
+  .format("YYYY-MM-DD");
 
 const todaysDate = moment()
   .local()
-  .format('YYYY-MM-DD');
+  .format("YYYY-MM-DD");
 
 export default function Dashboard() {
   // State variables
-  const [fromFilter, setFromFilter] = useState(startOfMonth);
+  const [fromFilter, setFromFilter] = useState(fromInitialDate);
   const [toFilter, setToFilter] = useState(todaysDate);
 
   // Fetch data using our custom useGetData hook
@@ -53,10 +50,10 @@ export default function Dashboard() {
       <div className='col-md-12'>
         <div className='col-md-12 title'>
           <h4 className='pull-left'>
-            {' '}
+            {" "}
             <span>
               <FontAwesomeIcon icon={faHome} />
-            </span>{' '}
+            </span>{" "}
             Dashboard
           </h4>
           <form className='form-inline pull-right'>

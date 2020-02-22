@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  prevMonthFirstDay,
+  fromInitialDate,
   endOfDay,
   dateFormatter,
   enumFormatter,
@@ -10,9 +10,14 @@ import {
   chewFormatter
 } from "../../utils/index";
 import moment from "moment";
+import _ from "underscore";
 import Check from "../../components/Check";
+import ExpandableTable from "./ExpandableTable";
 import { NavDropdown, MenuItem } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+
 const Fuse = require("fuse.js");
 
 export default class MissedAppointments extends Component {
@@ -25,7 +30,7 @@ export default class MissedAppointments extends Component {
       isLoaded: false,
       loadingText: "Loading ..",
       status: "Missed",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),
@@ -47,6 +52,8 @@ export default class MissedAppointments extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
+    this.isExpandableRow = this.isExpandableRow.bind(this);
+    this.expandComponent = this.expandComponent.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -177,7 +184,35 @@ export default class MissedAppointments extends Component {
       });
     }
   }
+  isExpandableRow(row) {
+    let girls = _.filter(this.state.appointments, function(appointment) {
+      return appointment.girl.id === row.girl.id && appointment.id !== row.id;
+    });
+    if (girls.length > 0) return true;
+    else return false;
+    // return true;
+  }
 
+  expandComponent(row) {
+    let girls = _.filter(this.state.appointments, function(appointment) {
+      return appointment.girl.id === row.girl.id && appointment.id !== row.id;
+    });
+    return <ExpandableTable data={girls} />;
+  }
+  expandColumnComponent({ isExpandableRow, isExpanded }) {
+    let content = "";
+
+    if (isExpandableRow) {
+      content = isExpanded ? (
+        <FontAwesomeIcon icon={faCaretUp} />
+      ) : (
+        <FontAwesomeIcon icon={faCaretDown} />
+      );
+    } else {
+      content = " ";
+    }
+    return <div> {content} </div>;
+  }
   render() {
     let data_table = this.state.appointments;
     const trimesterType = {
@@ -197,7 +232,8 @@ export default class MissedAppointments extends Component {
       prePage: "Prev", // Previous page button text
       nextPage: "Next", // Next page button text
       firstPage: "First", // First page button text
-      paginationPosition: "bottom" // default is bottom, top and both is all available
+      paginationPosition: "bottom", // default is bottom, top and both is all available
+      expandRowBgColor: "rgb(255, 255, 255,0.1)"
     };
 
     return (
@@ -295,6 +331,13 @@ export default class MissedAppointments extends Component {
                 options={options}
                 exportCSV
                 pagination
+                expandableRow={this.isExpandableRow}
+                expandComponent={this.expandComponent}
+                expandColumnOptions={{
+                  expandColumnVisible: true,
+                  expandColumnComponent: this.expandColumnComponent,
+                  columnWidth: 50
+                }}
               >
                 <TableHeaderColumn
                   isKey={true}

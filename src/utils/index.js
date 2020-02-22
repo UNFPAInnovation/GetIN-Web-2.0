@@ -8,6 +8,7 @@ export const prevMonthFirstDay = moment()
   .date(1)
   .local()
   .format("YYYY-MM-DD");
+export const fromInitialDate = "2019-10-01";
 export const endOfDay = new Date().setHours(23, 59, 59, 999);
 export const dateFormatter = function(cell) {
   return moment(new Date(cell)).format("Do MMM YY hh a");
@@ -73,16 +74,13 @@ export const getData = function(action, callback) {
       );
       break;
     case "users":
-      service.users(
-        action.role,
-        function(error, response) {
-          if (error) {
-            return callback(error);
-          } else {
-            return callback(null, response);
-          }
+      service.users(action.role, function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
         }
-      );
+      });
       break;
     case "getHealthFacilities":
       service.getHealthFacilities(function(error, response) {
@@ -93,15 +91,15 @@ export const getData = function(action, callback) {
         }
       });
       break;
-      case "listSms":
-          service.listSms(function(error, response) {
-            if (error) {
-              return callback(error);
-            } else {
-              return callback(null, response);
-            }
-          });
-          break;
+    case "listSms":
+      service.listSms(function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
     default:
       service[action.name](action.from, action.to, function(error, response) {
         if (error) {

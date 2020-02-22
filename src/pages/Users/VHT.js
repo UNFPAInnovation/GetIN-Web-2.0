@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { prevMonthFirstDay, endOfDay, getData } from "../../utils/index";
+import { fromInitialDate, endOfDay, getData } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
@@ -17,7 +17,7 @@ export default class VHT extends Component {
       isLoaded: false,
       loadingText: "Loading ..",
       role: "chew",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),

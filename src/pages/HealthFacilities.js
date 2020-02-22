@@ -5,7 +5,7 @@ import { faHospital } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
-import { prevMonthFirstDay, endOfDay, getData } from "../utils/index";
+import { fromInitialDate, endOfDay, getData } from "../utils/index";
 const Fuse = require("fuse.js");
 
 export default class HealthFacilities extends React.Component {
@@ -17,7 +17,7 @@ export default class HealthFacilities extends React.Component {
       search: null,
       isLoaded: false,
       loadingText: "Loading ..",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),

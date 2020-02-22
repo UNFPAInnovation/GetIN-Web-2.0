@@ -7,7 +7,7 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import Check from "../components/Check";
 import {
-  prevMonthFirstDay,
+  fromInitialDate,
   endOfDay,
   dateFormatter,
   enumFormatter,
@@ -29,7 +29,7 @@ export default class FollowUps extends Component {
       isLoaded: false,
       loadingText: "Loading ..",
       status: "All",
-      from: prevMonthFirstDay,
+      from: fromInitialDate,
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),
