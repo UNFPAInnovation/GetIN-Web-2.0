@@ -119,6 +119,9 @@ export default class MappedGirls extends Component {
       });
     }
   }
+  voucherId(cell, row){
+    return row.voucher_card
+    }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
   }
@@ -614,6 +617,8 @@ export default class MappedGirls extends Component {
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.voucher_id}
+                  dataFormat={this.voucherId}
+                  csvFormat={this.voucherId}
                   dataField='voucher_number'
                 >
                   Voucher ID

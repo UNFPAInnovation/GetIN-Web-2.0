@@ -4,5 +4,5 @@
   "PRODUCTION_URL": "dash.getinmobile.org",
   "ALT_PRODUCTION_URL": "www.dash.getinmobile.org",
   "TEST_URL": "testdash.getinmobile.org",
-  "LOCAL_URL": "localhost"
+  "LOCAL_URL": "http://testbackend.getinmobile.org"
 }
