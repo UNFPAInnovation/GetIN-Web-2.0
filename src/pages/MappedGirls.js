@@ -39,6 +39,7 @@ export default class MappedGirls extends Component {
         vht: true,
         name: false,
         trimester: false,
+        voucher_card: true,
         next_of_kin_name: true,
         education_level: true,
         marital_status: false,
@@ -120,8 +121,11 @@ export default class MappedGirls extends Component {
     }
   }
   voucherId(cell, row){
-    return row.voucher_card
+    return row.girl.voucher_number
     }
+  getVoucherCard(cell, row){
+    return row.voucher_card
+  }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
   }
@@ -319,6 +323,13 @@ export default class MappedGirls extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.vht} /> VHT
+              </MenuItem>
+              <MenuItem
+                onClick={(e, voucher_card) => this.updateTable("voucher_card")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.voucher_card} /> Voucher Card
               </MenuItem>
               <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
@@ -530,6 +541,20 @@ export default class MappedGirls extends Component {
                 >
                   Sub county
                 </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.voucher_card}
+                  dataFormat={(cell, row, item) =>
+                    this.getVoucherCard(cell, row, "name")
+                  }
+                  csvFormat={(cell, row, item) =>
+                    this.getVoucherCard(cell, row, "name")
+                  }
+                  dataField='voucher_card'
+                >
+                  Voucher Card
+                </TableHeaderColumn>
+
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.vht}
                   width='300px'
