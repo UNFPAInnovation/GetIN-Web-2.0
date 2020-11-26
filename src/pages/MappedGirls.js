@@ -325,6 +325,13 @@ export default class MappedGirls extends Component {
                 <Check state={this.state.manageColomns.vht} /> VHT
               </MenuItem>
               <MenuItem
+                onClick={(e, voucher_card) => this.updateTable("voucher_card")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.voucher_card} /> Voucher Card
+              </MenuItem>
+              <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
                 eventKey={3.1}
               >
@@ -548,6 +555,20 @@ export default class MappedGirls extends Component {
                 >
                   Sub county
                 </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.voucher_card}
+                  dataFormat={(cell, row, item) =>
+                    this.getVoucherCard(cell, row, "name")
+                  }
+                  csvFormat={(cell, row, item) =>
+                    this.getVoucherCard(cell, row, "name")
+                  }
+                  dataField='voucher_card'
+                >
+                  Voucher Card
+                </TableHeaderColumn>
+
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.vht}
                   width='300px'
