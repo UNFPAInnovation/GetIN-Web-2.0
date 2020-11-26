@@ -38,13 +38,13 @@ export default class MappedGirls extends Component {
         village: true,
         vht: true,
         name: false,
-        trimester: false,
-        voucher_card: true,
+        redeemed_service: false,
+        trimester: true,
         next_of_kin_name: true,
         education_level: true,
-        marital_status: false,
+        marital_status: true,
         last_menstruation_date: true,
-        voucher_id: true,
+        voucher_id: false,
         parish: true,
         subcounty: false,
         attended_anc_visits: true,
@@ -123,8 +123,8 @@ export default class MappedGirls extends Component {
   voucherId(cell, row){
     return row.girl.voucher_number
     }
-  getVoucherCard(cell, row){
-    return row.voucher_card
+  getService(cell, row, item){
+    return row.girl[item]
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -427,6 +427,20 @@ export default class MappedGirls extends Component {
                 />{" "}
                 Family planning
               </MenuItem>
+              
+              <MenuItem
+                onClick={(e, redeemed_service) =>
+                  this.updateTable("redeemed_service")
+                }
+                eventKey={3.1}
+              >
+                {" "}
+                <Check
+                  state={this.state.manageColomns.redeemed_service}
+                />{" "}
+                Redeemed Service
+              </MenuItem>
+
               <MenuItem
                 onClick={(e, fever) => this.updateTable("fever")}
                 eventKey={3.1}
@@ -620,6 +634,29 @@ export default class MappedGirls extends Component {
                 >
                   Last menstruation date
                 </TableHeaderColumn>
+                
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.voucher_id}
+                  dataFormat={this.voucherId}
+                  csvFormat={this.voucherId}
+                  dataField='voucher_number'
+                >
+                  Voucher ID
+                </TableHeaderColumn>
+
+
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.redeemed_service}
+                  dataFormat={(cell, row, item)=>
+                  this.getService(cell, row, "services_recieved")
+                  }
+                  csvFormat={(cell, row, item)=>
+                  this.getService(cell, row, "services_recieved")}
+                  dataField='services_recieved'
+                >
+                  Redeemed Service
+                </TableHeaderColumn>
+
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.dob}
                   dataFormat={this.ageFormatter}
@@ -640,14 +677,8 @@ export default class MappedGirls extends Component {
                   Date Mapped
                 </TableHeaderColumn>
 
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.voucher_id}
-                  dataFormat={this.voucherId}
-                  csvFormat={this.voucherId}
-                  dataField='voucher_number'
-                >
-                  Voucher ID
-                </TableHeaderColumn>
+                
+
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.attended_anc_visits}

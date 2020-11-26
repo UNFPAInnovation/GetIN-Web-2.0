@@ -107,6 +107,10 @@ export default class Midwives extends Component {
       });
     }
   }
+  healthFormatter(cell, row){
+    if(row.health_facility == null) return ;
+    return row.health_facility.name
+  }
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
   }
@@ -271,6 +275,8 @@ export default class Midwives extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.health_facility}
+                  dataFormat={this.healthFormatter}
+                  csvFormat={this.healthFormatter}
                   dataSort={true}
                   dataField='health_facility'
                 >
