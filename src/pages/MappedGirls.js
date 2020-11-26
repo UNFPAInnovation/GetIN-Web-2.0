@@ -557,19 +557,6 @@ export default class MappedGirls extends Component {
                 </TableHeaderColumn>
 
                 <TableHeaderColumn
-                  hidden={this.state.manageColomns.voucher_card}
-                  dataFormat={(cell, row, item) =>
-                    this.getVoucherCard(cell, row, "name")
-                  }
-                  csvFormat={(cell, row, item) =>
-                    this.getVoucherCard(cell, row, "name")
-                  }
-                  dataField='voucher_card'
-                >
-                  Voucher Card
-                </TableHeaderColumn>
-
-                <TableHeaderColumn
                   hidden={this.state.manageColomns.vht}
                   width='300px'
                   dataFormat={(cell, row, item) => this.getVHT(cell, row)}
