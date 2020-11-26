@@ -123,8 +123,8 @@ export default class MappedGirls extends Component {
   voucherId(cell, row){
     return row.girl.voucher_number
     }
-  getService(cell, row, item){
-    return row.girl[item]
+  getService(cell, row){
+    return row.girl.services_received
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -635,10 +635,10 @@ export default class MappedGirls extends Component {
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.redeemed_service}
                   dataFormat={(cell, row, item)=>
-                  this.getService(cell, row, "services_recieved")
+                  this.getService(cell, row)
                   }
                   csvFormat={(cell, row, item)=>
-                  this.getService(cell, row, "services_recieved")}
+                  this.getService(cell, row)}
                   dataField='services_recieved'
                 >
                   Redeemed Service
