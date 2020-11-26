@@ -68,7 +68,7 @@ export default function useGetData(fromFilter, toFilter) {
         setIsLoading(false);
       }
     );
-  }, [fromFilter, toFilter]);
+  }, [fromFilter, toFilter,followupsURL,deliveriesURL,mappingEncountersStatsURL]);
 
   return [
     {
