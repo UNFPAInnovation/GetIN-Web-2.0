@@ -1,4 +1,39 @@
+# GetIN Dashboard Web Client
+
+## Deployment guide to AWS (Linux)
+
+Ensure that you the server pem key file in any of your directories.
+
+Connect to the GetIN instance on aws
+
+### `cd ~/Directory_With_Pem_Key && ssh -i filename.pem ubuntu@server_ip`
+
+Locate the apache document root folder with dashboard
+
+### `cd /var/www/html/GetIN-Web-2.0`
+
+Pull latest changes from production branch
+
+### `git pull origin branch`
+
+Run a production build
+
+### `sudo yarn run build`
+
+
+## Test Dashboard
+* [testdash.getinmobile.org](http://testdash.getinmobile.org/)
+
+## Live Dashboard
+* [dash.getinmobile.org](http://dash.getinmobile.org/)
+
+
+## Authors
+
+* [Outbox (U) LTD](https://www.outbox.co.ug)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
 
 ## Available Scripts
 
