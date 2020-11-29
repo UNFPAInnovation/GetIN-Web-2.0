@@ -104,6 +104,7 @@ export default class HealthFacilities extends React.Component {
     }
   }
   getHealthFacilities(cell, row){
+    if(row.facility_level == null) return ;
     return row.facility_level
   }
   search(event) {
