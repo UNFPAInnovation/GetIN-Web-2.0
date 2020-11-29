@@ -103,6 +103,9 @@ export default class HealthFacilities extends React.Component {
       });
     }
   }
+  getHealthFacilities(cell, row){
+    return row.facility_level
+  }
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -299,6 +302,7 @@ export default class HealthFacilities extends React.Component {
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.level}
                       dataSort={true}
+                      dataFormat={this.getHealthFacilities}
                       dataField='level'
                     >
                       Level
@@ -331,9 +335,7 @@ export default class HealthFacilities extends React.Component {
 }
 
 class Check extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  
   render() {
     return (
       <React.Fragment>
