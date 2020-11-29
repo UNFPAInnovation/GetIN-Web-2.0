@@ -12,7 +12,7 @@ import {
   dateFormatter,
   enumFormatter,
   getData,
-  nameFormatter
+  nameFormatter,
 } from "../utils/index";
 const Fuse = require("fuse.js");
 
@@ -27,9 +27,7 @@ export default class MappedGirls extends Component {
       loadingText: "Loading ..",
       status: "All",
       from: fromInitialDate,
-      to: moment(endOfDay)
-        .local()
-        .format("YYYY-MM-DD"),
+      to: moment(endOfDay).local().format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
         dob: false,
@@ -52,12 +50,12 @@ export default class MappedGirls extends Component {
         fever: true,
         bleeding_heavily: true,
         blurred_vision: true,
-        swollen_feet: true
+        swollen_feet: true,
       },
       // remote pagination
       currentPage: 1,
       sizePerPage: 20,
-      totalDataSize: 0
+      totalDataSize: 0,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
@@ -72,18 +70,18 @@ export default class MappedGirls extends Component {
       {
         name: "mappedGirlsEncounter",
         from: this.state.from,
-        to: this.state.to
+        to: this.state.to,
       },
-      function(error, response) {
+      function (error, response) {
         if (error) {
           thisApp.setState({
-            isLoaded: true
+            isLoaded: true,
           });
         } else {
           thisApp.setState({
             isLoaded: true,
             girls: response.results,
-            girls_copy: response.results
+            girls_copy: response.results,
           });
         }
       }
@@ -98,7 +96,7 @@ export default class MappedGirls extends Component {
     this.setState(
       {
         [name]: value,
-        isLoaded: false
+        isLoaded: false,
       },
       () => thisApp.loadData()
     );
@@ -111,20 +109,20 @@ export default class MappedGirls extends Component {
     if (this.state.manageColomns[colomn] === true) {
       manageColomns[colomn] = false;
       this.setState({
-        manageColomns: manageColomns
+        manageColomns: manageColomns,
       });
     } else {
       manageColomns[colomn] = true;
       this.setState({
-        manageColomns: manageColomns
+        manageColomns: manageColomns,
       });
     }
   }
-  voucherId(cell, row){
-    return row.girl.voucher_number
-    }
-  getService(cell, row){
-    return row.girl.services_received
+  voucherId(cell, row) {
+    return row.girl.voucher_number;
+  }
+  getService(cell, row) {
+    return row.girl.services_received;
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -161,7 +159,7 @@ export default class MappedGirls extends Component {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
       this.setState({
-        girls: this.state.girls_copy
+        girls: this.state.girls_copy,
       });
     } else {
       let options = {
@@ -178,14 +176,14 @@ export default class MappedGirls extends Component {
           "girl.trimester",
           "girl.next_of_kin_last_name",
           "girl.next_of_kin_first_name",
-          "girl.next_of_kin_phone_number"
-        ]
+          "girl.next_of_kin_phone_number",
+        ],
       };
 
       var fuse = new Fuse(this.state.girls_copy, options); // "list" is the item array
       var result = fuse.search(event.target.value);
       this.setState({
-        girls: result
+        girls: result,
       });
     }
   }
@@ -218,7 +216,7 @@ export default class MappedGirls extends Component {
   render() {
     const YesNoFormat = {
       true: "Yes",
-      false: "No"
+      false: "No",
     };
     let girls = this.state.girls;
     const options = {
@@ -233,12 +231,12 @@ export default class MappedGirls extends Component {
       prePage: "Prev", // Previous page button text
       nextPage: "Next", // Next page button text
       firstPage: "First", // First page button text
-      paginationPosition: "bottom" // default is bottom, top and both is all available
+      paginationPosition: "bottom", // default is bottom, top and both is all available
     };
 
     return (
       <div>
-        <div className='col-md-8 title'>
+        <div className="col-md-8 title">
           <h4>
             {" "}
             <span>
@@ -248,45 +246,45 @@ export default class MappedGirls extends Component {
           </h4>
           <br />
         </div>
-        <div className='col-md-12 bg-white-content'>
-          <form className='form-inline pull-right'>
-            <div className='form-group'>
-              <label htmlFor='email'>Search:</label>
+        <div className="col-md-12 bg-white-content">
+          <form className="form-inline pull-right">
+            <div className="form-group">
+              <label htmlFor="email">Search:</label>
               <input
-                name='from'
+                name="from"
                 value={this.state.search}
                 onChange={this.search}
-                placeholder='Type something here'
-                className='search form-control'
-                type='text'
+                placeholder="Type something here"
+                className="search form-control"
+                type="text"
               />
             </div>
-            <div className='form-group'>
-              <label htmlFor='email'>From:</label>
+            <div className="form-group">
+              <label htmlFor="email">From:</label>
               <input
-                name='from'
+                name="from"
                 value={this.state.from}
                 onChange={this.handleInputChange}
-                className='form-control'
-                type='date'
+                className="form-control"
+                type="date"
               />
             </div>
-            <div className='form-group'>
-              <label htmlFor='email'>To:</label>
+            <div className="form-group">
+              <label htmlFor="email">To:</label>
               <input
-                name='to'
+                name="to"
                 value={this.state.to}
                 onChange={this.handleInputChange}
-                className='form-control'
-                type='date'
+                className="form-control"
+                type="date"
               />
             </div>
 
             <NavDropdown
               eventKey={3}
-              className='pull-right'
-              title='Manage columns'
-              id='basic-nav-dropdown'
+              className="pull-right"
+              title="Manage columns"
+              id="basic-nav-dropdown"
             >
               <MenuItem
                 onClick={(e, name) => this.updateTable("name")}
@@ -329,7 +327,8 @@ export default class MappedGirls extends Component {
                 eventKey={3.1}
               >
                 {" "}
-                <Check state={this.state.manageColomns.voucher_card} /> Voucher Card
+                <Check state={this.state.manageColomns.voucher_card} /> Voucher
+                Card
               </MenuItem>
               <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
@@ -427,7 +426,7 @@ export default class MappedGirls extends Component {
                 />{" "}
                 Family planning
               </MenuItem>
-              
+
               <MenuItem
                 onClick={(e, redeemed_service) =>
                   this.updateTable("redeemed_service")
@@ -435,9 +434,7 @@ export default class MappedGirls extends Component {
                 eventKey={3.1}
               >
                 {" "}
-                <Check
-                  state={this.state.manageColomns.redeemed_service}
-                />{" "}
+                <Check state={this.state.manageColomns.redeemed_service} />{" "}
                 Redeemed Service
               </MenuItem>
 
@@ -479,7 +476,7 @@ export default class MappedGirls extends Component {
             </NavDropdown>
           </form>
 
-          <div className='padding-top content-container col-md-12'>
+          <div className="padding-top content-container col-md-12">
             {this.state.isLoaded === true ? (
               <BootstrapTable
                 data={girls}
@@ -487,27 +484,25 @@ export default class MappedGirls extends Component {
                 hover
                 csvFileName={
                   "Mapped_girls_" +
-                  moment(Date.now())
-                    .local()
-                    .format("YYYY_MM_DD_HHmmss") +
+                  moment(Date.now()).local().format("YYYY_MM_DD_HHmmss") +
                   ".csv"
                 }
-                ref='table'
+                ref="table"
                 remote={false}
-                headerContainerClass='table-header'
-                tableContainerClass='table-responsive table-onScreen'
+                headerContainerClass="table-header"
+                tableContainerClass="table-responsive table-onScreen"
                 pagination={true}
                 options={options}
                 exportCSV
                 pagination
               >
                 <TableHeaderColumn
-                  width='300px'
+                  width="300px"
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
                   dataSort={true}
-                  dataField='first_name'
+                  dataField="first_name"
                 >
                   Name
                 </TableHeaderColumn>
@@ -515,7 +510,7 @@ export default class MappedGirls extends Component {
                   dataSort={true}
                   hidden={true}
                   isKey
-                  dataField='phone_number'
+                  dataField="phone_number"
                 >
                   Phone number
                 </TableHeaderColumn>
@@ -527,7 +522,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getVillageItem(cell, row, "name")
                   }
-                  dataField='village'
+                  dataField="village"
                 >
                   Village
                 </TableHeaderColumn>
@@ -539,7 +534,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getParishItem(cell, row, "name")
                   }
-                  dataField='parish'
+                  dataField="parish"
                 >
                   Parish
                 </TableHeaderColumn>
@@ -551,17 +546,17 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getSubCountyItem(cell, row, "name")
                   }
-                  dataField='subcounty'
+                  dataField="subcounty"
                 >
                   Sub county
                 </TableHeaderColumn>
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.vht}
-                  width='300px'
+                  width="300px"
                   dataFormat={(cell, row, item) => this.getVHT(cell, row)}
                   csvFormat={(cell, row, item) => this.getVHT(cell, row)}
-                  dataField='vht'
+                  dataField="vht"
                 >
                   VHT
                 </TableHeaderColumn>
@@ -573,7 +568,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getGirlItem(cell, row, "trimester")
                   }
-                  dataField='trimester'
+                  dataField="trimester"
                 >
                   Trimester
                 </TableHeaderColumn>
@@ -581,7 +576,7 @@ export default class MappedGirls extends Component {
                   hidden={this.state.manageColomns.next_of_kin_name}
                   dataFormat={this.nextOfKinFormatter}
                   csvFormat={this.nextOfKinFormatter}
-                  dataField='next_of_kin_name'
+                  dataField="next_of_kin_name"
                 >
                   Next of Kin
                 </TableHeaderColumn>
@@ -593,7 +588,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getGirlItem(cell, row, "education_level")
                   }
-                  dataField='education_level'
+                  dataField="education_level"
                 >
                   Education level
                 </TableHeaderColumn>
@@ -605,7 +600,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getGirlItem(cell, row, "marital_status")
                   }
-                  dataField='marital_status'
+                  dataField="marital_status"
                 >
                   Marital status
                 </TableHeaderColumn>
@@ -617,29 +612,25 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.getGirlItem(cell, row, "last_menstruation_date")
                   }
-                  dataField='last_menstruation_date'
+                  dataField="last_menstruation_date"
                 >
                   Last menstruation date
                 </TableHeaderColumn>
-                
+
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.voucher_id}
                   dataFormat={this.voucherId}
                   csvFormat={this.voucherId}
-                  dataField='voucher_number'
+                  dataField="voucher_number"
                 >
                   Voucher ID
                 </TableHeaderColumn>
 
-
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.redeemed_service}
-                  dataFormat={(cell, row, item)=>
-                  this.getService(cell, row)
-                  }
-                  csvFormat={(cell, row, item)=>
-                  this.getService(cell, row)}
-                  dataField='services_recieved'
+                  dataFormat={(cell, row, item) => this.getService(cell, row)}
+                  csvFormat={(cell, row, item) => this.getService(cell, row)}
+                  dataField="services_recieved"
                 >
                   Redeemed Service
                 </TableHeaderColumn>
@@ -650,7 +641,7 @@ export default class MappedGirls extends Component {
                   csvFormat={this.ageFormatter}
                   dataSort={true}
                   sortFunc={this.sortByAge}
-                  dataField='dob'
+                  dataField="dob"
                 >
                   Age
                 </TableHeaderColumn>
@@ -659,20 +650,17 @@ export default class MappedGirls extends Component {
                   dataFormat={dateFormatter}
                   csvFormat={this.dateFormatter}
                   dataSort={true}
-                  dataField='created_at'
+                  dataField="created_at"
                 >
                   Date Mapped
                 </TableHeaderColumn>
-
-                
-
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.attended_anc_visits}
                   dataFormat={enumFormatter}
                   csvFormat={this.enumFormatter}
                   formatExtraData={YesNoFormat}
-                  dataField='attended_anc_visit'
+                  dataField="attended_anc_visit"
                 >
                   Has attended ANC visits
                 </TableHeaderColumn>
@@ -680,7 +668,7 @@ export default class MappedGirls extends Component {
                   hidden={this.state.manageColomns.using_family_planning}
                   dataFormat={this.familyPlanningFormatter}
                   csvFormat={this.familyPlanningFormatter}
-                  dataField='using_family_planning'
+                  dataField="using_family_planning"
                 >
                   Family planning
                 </TableHeaderColumn>
@@ -689,7 +677,7 @@ export default class MappedGirls extends Component {
                   dataFormat={(cell, row, item) =>
                     this.observationFormatter(cell, row, "fever")
                   }
-                  dataField='fever'
+                  dataField="fever"
                 >
                   Has fever
                 </TableHeaderColumn>
@@ -701,7 +689,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.observationFormatter(cell, row, "bleeding_heavily")
                   }
-                  dataField='bleeding_heavily'
+                  dataField="bleeding_heavily"
                 >
                   Bleeding heavily
                 </TableHeaderColumn>
@@ -713,7 +701,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.observationFormatter(cell, row, "blurred_vision")
                   }
-                  dataField='blurred_vision'
+                  dataField="blurred_vision"
                 >
                   Blurred vision
                 </TableHeaderColumn>
@@ -725,7 +713,7 @@ export default class MappedGirls extends Component {
                   csvFormat={(cell, row, item) =>
                     this.observationFormatter(cell, row, "swollen_feet")
                   }
-                  dataField='swollen_feet'
+                  dataField="swollen_feet"
                 >
                   Has swollen feet
                 </TableHeaderColumn>
