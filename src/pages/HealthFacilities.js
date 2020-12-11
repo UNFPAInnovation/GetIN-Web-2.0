@@ -107,9 +107,8 @@ export default class HealthFacilities extends React.Component {
     console.log(row)
     return row.facility_level
   }
-  getSubCountyName(cell,row, item){
-    return row.sub_county &&
-    row.sub_county[item]
+  getSubCountyName(cell,row){
+    return row.sub_county.name
   }
 
   search(event) {
@@ -286,8 +285,8 @@ export default class HealthFacilities extends React.Component {
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.subcounty}
-                      dataFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
-                      csvFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
+                      dataFormat={(cell, row)=>this.getSubCountyName(cell, row)}
+                      csvFormat={(cell, row)=>this.getSubCountyName(cell, row)}
                       dataSort={true}
                       dataField='sub_county'
                     >
