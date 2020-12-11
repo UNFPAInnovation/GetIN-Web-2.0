@@ -104,6 +104,7 @@ export default class HealthFacilities extends React.Component {
     }
   }
   getHealthFacilities(cell, row){
+    console.log(row)
     return row.facility_level
   }
   search(event) {
@@ -302,8 +303,9 @@ export default class HealthFacilities extends React.Component {
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.level}
                       dataSort={true}
-                      dataFormat={this.getHealthFacilities}
-                      dataField='level'
+                      dataFormat={(cell,row)=>this.getHealthFacilities(cell, row)}
+                      csvFormat={(cell,row)=>this.getHealthFacilities(cell,row)}
+                      dataField='facility_level'
                     >
                       Level
                     </TableHeaderColumn>
