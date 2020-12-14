@@ -107,6 +107,11 @@ export default class HealthFacilities extends React.Component {
     if(row.facility_level == null) return ;
     return row.facility_level
   }
+  getSubCountyName(cell,row, item){
+    return row.sub_county &&
+    row.sub_county[item]
+  }
+
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -281,8 +286,10 @@ export default class HealthFacilities extends React.Component {
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.subcounty}
+                      dataFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
+                      csvFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
                       dataSort={true}
-                      dataField='subcounty'
+                      dataField='sub_county'
                     >
                       Subcounty
                     </TableHeaderColumn>
@@ -303,8 +310,9 @@ export default class HealthFacilities extends React.Component {
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.level}
                       dataSort={true}
-                      dataFormat={this.getHealthFacilities}
-                      dataField='level'
+                      dataFormat={(cell,row)=>this.getHealthFacilities(cell, row)}
+                      csvFormat={(cell,row)=>this.getHealthFacilities(cell,row)}
+                      dataField='facility_level'
                     >
                       Level
                     </TableHeaderColumn>
