@@ -104,7 +104,7 @@ export default class HealthFacilities extends React.Component {
     }
   }
   getHealthFacilities(cell, row){
-    console.log(row)
+    if(row.facility_level == null) return ;
     return row.facility_level
   }
   getSubCountyName(cell,row, item){
