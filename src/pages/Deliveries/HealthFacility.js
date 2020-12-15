@@ -126,7 +126,7 @@ export default class HealthFacility extends Component {
   }
   familyPlanningFormatter(cell, row) {
     let familyPlanning = "";
-    if(row.family_planning.length === 0) return ;
+    if(row.family_planning[0] === undefined) return ;
     if (
       row.family_planning &&
       row.family_planning[0] &&
