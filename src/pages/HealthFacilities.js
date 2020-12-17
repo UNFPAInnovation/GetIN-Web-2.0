@@ -111,6 +111,15 @@ export default class HealthFacilities extends React.Component {
     return row.sub_county &&
     row.sub_county[item]
   }
+  getMidwives(cell,row){
+    return row.midwife
+  }
+  getChews(cell, row){
+    return row.chew
+  }
+  getAmbulances(cell, row){
+    return row.ambulance
+  }
 
   search(event) {
     this.setState({ search: event.target.value });
@@ -297,6 +306,8 @@ export default class HealthFacilities extends React.Component {
                       hidden={this.state.manageColomns.midwives}
                       dataSort={true}
                       dataField='midwives'
+                      dataFormat={(cell,row)=>this.getMidwives(cell, row)}
+                      csvFormat={(cell,row)=>this.getMidwives(cell, row)}
                     >
                       Midwives
                     </TableHeaderColumn>
@@ -304,6 +315,8 @@ export default class HealthFacilities extends React.Component {
                       hidden={this.state.manageColomns.vhts}
                       dataSort={true}
                       dataField='vhts'
+                      dataFormat={(cell, row)=>this.getChews(cell,row)}
+                      csvFormat={(cell,row)=>this.getChews(cell,row)}
                     >
                       Chews
                     </TableHeaderColumn>
@@ -327,6 +340,8 @@ export default class HealthFacilities extends React.Component {
                       hidden={this.state.manageColomns.ambulances}
                       dataSort={true}
                       dataField='ambulances'
+                      dataFormat={(cell,row)=>this.getAmbulances(cell, row)}
+                      csvFormat={(cell,row)=>this.getAmbulances(cell,row)}
                     >
                       Ambulances
                     </TableHeaderColumn>
