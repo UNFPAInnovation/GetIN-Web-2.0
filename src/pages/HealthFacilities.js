@@ -120,7 +120,9 @@ export default class HealthFacilities extends React.Component {
   getAmbulances(cell, row){
     return row.ambulance
   }
-
+  getAverageDeliveries(cell,row){
+    return row.average_deliveries
+  }
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -333,6 +335,8 @@ export default class HealthFacilities extends React.Component {
                       hidden={this.state.manageColomns.av_deliveries}
                       dataSort={true}
                       dataField='av_deliveries'
+                      dataFormat={(cell,row)=>this.getAverageDeliveries(cell,row)}
+                      csvFormat={(cell,row)=>this.getAverageDeliveries(cell,row)}
                     >
                       GETIN Average deliveries
                     </TableHeaderColumn>
