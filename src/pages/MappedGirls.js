@@ -322,14 +322,7 @@ export default class MappedGirls extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.vht} /> VHT
               </MenuItem>
-              <MenuItem
-                onClick={(e, voucher_card) => this.updateTable("voucher_card")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.voucher_card} /> Voucher
-                Card
-              </MenuItem>
+             
               <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
                 eventKey={3.1}
