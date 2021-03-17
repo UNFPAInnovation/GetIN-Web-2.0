@@ -117,9 +117,9 @@ export default class Home extends Component {
     } else if (!row.mother_alive && row.baby_alive) {
       return (delivery = "Mother Dead, Baby Alive");
     } else if (row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Alive, Still Born");
-    } else if (row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Dead, Still Born");
+      return (delivery = "Mother Alive, Baby Dead");
+    } else if (!row.mother_alive && !row.baby_alive) {
+      return (delivery = "Mother Dead, Baby Dead");
     } else {
       return (delivery = "Not recorded");
     }
