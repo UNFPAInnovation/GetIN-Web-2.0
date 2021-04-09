@@ -66,11 +66,13 @@ export default class MappedGirls extends Component {
   }
   loadData() {
     const thisApp = this;
+    let incremented_to_date = this.state.to;
+    incremented_to_date.add(1, 'days')
     getData(
       {
         name: "mappedGirlsEncounter",
         from: this.state.from,
-        to: this.state.to,
+        to: incremented_to_date,
       },
       function (error, response) {
         if (error) {
