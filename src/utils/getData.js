@@ -18,8 +18,8 @@ const apiURL = require('../env_config').default;
 
 export default function useGetData(fromFilter, toFilter) {
   // Currate all the api endpoints we querry for data / stats
-  const followupsURL = `${apiURL}/api/v1/followups?created_from=${fromFilter}&created_to=${toFilter}`;
-  const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from=${fromFilter}&created_to=${toFilter}`;
+  const followupsURL = `${apiURL}/api/v1/followups?created_from__gte=${fromFilter}&created_to__lte=${toFilter}`;
+  const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from__gte=${fromFilter}&created_to__lte=${toFilter}`;
   const mappingEncountersStatsURL = `${apiURL}/api/v1/mapping_encounters_stats?from=${fromFilter}&to=${toFilter}`;
 
   // Set initial state of our data

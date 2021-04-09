@@ -194,7 +194,7 @@ exports.usersAmbulanceDrivers = function(callback) {
 };
 
 exports.followUps =  function(from, to, callback){
-   api.get(addr+"/api/v1/followups?created_from="+from+"&created_to="+to,
+   api.get(addr+"/api/v1/followups?created_from__gte="+from+"&created_to__lte="+to,
    OPTIONS,function(error, response){
        //callback of the method here
         if(error){
@@ -230,7 +230,7 @@ exports.getVillages = function(callback) {
 };
 exports.mappedGirls = function(from, to, callback) {
   api.get(
-    addr + "/api/v1/girls?created_from="+from+"&created_to="+to,
+    addr + "/api/v1/girls?created_from__gte="+from+"&created_to__lte="+to,
     OPTIONS,
     function(error, response) {
       //callback of the method here
@@ -250,7 +250,7 @@ exports.mappedGirls = function(from, to, callback) {
 
 exports.mappedGirlsEncounter = function(from, to, callback) {
   api.get(
-    addr + "/api/v1/mapping_encounters?created_from="+from+"&created_to="+to,
+    addr + "/api/v1/mapping_encounters?created_from__gte="+from+"&created_to__lte="+to,
     OPTIONS,
     function(error, response) {
       //callback of the method here
@@ -345,7 +345,7 @@ exports.getParishes = function(callback) {
 
 exports.Appointments = function(status, from, to, callback) {
   api.get(
-    addr + "/api/v1/appointments?status="+status+"&created_from="+from+"&created_to="+to,
+    addr + "/api/v1/appointments?status="+status+"&created_from__gte="+from+"&created_to__lte="+to,
     OPTIONS,
     function(error, response) {
       //callback of the method here
