@@ -242,7 +242,7 @@ export default class MappedGirls extends Component {
             <span>
               <FontAwesomeIcon icon={faFemale} />
             </span>{" "}
-            Mapped girls
+            Mapped women
           </h4>
           <br />
         </div>

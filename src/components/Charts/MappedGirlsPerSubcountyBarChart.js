@@ -24,7 +24,7 @@ const MappedGirlsPerSubcountyBarChart = data => {
     yAxis: {
       min: 0,
       title: {
-        text: 'Total number of girls mapped from ' + district
+        text: 'Total number of women mapped from ' + district
       }
     },
     legend: {

@@ -27,7 +27,7 @@ const MappedGirlsPerSubcountyBarChartCard = ({ data }) => {
 
   return (
     <ChartCard
-      title={"Mapped girls per subcounty from " + district}
+      title={"Mapped women per subcounty from " + district}
       content={
         <HighchartsReact
           highcharts={Drilldown(Highcharts)}

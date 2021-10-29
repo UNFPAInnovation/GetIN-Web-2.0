@@ -24,7 +24,7 @@ const AgeGroupOfMappedGirlsPieChartCard = ({ data }) => {
 
   return (
     <ChartCard
-      title={'Age group of mapped girls'}
+      title={'Age group of mapped women'}
       content={
         <HighchartsReact highcharts={Highcharts} options={chart && chart} />
       }
