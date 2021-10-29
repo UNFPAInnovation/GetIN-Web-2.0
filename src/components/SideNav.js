@@ -131,7 +131,7 @@ export default class SideNav extends Component {
             </ListGroupItem>
             <ListGroupItem id="girlsLink">
               <Link to="/girls">
-                {this.state.mini === false && "Mapped girls"}{" "}
+                {this.state.mini === false && "Mapped Women"}{" "}
                 <FontAwesomeIcon icon={faFemale} />
               </Link>
             </ListGroupItem>

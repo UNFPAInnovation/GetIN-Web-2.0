@@ -8,7 +8,7 @@ import Card from '../../../../components/Card';
 const MappedGirlsCard = ({ data }) => {
   return (
     <Card
-      title='Mapped girls'
+      title='Mapped women'
       icon={faFemale}
       rate='30%'
       direction='up'
