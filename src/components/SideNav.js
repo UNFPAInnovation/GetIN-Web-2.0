@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -14,6 +14,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import {GlobalContext} from '../context/GlobalState';
+
 export default class SideNav extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +102,11 @@ export default class SideNav extends Component {
       district: district
     });
   }
+
+  static contextType = GlobalContext;
+
   render() {
+    console.log(this.context);
     return (
       <div className={this.state.show ? "sideNav" : "sideNav hiddenMenu"}>
         <nav className="headerNav navbar navbar-default navbar-static-top">
@@ -108,7 +114,8 @@ export default class SideNav extends Component {
             <a className="navbar-brand" href="/dashboard">
               <img alt="GETIN" src={require("../assets/images/Logo.png")} />
               <span className="brand">GetIN</span>
-              <span className="district">{this.state.district}</span>
+              {/* <span className="district">{this.state.district}</span> */}
+              <span className="district">{this.context.district}</span>
             </a>
             <button
               type="button"

@@ -435,3 +435,20 @@ exports.sendSms = function(data, callback) {
     }
   );
 };
+exports.getDistricts = function(callback) {
+  api.get(
+    addr + "/api/v1/districts",
+    OPTIONS,
+    function(error, response) {
+      if (error) {
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Could not get districts");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
