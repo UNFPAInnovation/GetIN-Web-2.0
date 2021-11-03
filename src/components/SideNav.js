@@ -9,7 +9,8 @@ import {
   faBaby,
   faUsers,
   faHome,
-  faEnvelope
+  faEnvelope,
+  faCog
 } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -66,6 +67,7 @@ export default class SideNav extends Component {
     document.getElementById("messagesLink").classList.remove("active");
     document.getElementById("healthFacilitiesLink").classList.remove("active");
     document.getElementById("deliveriesLink").classList.remove("active");
+    document.getElementById("settingsLink").classList.remove("active");
 
     if (window.location.pathname == "/dashboard") {
       document.getElementById("dashboardLink").classList.add("active");
@@ -84,6 +86,9 @@ export default class SideNav extends Component {
     } else if (window.location.pathname == "/messages") {
       document.getElementById("messagesLink").classList.add("active");
     }
+     else if (window.location.pathname == "/settings") {
+      document.getElementById("settingsLink").classList.add("active");
+    }
   }
   componentDidUpdate(prevProps) {
     this.activeMenu();
@@ -101,7 +106,7 @@ export default class SideNav extends Component {
         <nav className="headerNav navbar navbar-default navbar-static-top">
           <div className="navbar-header">
             <a className="navbar-brand" href="/dashboard">
-              <img src={require("../assets/images/Logo.png")} />
+              <img alt="GETIN" src={require("../assets/images/Logo.png")} />
               <span className="brand">GetIN</span>
               <span className="district">{this.state.district}</span>
             </a>
@@ -163,6 +168,12 @@ export default class SideNav extends Component {
               <Link to="/messages">
                 {this.state.mini === false && "Messages"}{" "}
                 <FontAwesomeIcon icon={faEnvelope} />
+              </Link>
+            </ListGroupItem>
+            <ListGroupItem id="settingsLink">
+              <Link to="/settings">
+                {this.state.mini === false && "Settings"}{" "}
+                <FontAwesomeIcon icon={faCog} />
               </Link>
             </ListGroupItem>
           </ListGroup>

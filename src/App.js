@@ -15,6 +15,7 @@ const NotFound = React.lazy(() => import("./components/NotFound"));
 const Deliveries = React.lazy(() => import("./pages/Deliveries/Deliveries"));
 const Messages = React.lazy(() => import("./pages/Messages/Messages"));
 const HealthFacilities = React.lazy(() => import("./pages/HealthFacilities"));
+const Settings = React.lazy(() => import("./pages/Settings"));
 
 const service = require("./api/services");
 
@@ -200,6 +201,20 @@ class App extends Component {
                   keywords=""
                 />
                 <Messages />
+              </SF>
+            )}
+          />
+          <Route
+            exact
+            path="/settings"
+            render={() => (
+              <SF>
+                <Seo
+                  title="Settings - GetIn Dashboard"
+                  description=""
+                  keywords=""
+                />
+                <Settings />
               </SF>
             )}
           />
