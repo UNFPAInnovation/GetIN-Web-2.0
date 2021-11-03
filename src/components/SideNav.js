@@ -106,7 +106,6 @@ export default class SideNav extends Component {
   static contextType = GlobalContext;
 
   render() {
-    console.log(this.context);
     return (
       <div className={this.state.show ? "sideNav" : "sideNav hiddenMenu"}>
         <nav className="headerNav navbar navbar-default navbar-static-top">
@@ -114,7 +113,6 @@ export default class SideNav extends Component {
             <a className="navbar-brand" href="/dashboard">
               <img alt="GETIN" src={require("../assets/images/Logo.png")} />
               <span className="brand">GetIN</span>
-              {/* <span className="district">{this.state.district}</span> */}
               <span className="district">{this.context.district}</span>
             </a>
             <button
