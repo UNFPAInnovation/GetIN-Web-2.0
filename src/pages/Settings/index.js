@@ -6,6 +6,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 
 const UsersTable = React.lazy(() => import("./Users"));
+const HealthFacilityTable = React.lazy(()=> import("./HealthFacilities"));
 
 
 
@@ -69,6 +70,9 @@ export default class Users extends React.Component {
               >
                 <Tab eventKey="users" title="Users">
                   <UsersTable />
+                </Tab>
+                <Tab eventKey="facilities" title="Facilities">
+                  <HealthFacilityTable/>
                 </Tab>
               </Tabs>
             </div>
