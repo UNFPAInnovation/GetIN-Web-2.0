@@ -1,3 +1,4 @@
+/* eslint-disable */
 const api = require("./index");
 const addr = require("../env_config").default;
 const sessionStorage = window.sessionStorage;

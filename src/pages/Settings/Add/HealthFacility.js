@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import _ from "underscore";
 import { Modal } from "react-bootstrap";

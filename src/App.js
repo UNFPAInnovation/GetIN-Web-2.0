@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, Suspense } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";

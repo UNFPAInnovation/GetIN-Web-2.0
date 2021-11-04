@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import { fromInitialDate, endOfDay, getData } from "../../utils/index";
 import moment from "moment";

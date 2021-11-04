@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +16,7 @@ import {
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import {GlobalContext} from '../context/GlobalState';
+import Logo from '../assets/images/Logo.png';
 
 export default class SideNav extends Component {
   constructor(props) {
@@ -111,7 +113,7 @@ export default class SideNav extends Component {
         <nav className="headerNav navbar navbar-default navbar-static-top">
           <div className="navbar-header">
             <a className="navbar-brand" href="/dashboard">
-              <img alt="GETIN" src={require("../assets/images/Logo.png")} />
+              <img alt="GETIN" src={Logo} />
               <span className="brand">GetIN</span>
               <span className="district">{this.context.district}</span>
             </a>

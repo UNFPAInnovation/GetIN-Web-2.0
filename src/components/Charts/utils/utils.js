@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MappedGirlsPerSubcountyBarChart } from '../MappedGirlsPerSubcountyBarChart';
 
 // Various utility functions for graphs

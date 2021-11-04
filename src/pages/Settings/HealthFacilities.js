@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

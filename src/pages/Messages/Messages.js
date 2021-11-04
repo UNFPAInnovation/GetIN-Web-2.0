@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";

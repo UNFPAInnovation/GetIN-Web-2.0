@@ -1,3 +1,4 @@
+/* eslint-disable */
 const axios = require('axios');
 exports.get =  function(requesturl="", headers={}, callback){
   let error_ = null;
