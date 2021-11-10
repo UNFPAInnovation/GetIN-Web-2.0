@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -73,24 +72,24 @@ export default class SideNav extends Component {
     document.getElementById("deliveriesLink").classList.remove("active");
     document.getElementById("settingsLink").classList.remove("active");
 
-    if (window.location.pathname == "/dashboard") {
+    if (window.location.pathname === "/dashboard") {
       document.getElementById("dashboardLink").classList.add("active");
-    } else if (window.location.pathname == "/girls") {
+    } else if (window.location.pathname === "/girls") {
       document.getElementById("girlsLink").classList.add("active");
-    } else if (window.location.pathname == "/users") {
+    } else if (window.location.pathname === "/users") {
       document.getElementById("usersLink").classList.add("active");
-    } else if (window.location.pathname == "/anc_visits") {
+    } else if (window.location.pathname === "/anc_visits") {
       document.getElementById("anc_visitsLink").classList.add("active");
-    } else if (window.location.pathname == "/follow_ups") {
+    } else if (window.location.pathname === "/follow_ups") {
       document.getElementById("follow_upsLink").classList.add("active");
-    } else if (window.location.pathname == "/deliveries") {
+    } else if (window.location.pathname === "/deliveries") {
       document.getElementById("deliveriesLink").classList.add("active");
-    } else if (window.location.pathname == "/health_facilities") {
+    } else if (window.location.pathname === "/health_facilities") {
       document.getElementById("healthFacilitiesLink").classList.add("active");
-    } else if (window.location.pathname == "/messages") {
+    } else if (window.location.pathname === "/messages") {
       document.getElementById("messagesLink").classList.add("active");
     }
-     else if (window.location.pathname == "/settings") {
+     else if (window.location.pathname === "/settings") {
       document.getElementById("settingsLink").classList.add("active");
     }
   }

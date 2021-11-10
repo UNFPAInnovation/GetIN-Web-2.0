@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import {
   fromInitialDate,
@@ -13,9 +12,15 @@ import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+// import context
+import {GlobalContext} from '../../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class Home extends Component {
+
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -59,14 +64,24 @@ export default class Home extends Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "deliveries",
         delivery_location: this.state.delivery_location,
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -112,30 +127,27 @@ export default class Home extends Component {
     }
   }
   deliveryFormatter(cell, row) {
-    let delivery = "";
     if (row.mother_alive && row.baby_alive) {
-      return (delivery = "Mother Alive, Baby Alive");
+      return ("Mother Alive, Baby Alive");
     } else if (!row.mother_alive && row.baby_alive) {
-      return (delivery = "Mother Dead, Baby Alive");
+      return ("Mother Dead, Baby Alive");
     } else if (row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Alive, Baby Dead");
+      return ("Mother Alive, Baby Dead");
     } else if (!row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Dead, Baby Dead");
+      return ("Mother Dead, Baby Dead");
     } else {
-      return (delivery = "Not recorded");
+      return ("Not recorded");
     }
   }
   familyPlanningFormatter(cell, row) {
-    let familyPlanning = "";
     if(row.family_planning.length === 0) return;
     if (
       row.family_planning &&
       row.family_planning[0].using_family_planning === true
     ) {
-      return (familyPlanning = "Yes, " + row.family_planning[0].method);
+      return ("Yes, " + row.family_planning[0].method);
     } else {
-      return (familyPlanning =
-        "None, " + row.family_planning &&
+      return ("None, " + row.family_planning &&
         row.family_planning[0].no_family_planning_reason);
     }
   }
@@ -152,7 +164,20 @@ export default class Home extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateToChange(target.value);
+    }
+
   }
+
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -230,7 +255,7 @@ export default class Home extends Component {
             <label htmlFor='email'>From:</label>
             <input
               name='from'
-              value={this.state.from}
+              value={this.context.dateFrom}
               onChange={this.handleInputChange}
               className='form-control'
               type='date'
@@ -240,7 +265,7 @@ export default class Home extends Component {
             <label htmlFor='email'>To:</label>
             <input
               name='to'
-              value={this.state.to}
+              value={this.context.dateTo}
               onChange={this.handleInputChange}
               className='form-control'
               type='date'
@@ -363,7 +388,6 @@ export default class Home extends Component {
               options={options}
               exportCSV
               condensed
-              pagination
             >
               <TableHeaderColumn
                 width='220px'

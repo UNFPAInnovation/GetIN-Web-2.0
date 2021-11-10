@@ -1,6 +1,4 @@
-/* eslint-disable */
 import React, { Component } from "react";
-import _ from "underscore";
 import { Modal } from "react-bootstrap";
 const alertifyjs = require("alertifyjs");
 const service = require("../../../api/services");

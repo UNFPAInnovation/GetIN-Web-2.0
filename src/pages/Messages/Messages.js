@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -94,7 +93,6 @@ getData({
   
   }
   render() {
-    let data = this.state.messages;
     return (
       <React.Fragment>
         <div className="col-md-12">

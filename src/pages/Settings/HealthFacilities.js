@@ -1,16 +1,16 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHospital } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { fromInitialDate, endOfDay, getData } from "../../utils/index";
+import { GlobalContext } from "../../context/GlobalState";
 const Fuse = require("fuse.js");
 const HealthFacilityModal = React.lazy(() => import("./Add/HealthFacility"));
 
-export default class HealthFacilities extends React.Component {
+export default class HealthFacilities extends Component {
+  static contextType = GlobalContext;
+
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -81,7 +81,8 @@ export default class HealthFacilities extends React.Component {
     const thisApp = this;
     getData(
       {
-        name: "getHealthFacilities"
+        name: "getHealthFacilities",
+        districtId: this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -162,6 +163,14 @@ export default class HealthFacilities extends React.Component {
 
   componentDidMount() {
     this.loadData();
+  }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
   }
 
   render() {
@@ -294,7 +303,6 @@ export default class HealthFacilities extends React.Component {
                     pagination={true}
                     options={options}
                     exportCSV
-                    pagination
                   >
                     <TableHeaderColumn
                       isKey={true}

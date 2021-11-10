@@ -5,9 +5,12 @@ import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import {GlobalContext} from '../../context/GlobalState';
 const Fuse = require("fuse.js");
 
 export default class Midwives extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -45,12 +48,22 @@ export default class Midwives extends Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "users",
-        role: this.state.role
+        role: this.state.role,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {

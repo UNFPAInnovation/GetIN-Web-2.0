@@ -1,12 +1,8 @@
-/* eslint-disable */
 import React, { useState, useMemo } from 'react';
 
 // Chart Stuff
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-// Chart componets
-import { Bar } from 'react-chartjs-2';
 
 // Chart Card Component
 import ChartCard from '../../../../components/ChartCard';
