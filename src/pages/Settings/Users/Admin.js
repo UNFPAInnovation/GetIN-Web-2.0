@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { fromInitialDate, endOfDay, getData } from "../../utils/index";
+import { fromInitialDate, endOfDay, getData } from "../../../utils/index";
 import moment from "moment";
-import Check from "../../components/Check";
+import Check from "../../../components/Check";
 import { NavDropdown, MenuItem, Button } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 const Fuse = require("fuse.js");
-const UserModal = React.lazy(() => import("./Add/User"));
+const UserModal = React.lazy(() => import("../Add/User"));
 
 export default class VHT extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ export default class VHT extends Component {
       search: null,
       isLoaded: false,
       loadingText: "Loading ..",
-      role: "chew",
+      role: "manager",
       from: fromInitialDate,
       to: moment(endOfDay).local().format("YYYY-MM-DD"),
       showCoords: true,

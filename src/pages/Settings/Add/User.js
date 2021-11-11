@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 const alertifyjs = require("alertifyjs");
 const service = require("../../../api/services");
 
-export default class ChewModal extends Component {
+export default class UserModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,39 +15,25 @@ export default class ChewModal extends Component {
       gender: null,
       email: null,
       phone_number: null,
-      village: null,
-      subcounty: null,
-      villages: [],
-      district: [],
-      villages_copy: [],
-      sub_counties: [],
       loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.updateVillagesList = this.updateVillagesList.bind(this);
   }
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    this.setState(
-      {
-        [name]: value,
-      },
-      function () {
-        if (name === "sub_county") {
-          this.updateVillagesList();
-        }
-      }
-    );
+    this.setState({
+      [name]: value,
+    });
   }
-  addChew(e) {
+  addAdminUser(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
       loading: true,
     });
-    alertifyjs.message("Adding CHEW..", 2, function () {});
+    alertifyjs.message("Adding Admin User..", 2, function () {});
     service.addUser(
       {
         first_name: this.state.first_name,
@@ -55,10 +41,9 @@ export default class ChewModal extends Component {
         username: this.state.username,
         email: this.state.email,
         gender: this.state.gender,
-        village: this.state.village,
         password: this.state.password,
         phone: this.state.phone_number,
-        role: "chew",
+        role: "manager",
       },
       function (error, response) {
         if (error) {
@@ -76,73 +61,7 @@ export default class ChewModal extends Component {
       }
     );
   }
-  getVillages() {
-    const thisApp = this;
-    thisApp.setState({
-      villages: [],
-      villages_copy: [],
-      loadingText: "Loading...",
-    });
-    service.getVillages(function (error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          villages: [],
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          villages: response.results,
-          villages_copy: response.results,
-        });
-      }
-    });
-  }
-  getSubCounties() {
-    const thisApp = this;
-    thisApp.setState({
-      sub_counties: [],
-      sub_counties_copy: [],
-      loadingText: "Loading...",
-    });
 
-    service.getSubCounties(function (error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: [],
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: response.results,
-        });
-      }
-    });
-  }
-  updateVillagesList() {
-    const thisApp = this;
-    if (thisApp.state.sub_county) {
-      let subcounty_villages = _.filter(
-        thisApp.state.villages_copy,
-        function (village) {
-          return (
-            village.parish.sub_county.id === parseInt(thisApp.state.sub_county)
-          );
-        }
-
-        //village.parish.sub_county.id === this.state.sub_county;
-      );
-      thisApp.setState({
-        villages: subcounty_villages,
-        village: null,
-      });
-    }
-  }
-  componentDidMount() {
-    this.getVillages();
-    this.getSubCounties();
-  }
   render() {
     return (
       <Modal
@@ -150,10 +69,10 @@ export default class ChewModal extends Component {
         onHide={() => this.props.handleClose("modal")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a new User</Modal.Title>
+          <Modal.Title>Add a new Admin User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={(e) => this.addChew(e)}>
+          <form onSubmit={(e) => this.addAdminUser(e)}>
             <div className="col-md-12">
               <div className="form-group col-md-6">
                 <label>First name</label>
@@ -247,69 +166,11 @@ export default class ChewModal extends Component {
             </div>
             <div className="col-md-12">
               <br className="clear-both" />
-              <div className="form-group col-md-6">
-                <label>Sub District</label>
-                <select
-                  required
-                  className="form-control"
-                  name="district"
-                  onChange={this.handleChange}
-                  value={this.state.sub_county}
-                >
-                  <option defaultValue value={null}>
-                    Select District
-                  </option>
-                  {this.state.sub_counties.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group col-md-6">
-                <label>Sub counties</label>
-                <select
-                  required
-                  className="form-control"
-                  name="sub_county"
-                  onChange={this.handleChange}
-                  value={this.state.sub_county}
-                >
-                  <option defaultValue value={null}>
-                    Select subcounty
-                  </option>
-                  {this.state.sub_counties.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group col-md-6">
-                <label>Villages</label>
-                <select
-                  required
-                  className="form-control"
-                  name="village"
-                  onChange={this.handleChange}
-                  value={this.state.village}
-                >
-                  <option defaultValue value={null}>
-                    Select Village
-                  </option>
-                  {this.state.villages.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
               <br className="clear-both" />
               <div className="row">
                 <div className="col-md-offset-9 col-md-2">
                   <button type="submit" className="btn btn-primary">
-                    {this.state.loading ? "Adding Chew" : "Submit"}
+                    {this.state.loading ? "Adding User" : "Submit"}
                   </button>
                 </div>
               </div>

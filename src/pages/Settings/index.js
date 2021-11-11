@@ -1,11 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 import {Tabs, Tab} from 'react-bootstrap';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 
-const UsersTable = React.lazy(() => import("./Users"));
+const AdminUsers = React.lazy(() => import("./Users/Admin"));
+const GetInUsers = React.lazy(() => import("./Users/GetIN/Users"));
 
 
 
@@ -13,13 +14,13 @@ export default class Users extends React.Component {
     constructor(props, context) {
       super(props, context);
       this.state = {
-        key: 'users',
+        key: "getInUsers",
 
         users: false,
+        getInUsers: false,
         healthFacility: false,
 
-        userType:"",
-
+        userType: "",
       };
       this.handleShow = this.handleShow.bind(this);
       this.handleClose = this.handleClose.bind(this);
@@ -53,7 +54,7 @@ export default class Users extends React.Component {
               <h4 className="pull-left">
                 {" "}
                 <span>
-                  <FontAwesomeIcon icon={faUsers} />
+                  <FontAwesomeIcon icon={faCog} />
                 </span>{" "}
                 Settings
               </h4>
@@ -67,8 +68,11 @@ export default class Users extends React.Component {
                 activeKey={this.state.key}
                 onSelect={(key) => this.setState({ key })}
               >
-                <Tab eventKey="users" title="Users">
-                  <UsersTable />
+                <Tab eventKey="getInUsers" title="GetIn Users">
+                  <GetInUsers />
+                </Tab>
+                <Tab eventKey="users" title="Admin Users">
+                  <AdminUsers />
                 </Tab>
               </Tabs>
             </div>
