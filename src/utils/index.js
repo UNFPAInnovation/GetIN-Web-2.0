@@ -118,7 +118,6 @@ export const getData = function(action, callback) {
         if (error) {
           return callback(error);
         } else {
-          console.log(response)
           return callback(null, response);
         }
       });
@@ -128,7 +127,6 @@ export const getData = function(action, callback) {
         if (error) {
           return callback(error);
         } else {
-          console.log(response)
           return callback(null, response);
         }
       });

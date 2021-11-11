@@ -16,11 +16,17 @@ const DEFAULT_OPTIONS = {
 // Endpoints
 const apiURL = require('../env_config').default;
 
-export default function useGetData(fromFilter, toFilter) {
+export default function useGetData(fromFilter, toFilter, districtId) {
   // Currate all the api endpoints we querry for data / stats
-  const followupsURL = `${apiURL}/api/v1/followups?created_from__gte=${fromFilter}&created_to__lte=${toFilter}`;
-  const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from__gte=${fromFilter}&created_to__lte=${toFilter}`;
-  const mappingEncountersStatsURL = `${apiURL}/api/v1/mapping_encounters_stats?from=${fromFilter}&to=${toFilter}`;
+  const followupsURL = `${apiURL}/api/v1/followups?created_from__gte=${fromFilter}&created_to__lte=${toFilter}${
+    districtId && `&district=${districtId}`
+  }`;
+  const deliveriesURL = `${apiURL}/api/v1/deliveries?created_from__gte=${fromFilter}&created_to__lte=${toFilter}${
+    districtId && `&district=${districtId}`
+  }`;
+  const mappingEncountersStatsURL = `${apiURL}/api/v1/mapping_encounters_stats?from=${fromFilter}&to=${toFilter}${
+    districtId && `&district=${districtId}`
+  }`;
 
   // Set initial state of our data
   const [isLoading, setIsLoading] = useState(false);
@@ -55,28 +61,33 @@ export default function useGetData(fromFilter, toFilter) {
       return Promise.all([
         followupsReq(),
         deliveriesURLReq(),
-        mappingEncountersStatsURLReq()
+        mappingEncountersStatsURLReq(),
       ]);
     };
 
     // When Promise reolves, all our data is available and we can set state appropriately
     getAllData().then(
       ([followups, deliveries, mappingEncountersStats, healthFacilities]) => {
-        console.log(toFilter,fromFilter);
         setFollowups(followups);
         setDeliveries(deliveries);
         setMappingEncountersStats(mappingEncountersStats);
         setIsLoading(false);
       }
     );
-  }, [fromFilter, toFilter,followupsURL,deliveriesURL,mappingEncountersStatsURL]);
+  }, [
+    fromFilter,
+    toFilter,
+    followupsURL,
+    deliveriesURL,
+    mappingEncountersStatsURL,
+  ]);
 
   return [
     {
       followups,
       deliveries,
       mappingEncountersStats,
-      isLoading
-    }
+      isLoading,
+    },
   ];
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
 
 // React bootstrap components
@@ -21,6 +21,9 @@ import MappedGirlsPerSubcountyBarChart from "./components/MappedGirlsPerSubcount
 // Get Data
 import getData from "../../utils/getData";
 
+// import context
+import {GlobalContext} from '../../context/GlobalState';
+
 import { fromInitialDate } from "../../utils/index";
 
 // const startOfMonth = moment()
@@ -34,14 +37,14 @@ const todaysDate = moment()
   .format("YYYY-MM-DD");
 
 export default function Dashboard() {
+  const { districtId } = useContext(GlobalContext);
   // State variables
   const [fromFilter, setFromFilter] = useState(fromInitialDate);
   const [toFilter, setToFilter] = useState(todaysDate);
 
   // Fetch data using our custom useGetData hook
-  const [
-    { followups, deliveries, mappingEncountersStats, isLoading }
-  ] = getData(fromFilter, toFilter);
+  const [{ followups, deliveries, mappingEncountersStats, isLoading }] =
+    getData(fromFilter, toFilter, districtId);
 
   // Memoize the data
 

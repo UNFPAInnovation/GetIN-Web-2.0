@@ -27,9 +27,7 @@ export default class VHT extends Component {
         name: false,
         phone: false,
         gender: false,
-        village: false,
         username: false,
-        sub_county: false,
       },
       // remote pagination
       currentPage: 1,
@@ -120,14 +118,6 @@ export default class VHT extends Component {
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
   }
-  villageFormatter(cell, row) {
-    return row.village && row.village.name;
-  }
-  subCountyFormatter(cell, row) {
-    return (
-      row.village && row.village.parish && row.village.parish.sub_county.name
-    );
-  }
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -209,20 +199,6 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.gender} /> Gender
               </MenuItem>
               <MenuItem
-                onClick={(e, village) => this.updateTable("village")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.village} /> Village
-              </MenuItem>
-              <MenuItem
-                onClick={(e, sub_county) => this.updateTable("sub_county")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.sub_county} /> Sub County
-              </MenuItem>
-              <MenuItem
                 onClick={(e, username) => this.updateTable("username")}
                 eventKey={3.1}
               >
@@ -288,22 +264,6 @@ export default class VHT extends Component {
                   dataField="gender"
                 >
                   Gender
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.village}
-                  dataFormat={this.villageFormatter}
-                  csvFormat={this.villageFormatter}
-                  dataField="village"
-                >
-                  Village
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.sub_county}
-                  dataFormat={this.subCountyFormatter}
-                  csvFormat={this.subCountyFormatter}
-                  dataField="sub_county"
-                >
-                  Sub county
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.username}
