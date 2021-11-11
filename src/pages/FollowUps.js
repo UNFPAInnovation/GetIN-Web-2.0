@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,9 +17,14 @@ import {
   ageFormatter,
   trimesterFormatter
 } from "../utils/index";
+// import context
+import {GlobalContext} from '../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class FollowUps extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -61,16 +67,27 @@ export default class FollowUps extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
   }
+
   componentDidMount() {
     this.loadData();
   }
+  
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "followUps",
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -100,6 +117,17 @@ export default class FollowUps extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateToChange(target.value);
+    }
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -179,6 +207,7 @@ export default class FollowUps extends Component {
   }
 
   render() {
+    console.log('Context:', this.context);
     let followUps = this.state.followUps;
     const YesNoFormat = {
       true: "Yes",
@@ -227,7 +256,7 @@ export default class FollowUps extends Component {
               <label htmlFor='email'>From:</label>
               <input
                 name='from'
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -237,7 +266,7 @@ export default class FollowUps extends Component {
               <label htmlFor='email'>To:</label>
               <input
                 name='to'
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'

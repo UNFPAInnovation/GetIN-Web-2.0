@@ -1,5 +1,7 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import '../styles/Login.scss';
+import Logo from '../assets/images/Logo.png';
 const alertifyjs = require('alertifyjs');
 
 const service = require('../api/services');
@@ -26,6 +28,7 @@ export default class Login extends Component {
     };
     service.login(data, function(error, token) {
       if (error) {
+        console.log(error);
         alertifyjs.error(
           'Email / password combination is not valid.',
           5,
@@ -64,7 +67,7 @@ export default class Login extends Component {
               <div className='col-md-12'>
                 <img
                   className='text-center loginLogo'
-                  src={require('../assets/images/Logo.png')}
+                  src={Logo}
                 />
               </div>
 

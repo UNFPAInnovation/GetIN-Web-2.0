@@ -62,6 +62,7 @@ export default function useGetData(fromFilter, toFilter) {
     // When Promise reolves, all our data is available and we can set state appropriately
     getAllData().then(
       ([followups, deliveries, mappingEncountersStats, healthFacilities]) => {
+        console.log(toFilter,fromFilter);
         setFollowups(followups);
         setDeliveries(deliveries);
         setMappingEncountersStats(mappingEncountersStats);

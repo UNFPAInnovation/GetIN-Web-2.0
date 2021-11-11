@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 
 // React bootstrap components
@@ -23,11 +23,11 @@ import getData from "../../utils/getData";
 
 import { fromInitialDate } from "../../utils/index";
 
-const startOfMonth = moment()
-  .subtract(1, "months")
-  .date(1)
-  .local()
-  .format("YYYY-MM-DD");
+// const startOfMonth = moment()
+//   .subtract(1, "months")
+//   .date(1)
+//   .local()
+//   .format("YYYY-MM-DD");
 
 const todaysDate = moment()
   .local()

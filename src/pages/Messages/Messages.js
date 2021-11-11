@@ -93,7 +93,6 @@ getData({
   
   }
   render() {
-    let data = this.state.messages;
     return (
       <React.Fragment>
         <div className="col-md-12">

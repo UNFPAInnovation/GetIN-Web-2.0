@@ -3,7 +3,6 @@ import {
   fromInitialDate,
   endOfDay,
   dateFormatter,
-  enumFormatter,
   getData,
   trimesterFormatter,
   nameFormatter,
@@ -18,10 +17,13 @@ import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { GlobalContext } from "../../context/GlobalState";
 
 const Fuse = require("fuse.js");
 
 export default class MissedAppointments extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -59,14 +61,24 @@ export default class MissedAppointments extends Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "Appointments",
         status: this.state.status,
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -114,6 +126,17 @@ export default class MissedAppointments extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateToChange(target.value);
+    }
   }
   onFilterChange(filter) {
     let results = [];
@@ -258,7 +281,7 @@ export default class MissedAppointments extends Component {
               <label htmlFor='email'>From:</label>
               <input
                 name='from'
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -268,7 +291,7 @@ export default class MissedAppointments extends Component {
               <label htmlFor='email'>To:</label>
               <input
                 name='to'
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -335,7 +358,6 @@ export default class MissedAppointments extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
                 expandableRow={this.isExpandableRow}
                 expandComponent={this.expandComponent}
                 expandColumnOptions={{
@@ -377,7 +399,6 @@ export default class MissedAppointments extends Component {
                   // dataSort={true}
                   csvFormat={trimesterFormatter}
                   filterFormatted
-                  dataFormat={enumFormatter}
                   dataFormat={trimesterFormatter}
                   filter={{ type: "SelectFilter", options: trimesterType }}
                   dataField='trimester'

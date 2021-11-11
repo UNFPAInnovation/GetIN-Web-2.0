@@ -13,7 +13,7 @@ export default class Card extends Component {
         <h4>{this.props.number}</h4>
         <span className="rate">
           <FontAwesomeIcon
-            icon={this.props.direction == "up" ? faArrowUp : faArrowDown}
+            icon={this.props.direction === "up" ? faArrowUp : faArrowDown}
           />
           {this.props.rate}
         </span>

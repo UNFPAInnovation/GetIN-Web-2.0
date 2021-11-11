@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,9 +15,14 @@ import {
   getData,
   nameFormatter,
 } from "../utils/index";
+// import context
+import {GlobalContext} from '../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class MappedGirls extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -55,22 +61,33 @@ export default class MappedGirls extends Component {
       // remote pagination
       currentPage: 1,
       sizePerPage: 20,
-      totalDataSize: 0,
+      totalDataSize: 0
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
   }
+
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "mappedGirlsEncounter",
-        from: this.state.from,
-        to: this.state.to,
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId: this.context.districtId
       },
       function (error, response) {
         if (error) {
@@ -100,6 +117,17 @@ export default class MappedGirls extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateToChange(target.value);
+    }
   }
 
   updateTable(colomn) {
@@ -263,7 +291,7 @@ export default class MappedGirls extends Component {
               <label htmlFor="email">From:</label>
               <input
                 name="from"
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className="form-control"
                 type="date"
@@ -273,7 +301,7 @@ export default class MappedGirls extends Component {
               <label htmlFor="email">To:</label>
               <input
                 name="to"
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className="form-control"
                 type="date"
