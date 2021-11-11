@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
-import {Tabs, Tab, Modal, DropdownButton, MenuItem} from 'react-bootstrap';
+import React from 'react';
+import {Tabs, Tab, DropdownButton, MenuItem} from 'react-bootstrap';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 

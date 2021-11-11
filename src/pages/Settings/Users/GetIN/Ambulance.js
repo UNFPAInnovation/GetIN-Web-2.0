@@ -2,12 +2,7 @@ import React, { Component } from "react";
 import {
   fromInitialDate,
   endOfDay,
-  dateFormatter,
-  enumFormatter,
   getData,
-  trimesterFormatter,
-  chewFormatter,
-  nameFormatter,
 } from "../../../../utils/index";
 import moment from "moment";
 import Check from "../../../../components/Check";
@@ -250,7 +245,6 @@ export default class AmbulanceDrivers extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.name}
