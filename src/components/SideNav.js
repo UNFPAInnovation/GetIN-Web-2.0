@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -14,6 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import {GlobalContext} from '../context/GlobalState';
+import Logo from '../assets/images/Logo.png';
+
 export default class SideNav extends Component {
   constructor(props) {
     super(props);
@@ -69,24 +72,24 @@ export default class SideNav extends Component {
     document.getElementById("deliveriesLink").classList.remove("active");
     document.getElementById("settingsLink").classList.remove("active");
 
-    if (window.location.pathname == "/dashboard") {
+    if (window.location.pathname === "/dashboard") {
       document.getElementById("dashboardLink").classList.add("active");
-    } else if (window.location.pathname == "/girls") {
+    } else if (window.location.pathname === "/girls") {
       document.getElementById("girlsLink").classList.add("active");
-    } else if (window.location.pathname == "/users") {
+    } else if (window.location.pathname === "/users") {
       document.getElementById("usersLink").classList.add("active");
-    } else if (window.location.pathname == "/anc_visits") {
+    } else if (window.location.pathname === "/anc_visits") {
       document.getElementById("anc_visitsLink").classList.add("active");
-    } else if (window.location.pathname == "/follow_ups") {
+    } else if (window.location.pathname === "/follow_ups") {
       document.getElementById("follow_upsLink").classList.add("active");
-    } else if (window.location.pathname == "/deliveries") {
+    } else if (window.location.pathname === "/deliveries") {
       document.getElementById("deliveriesLink").classList.add("active");
-    } else if (window.location.pathname == "/health_facilities") {
+    } else if (window.location.pathname === "/health_facilities") {
       document.getElementById("healthFacilitiesLink").classList.add("active");
-    } else if (window.location.pathname == "/messages") {
+    } else if (window.location.pathname === "/messages") {
       document.getElementById("messagesLink").classList.add("active");
     }
-     else if (window.location.pathname == "/settings") {
+     else if (window.location.pathname === "/settings") {
       document.getElementById("settingsLink").classList.add("active");
     }
   }
@@ -100,15 +103,18 @@ export default class SideNav extends Component {
       district: district
     });
   }
+
+  static contextType = GlobalContext;
+
   render() {
     return (
       <div className={this.state.show ? "sideNav" : "sideNav hiddenMenu"}>
         <nav className="headerNav navbar navbar-default navbar-static-top">
           <div className="navbar-header">
             <a className="navbar-brand" href="/dashboard">
-              <img alt="GETIN" src={require("../assets/images/Logo.png")} />
+              <img alt="GETIN" src={Logo} />
               <span className="brand">GetIN</span>
-              <span className="district">{this.state.district}</span>
+              <span className="district">{this.context.district}</span>
             </a>
             <button
               type="button"

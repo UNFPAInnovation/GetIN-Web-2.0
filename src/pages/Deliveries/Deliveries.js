@@ -9,7 +9,7 @@ const Home = React.lazy(() => import("./Home"));
 
 
 
-export default class Deliveries extends React.Component {
+export default class Deliveries extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

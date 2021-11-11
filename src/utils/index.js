@@ -1,3 +1,4 @@
+/* eslint-disable */
 import moment from "moment";
 import _ from "underscore";
 
@@ -50,7 +51,7 @@ export const chewFormatter = function(cell, row) {
 export const getData = function(action, callback) {
   switch (action.name) {
     case "Appointments":
-      service.Appointments(action.status, action.from, action.to, function(
+      service.Appointments(action.status, action.from, action.to,action.districtId, function(
         error,
         response
       ) {
@@ -66,6 +67,7 @@ export const getData = function(action, callback) {
         action.delivery_location,
         action.from,
         action.to,
+        action.districtId,
         function(error, response) {
           if (error) {
             return callback(error);
@@ -76,7 +78,7 @@ export const getData = function(action, callback) {
       );
       break;
     case "users":
-      service.users(action.role, function(error, response) {
+      service.users(action.role,action.districtId,function(error, response) {
         if (error) {
           return callback(error);
         } else {
@@ -93,11 +95,40 @@ export const getData = function(action, callback) {
         }
       });
       break;
+    case "getHealthFacilitiesByDistrict":
+      service.getHealthFacilitiesByDistrict(action.districtId,function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
     case "listSms":
       service.listSms(function(error, response) {
         if (error) {
           return callback(error);
         } else {
+          return callback(null, response);
+        }
+      });
+      break;
+    case "mappedGirlsEncounter":
+      service.mappedGirlsEncounter(action.from,action.to,action.districtId,function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          console.log(response)
+          return callback(null, response);
+        }
+      });
+      break;
+    case "followUps":
+      service.followUps(action.from,action.to,action.districtId,function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          console.log(response)
           return callback(null, response);
         }
       });

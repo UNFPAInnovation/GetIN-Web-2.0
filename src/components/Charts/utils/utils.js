@@ -1,5 +1,3 @@
-import { MappedGirlsPerSubcountyBarChart } from '../MappedGirlsPerSubcountyBarChart';
-
 // Various utility functions for graphs
 
 const getDistrict = data => {
@@ -105,7 +103,7 @@ const aggregateSubcountyData = data => {
   // Probably a performance hit with all the loops so marked for future improvement.
   const subcountyDataObject = [];
 
-  data.map(month => {
+  data.forEach(month => {
     subcountyDataObject.push({
       name: month.month + ' ' + month.year,
       id: month.month + ' ' + month.year,
@@ -115,7 +113,7 @@ const aggregateSubcountyData = data => {
     subcountyDataObject.forEach(uniqueMonth => {
       // To avoid appending months data to the first instance, check if our data array is empty or undefined.
       // Only push data if its empty ie its a new month
-      if (uniqueMonth.data === undefined || uniqueMonth.data.length == 0) {
+      if (uniqueMonth.data === undefined || uniqueMonth.data.length === 0) {
         month.subcounties.forEach(subcounty => {
           uniqueMonth['data'].push([
             subcounty,

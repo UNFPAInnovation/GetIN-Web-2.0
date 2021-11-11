@@ -1,8 +1,11 @@
+/* eslint-disable */
 import React, { Component, Suspense } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import Seo from "./components/Seo";
 import "./styles/global.scss";
+// Global State
+import {GlobalProvider} from "./context/GlobalState";
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
 const MappedGirls = React.lazy(() => import("./pages/MappedGirls"));
@@ -77,161 +80,163 @@ class App extends Component {
   }
   render() {
     return (
-      <BrowserRouter basename="/">
-        <Switch>
-          <Route
-            exact
-            path="/dashboard"
-            render={() => (
-              <SF>
-                <Seo title="GetIn Dashboard" description="" keywords="" />
+      <GlobalProvider>
+        <BrowserRouter basename="/">
+          <Switch>
+            <Route
+              exact
+              path="/dashboard"
+              render={() => (
+                <SF>
+                  <Seo title="GetIn Dashboard" description="" keywords="" />
 
                 <Dashboard />
               </SF>
             )}
-          />
-          <Route
-            exact
-            path="/anc_visits"
-            render={() => (
-              <SF>
-                <Seo
-                  title="ANC Visits - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <AncVisits />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/follow_ups"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Follow ups - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <FollowUps />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/girls"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Mapped girls - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <MappedGirls />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/users"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Users - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <Users />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/deliveries"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Deliveries - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <Deliveries />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/health_facilities"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Health facilities - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <HealthFacilities />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/"
-            render={() =>
-              this.state.isLoggedIn ? (
-                // <Redirect to="/dashboard" />
-                //temporary fix until dashboard is sorted
-                <Redirect to="/anc_visits" />
-              ) : (
-                <LoadingPage>
-                  {" "}
-                  <Login />
-                </LoadingPage>
-              )
-            }
-          />
-          <Route
-            exact
-            path="/messages"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Messages - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <Messages />
-              </SF>
-            )}
-          />
-          <Route
-            exact
-            path="/settings"
-            render={() => (
-              <SF>
-                <Seo
-                  title="Settings - GetIn Dashboard"
-                  description=""
-                  keywords=""
-                />
-                <Settings />
-              </SF>
-            )}
-          />
-          <Route
-            render={() => (
-              <SF>
-                <Seo
-                  title="Not found"
-                  description="We are sorry the page you are looking for was not found"
-                  keywords=""
-                />
-                <NotFound />
-              </SF>
-            )}
-          />
-        </Switch>
-      </BrowserRouter>
+            />
+            <Route
+              exact
+              path="/anc_visits"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="ANC Visits - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <AncVisits />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/follow_ups"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Follow ups - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <FollowUps />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/girls"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Mapped girls - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <MappedGirls />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/users"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Users - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <Users />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/deliveries"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Deliveries - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <Deliveries />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/health_facilities"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Health facilities - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <HealthFacilities />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/"
+              render={() =>
+                this.state.isLoggedIn ? (
+                  // <Redirect to="/dashboard" />
+                  //temporary fix until dashboard is sorted
+                  <Redirect to="/anc_visits" />
+                ) : (
+                  <LoadingPage>
+                    {" "}
+                    <Login />
+                  </LoadingPage>
+                )
+              }
+            />
+            <Route
+              exact
+              path="/messages"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Messages - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <Messages />
+                </SF>
+              )}
+            />
+            <Route
+              exact
+              path="/settings"
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Settings - GetIn Dashboard"
+                    description=""
+                    keywords=""
+                  />
+                  <Settings />
+                </SF>
+              )}
+            />
+            <Route
+              render={() => (
+                <SF>
+                  <Seo
+                    title="Not found"
+                    description="We are sorry the page you are looking for was not found"
+                    keywords=""
+                  />
+                  <NotFound />
+                </SF>
+              )}
+            />
+          </Switch>
+        </BrowserRouter>
+      </GlobalProvider>
     );
   }
 }

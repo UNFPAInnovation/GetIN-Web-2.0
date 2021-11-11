@@ -259,7 +259,6 @@ export default class VHT extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.name}

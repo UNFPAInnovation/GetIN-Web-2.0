@@ -1,16 +1,14 @@
-/* eslint-disable */
 import React, { Component } from "react";
-import { NavDropdown, MenuItem } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHospital } from "@fortawesome/free-solid-svg-icons";
+import { NavDropdown, MenuItem, Button } from "react-bootstrap";
 import moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
-import { fromInitialDate, endOfDay, getData } from "../utils/index";
-import {GlobalContext} from '../context/GlobalState';
+import { fromInitialDate, endOfDay, getData } from "../../utils/index";
+import { GlobalContext } from "../../context/GlobalState";
 const Fuse = require("fuse.js");
+const HealthFacilityModal = React.lazy(() => import("./Add/HealthFacility"));
 
-export default class HealthFacilities extends React.Component {
+export default class HealthFacilities extends Component {
   static contextType = GlobalContext;
 
   constructor(props, context) {
@@ -43,18 +41,16 @@ export default class HealthFacilities extends React.Component {
     this.updateTable = this.updateTable.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  componentDidMount() {
-    this.loadData();
+  handleClose(modal) {
+    this.setState({ [modal]: false });
   }
 
-  componentDidUpdate(){
-    if(this.context.change){
-      this.setState({isLoaded:false});
-      this.loadData();
-      this.context.contextChange(false);
-    }
+  handleShow(modal) {
+    this.setState({ [modal]: true });
   }
 
   handleInputChange(event) {
@@ -70,6 +66,7 @@ export default class HealthFacilities extends React.Component {
       () => this.getData()
     );
   }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -79,12 +76,13 @@ export default class HealthFacilities extends React.Component {
       [name]: value
     });
   }
+
   loadData() {
     const thisApp = this;
     getData(
       {
-        name: "getHealthFacilitiesByDistrict",
-        districtId:this.context.districtId
+        name: "getHealthFacilities",
+        districtId: this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -101,6 +99,7 @@ export default class HealthFacilities extends React.Component {
       }
     );
   }
+
   updateTable(colomn) {
     //make a copy of state
     let manageColomns = this.state.manageColomns;
@@ -161,6 +160,19 @@ export default class HealthFacilities extends React.Component {
       });
     }
   }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   render() {
     let data_table = this.state.health_facilities;
     const options = {
@@ -181,23 +193,11 @@ export default class HealthFacilities extends React.Component {
     return (
       <React.Fragment>
         <div className='col-md-12'>
-          <div className='col-md-12 title'>
-            <h4 className='pull-left'>
-              {" "}
-              <span>
-                <FontAwesomeIcon icon={faHospital} />
-              </span>{" "}
-              Health Facilities
-            </h4>
-            <br className='clear-both' />
-            <br className='clear-both' />
-          </div>
           <div className='col-md-12 bg-white-content'>
             <div className='col-md-12'>
               <br className='clear-both' />
-              <form className='form-inline pull-right'>
+              <form className='form-inline pull-right search-flex'>
                 <div className='form-group'>
-                  <label htmlFor='email'>Search:</label>
                   <input
                     name='from'
                     value={this.state.search}
@@ -271,6 +271,17 @@ export default class HealthFacilities extends React.Component {
                     Ambulances
                   </MenuItem>
                 </NavDropdown>
+
+                <div className="form-group">  
+                    <Button
+                        className="btn-primary"
+                        onClick={() => this.handleShow("modal")}
+                        eventKey="4"
+                    >
+                        Add HealthFacility
+                    </Button>
+                </div>
+
               </form>
               <div className='padding-top content-container col-md-12'>
                 {this.state.isLoaded === true ? (
@@ -292,7 +303,6 @@ export default class HealthFacilities extends React.Component {
                     pagination={true}
                     options={options}
                     exportCSV
-                    pagination
                   >
                     <TableHeaderColumn
                       isKey={true}
@@ -370,6 +380,10 @@ export default class HealthFacilities extends React.Component {
               </div>
             </div>
           </div>
+            <HealthFacilityModal
+                handleClose={(d) => this.handleClose(d)}
+                show={this.state.modal}
+            />
         </div>
       </React.Fragment>
     );

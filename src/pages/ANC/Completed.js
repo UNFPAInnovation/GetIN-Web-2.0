@@ -3,7 +3,7 @@ import {
   fromInitialDate,
   endOfDay,
   dateFormatter,
-  enumFormatter,
+  // enumFormatter,
   getData,
   trimesterFormatter,
   nameFormatter,
@@ -18,9 +18,12 @@ import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { GlobalContext } from "../../context/GlobalState";
 const Fuse = require("fuse.js");
 
 export default class CompletedAppointments extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -84,17 +87,28 @@ export default class CompletedAppointments extends Component {
     }
     return <div> {content} </div>;
   }
+
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "Appointments",
         status: this.state.status,
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -140,6 +154,17 @@ export default class CompletedAppointments extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      console.log(target.value);
+      this.context.dateToChange(target.value);
+    }
   }
   onFilterChange(filter) {
     let results = [];
@@ -251,7 +276,7 @@ export default class CompletedAppointments extends Component {
               <label htmlFor='email'>From:</label>
               <input
                 name='from'
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -261,7 +286,7 @@ export default class CompletedAppointments extends Component {
               <label htmlFor='email'>To:</label>
               <input
                 name='to'
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -327,7 +352,6 @@ export default class CompletedAppointments extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
                 expandableRow={this.isExpandableRow}
                 expandComponent={this.expandComponent}
                 expandColumnOptions={{
@@ -367,7 +391,7 @@ export default class CompletedAppointments extends Component {
                   hidden={this.state.manageColomns.trimester}
                   // dataSort={true}
                   filterFormatted
-                  dataFormat={enumFormatter}
+                  // dataFormat={enumFormatter}
                   dataFormat={trimesterFormatter}
                   csvFormat={trimesterFormatter}
                   filter={{ type: "SelectFilter", options: trimesterType }}

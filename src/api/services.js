@@ -1,3 +1,4 @@
+/* eslint-disable */
 const api = require("./index");
 const addr = require("../env_config").default;
 const sessionStorage = window.sessionStorage;
@@ -21,10 +22,13 @@ exports.login = function(data, callback) {
         let district = response.user && response.user.village && response.user.village.parish && response.user.village.parish.sub_county && response.user.village.parish.sub_county.county && response.user.village.parish.sub_county.county.district && response.user.village.parish.sub_county.county.district;
           sessionStorage.removeItem('district');
           sessionStorage.removeItem('username');
-          sessionStorage.removeItem('token')
-          sessionStorage.setItem('district', district.name);
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('role');
+          sessionStorage.setItem('district', district?.name);
           sessionStorage.setItem('username', response.user && response.user.username);
-           sessionStorage.setItem('token', response.auth_token);
+          sessionStorage.setItem('token', response.auth_token);
+          sessionStorage.setItem('role', response?.user?.role);
+
         return callback(null, response.auth_token);
       }
     }
@@ -122,8 +126,8 @@ exports.usersChew = function(callback) {
          }
         });
 }
-exports.getHealthFacilities =  function(callback){
-   api.get(addr+"/api/v1/healthfacilities",
+exports.getHealthFacilitiesByDistrict =  function(districtId='',callback){
+   api.get(addr+`/api/v1/healthfacilities${districtId && (`?district=${districtId}`)}`,
    OPTIONS,function(error, response){
         if(error){
            return callback(error);
@@ -193,8 +197,8 @@ exports.usersAmbulanceDrivers = function(callback) {
 
 };
 
-exports.followUps =  function(from, to, callback){
-   api.get(addr+"/api/v1/followups?created_from__gte="+from+"&created_to__lte="+to,
+exports.followUps =  function(from, to,districtId='', callback){
+   api.get(addr+`/api/v1/followups?created_from__gte=${from}&created_to__lte=${to}${districtId && (`&district=${districtId}`)}`,
    OPTIONS,function(error, response){
        //callback of the method here
         if(error){
@@ -248,9 +252,9 @@ exports.mappedGirls = function(from, to, callback) {
 };
 // Map encounter introdudced by backend to enable show more fields on mapped girls
 
-exports.mappedGirlsEncounter = function(from, to, callback) {
+exports.mappedGirlsEncounter = function(from, to,districtId, callback) {
   api.get(
-    addr + "/api/v1/mapping_encounters?created_from__gte="+from+"&created_to__lte="+to,
+    addr + `/api/v1/mapping_encounters?created_from__gte=${from}&created_to__lte=${to}${districtId && (`&district=${districtId}`)}`,
     OPTIONS,
     function(error, response) {
       //callback of the method here
@@ -267,9 +271,9 @@ exports.mappedGirlsEncounter = function(from, to, callback) {
   );
 };
 
-exports.deliveries = function(delivery_location, from, to, callback) {
+exports.deliveries = function(delivery_location, from, to,districtId='', callback) {
    api.get(
-     addr + "/api/v1/deliveries?delivery_location="+delivery_location+"&date_from="+from+"&date_to="+to,
+     addr + `/api/v1/deliveries?delivery_location=${delivery_location}&date_from=${from}&date_to=${to}${districtId && (`&district=${districtId}`)}`,
      OPTIONS,
      function(error, response) {
        //callback of the method here
@@ -306,7 +310,7 @@ exports.getSubCounties = function(callback) {
 
 exports.getHealthFacilities = function(callback) {
   api.get(
-    addr + "/api/v1/healthfacilities",
+    addr + `/api/v1/healthfacilities`,
     OPTIONS,
     function(error, response) {
       //callback of the method here
@@ -343,9 +347,9 @@ exports.getParishes = function(callback) {
 };
 
 
-exports.Appointments = function(status, from, to, callback) {
+exports.Appointments = function(status, from, to,districtId='', callback) {
   api.get(
-    addr + "/api/v1/appointments?status="+status+"&created_from__gte="+from+"&created_to__lte="+to,
+    addr + `/api/v1/appointments?status=${status}&created_from__gte=${from}&created_to__lte=${to}${districtId && (`&district=${districtId}`)}`,
     OPTIONS,
     function(error, response) {
       //callback of the method here
@@ -363,9 +367,10 @@ exports.Appointments = function(status, from, to, callback) {
 };
 
 
-exports.users = function(role, callback) {
+exports.users = function(role,districtId='',callback) {
   api.get(
-    addr + "/api/v1/users?role="+role,
+    addr + `/api/v1/users?role=${role}${districtId && (`&district=${districtId}`)}`,
+    // addr + `/api/v1/users?role=${role}`,
     OPTIONS,function(error, response){
         //callback of the method here
          if(error){
@@ -431,6 +436,23 @@ exports.sendSms = function(data, callback) {
         return callback(error);
       } else {
         return callback(null, response);
+      }
+    }
+  );
+};
+exports.getDistricts = function(callback) {
+  api.get(
+    addr + "/api/v1/districts",
+    OPTIONS,
+    function(error, response) {
+      if (error) {
+        return callback(error);
+      } else {
+        if (response.status != 200) {
+          return callback("Could not get districts");
+        } else {
+          return callback(null, response.data);
+        }
       }
     }
   );

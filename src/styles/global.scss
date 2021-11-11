@@ -128,6 +128,25 @@ a:focus {
 .container-fluid {
   padding: 0;
 }
+// Top Nav bar
+.top-navbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#district-nav-dropdown{
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 11px;
+  text-decoration: none;
+}
+
+#district-nav{
+  list-style: none !important;
+  line-height: 60px;
+}
+
 .navbar-brand {
   color: #4cc4d4 !important;
   font-size: 24px;
@@ -366,6 +385,7 @@ a:focus {
     border-radius: 11px;
     list-style: none !important;
   }
+  
 }
 .checkboxWrapper {
   width: 18px;
@@ -766,7 +786,7 @@ Dashboard Cards
 .search-flex {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   align-content: center;
   padding: 5px;
