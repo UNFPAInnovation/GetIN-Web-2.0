@@ -7,11 +7,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 
 const VHT = React.lazy(() => import("./VHT"));
-const ChewModal = React.lazy(() => import("./Add/Vht"));
 const Midwives = React.lazy(() => import("./Midwife"));
-const MidwifeModal = React.lazy(() => import("./Add/Midwife"));
 const AmbulanceDrivers = React.lazy(() => import("./Ambulance"));
-const AmbulanceModal = React.lazy(() => import("./Add/Ambulance"));
 
 
 
@@ -40,7 +37,7 @@ export default class Users extends React.Component {
       }
 
     componentDidMount(){
-      //this.getChews();
+
     }
     handleChange(event) {
         const target = event.target;
@@ -59,20 +56,6 @@ export default class Users extends React.Component {
           <div className="col-md-12">
           <div className="col-md-12 title">
               <h4 className="pull-left"> <span><FontAwesomeIcon icon={faUsers} /></span> Users</h4>
-              {/* <button onClick={this.handleShow} className="">Add user</button> */}
-              <div className="pull-right">
-              <DropdownButton
-                  bsStyle={"primary"}
-                  title={"Add user"}
-                  key={4}
-                  id={"add-user-btn"}
-                >
-                  <MenuItem onClick={()=>this.handleShow("chew")} eventKey="1">VHT</MenuItem>
-                  <MenuItem onClick={()=>this.handleShow("midwife")} eventKey="2">Midwives</MenuItem>
-                  <MenuItem onClick={()=>this.handleShow("ambulance")} eventKey="3">Ambulance</MenuItem>
-                </DropdownButton> 
-              </div>
-              
               <br className="clear-both"/>
               <br className="clear-both"/>
             </div>
@@ -94,9 +77,6 @@ export default class Users extends React.Component {
         </Tabs>
         </div>
         </div>
-        <ChewModal handleClose={(d)=>this.handleClose(d)} show={this.state.chew}/>
-        <MidwifeModal handleClose={(d)=>this.handleClose(d)} show={this.state.midwife} />
-        <AmbulanceModal handleClose={(d)=>this.handleClose(d)} show={this.state.ambulance} />
         </React.Fragment>
       );
     }

@@ -11,14 +11,13 @@ const service = require('../api/services');
 export default function Header(){
 
   const [loggedInAs, setLoggedInAs] = useState('');
-  // const [loadedDistricts,setLoadedDistricts] = useState(false);
+  const [districts,setDistricts] = useState([]);
   const {updateDistrict, updateDistrictId} = useContext(GlobalContext);
 
   const logout = ()=>{
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("district");
-    // sessionStorage.removeItem("districts");
     sessionStorage.removeItem("role");
     alertifyjs.message("Logging out", 5);
     window.location.href = "/";
@@ -30,8 +29,7 @@ export default function Header(){
         return "Failed to load districts";
       }
       else{
-        sessionStorage.setItem('districts',JSON.stringify(response.results));
-        // setLoadedDistricts(true);
+        setDistricts(response.results.filter((district)=> district.id !== 7 && district.id !== 4 && district.id !== 2 ));
       }
     })
   
@@ -40,11 +38,9 @@ export default function Header(){
   useEffect(() => {
     let username = sessionStorage.getItem("username");
     setLoggedInAs(username);
-    getdistricts();
-    
+    getdistricts();  
   }, [])
 
-  let districts = JSON.parse(sessionStorage.getItem('districts'));
   let role = sessionStorage.getItem('role');
 
   return (

@@ -70,7 +70,7 @@ export default class SideNav extends Component {
     document.getElementById("messagesLink").classList.remove("active");
     document.getElementById("healthFacilitiesLink").classList.remove("active");
     document.getElementById("deliveriesLink").classList.remove("active");
-    document.getElementById("settingsLink").classList.remove("active");
+    sessionStorage.getItem('role') === 'manager' && document.getElementById("settingsLink").classList.remove("active");
 
     if (window.location.pathname === "/dashboard") {
       document.getElementById("dashboardLink").classList.add("active");
@@ -107,6 +107,7 @@ export default class SideNav extends Component {
 
   render() {
     let role = sessionStorage.getItem("role");
+    let district = sessionStorage.getItem('district');
     return (
       <div className={this.state.show ? "sideNav" : "sideNav hiddenMenu"}>
         <nav className="headerNav navbar navbar-default navbar-static-top">
@@ -114,7 +115,7 @@ export default class SideNav extends Component {
             <a className="navbar-brand" href="/dashboard">
               <img alt="GETIN" src={Logo} />
               <span className="brand">GetIN</span>
-              <span className="district">{this.context.district}</span>
+              <span className="district">{district !== 'undefined' ?district:this.context.district}</span>
             </a>
             <button
               type="button"
@@ -178,12 +179,14 @@ export default class SideNav extends Component {
                 <FontAwesomeIcon icon={faEnvelope} />
               </Link>
             </ListGroupItem>
-            <ListGroupItem id="settingsLink">
-              <Link to="/settings">
-                {this.state.mini === false && "Settings"}{" "}
-                <FontAwesomeIcon icon={faCog} />
-              </Link>
-            </ListGroupItem>
+            {role === 'manager' && (
+              <ListGroupItem id="settingsLink">
+                <Link to="/settings">
+                  {this.state.mini === false && "Settings"}{" "}
+                  <FontAwesomeIcon icon={faCog} />
+                </Link>
+              </ListGroupItem>
+            )}
           </ListGroup>
         </div>
       </div>

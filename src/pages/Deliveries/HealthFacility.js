@@ -124,15 +124,20 @@ export default class HealthFacility extends Component {
       });
     }
   }
-  deliveryFormatter(cell, row) {
-    if (row.mother_alive && row.baby_alive) {
-      return ("Mother Alive, Baby Alive");
-    } else if (!row.mother_alive && row.baby_alive) {
-      return ("Mother Dead, Baby Alive");
-    } else if (row.mother_alive && !row.baby_alive) {
-      return ("Mother Alive, Still Born");
-    } else if (row.mother_alive && !row.baby_alive) {
-      return ("Mother Dead, Still Born");
+  motherStatusFormatter(cell, row) {
+    if (row.mother_alive) {
+      return ("Mother Alive");
+    } else if (!row.mother_alive) {
+      return ("Mother Dead");
+    } else {
+      return ("Not recorded");
+    }
+  }
+  babyStatusFormatter(cell, row) {
+    if (row.baby_alive) {
+      return ("Baby Alive");
+    } else if (!row.baby_alive) {
+      return ("Baby Dead");
     } else {
       return ("Not recorded");
     }
@@ -341,8 +346,16 @@ export default class HealthFacility extends Component {
               eventKey={3.1}
             >
               {" "}
-              <Check state={this.state.manageColomns.delivery} /> Delivery
-              status
+              <Check state={this.state.manageColomns.delivery} /> 
+              Mother status
+            </MenuItem>
+            <MenuItem
+              onClick={(e, delivery) => this.updateTable("delivery")}
+              eventKey={3.1}
+            >
+              {" "}
+              <Check state={this.state.manageColomns.delivery} /> 
+              Baby status
             </MenuItem>
             <MenuItem
               onClick={(e, family_planning) =>
@@ -393,7 +406,7 @@ export default class HealthFacility extends Component {
                 dataFormat={nameFormatter}
                 csvFormat={nameFormatter}
                 dataSort={true}
-                width='300px'
+                width='150px'
                 dataField='Name'
               >
                 Mother
@@ -471,11 +484,19 @@ export default class HealthFacility extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.delivery}
-                dataFormat={this.deliveryFormatter}
-                csvFormat={this.deliveryFormatter}
-                dataField='delivery'
+                dataFormat={this.motherStatusFormatter}
+                csvFormat={this.motherStatusFormatter}
+                dataField="Mother's Status"
               >
-                Status of delivery
+                Status of Mother
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                hidden={this.state.manageColomns.delivery}
+                dataFormat={this.babyStatusFormatter}
+                csvFormat={this.babyStatusFormatter}
+                dataField="Baby's Status"
+              >
+                Status of Baby
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.family_planning}
