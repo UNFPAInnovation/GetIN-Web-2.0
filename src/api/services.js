@@ -91,6 +91,21 @@ exports.addAmbulance = function(data, callback) {
   );
 };
 
+exports.addHealthFacility = function(data, callback) {
+  api.post(
+    addr + "/api/v1/healthfacilities",
+    OPTIONS,
+    data,
+    function(error, response) {
+      if (error) {
+        return callback(error);
+      } else {
+        return callback(null, response);
+      }
+    }
+  );
+};
+
 exports.verifyToken = function(callback) {
   api.get(
     addr + "/auth/me/",
