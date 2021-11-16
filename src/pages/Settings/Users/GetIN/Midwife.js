@@ -4,9 +4,11 @@ import moment from "moment";
 import Check from "../../../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { GlobalContext } from "../../../../context/GlobalState";
 const Fuse = require("fuse.js");
 
 export default class Midwives extends Component {
+  static contextType = GlobalContext;
   constructor(props) {
     super(props);
 
@@ -24,13 +26,13 @@ export default class Midwives extends Component {
         .format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
-        email: false,
+        email: true,
         name: false,
         phone: false,
         gender: false,
         username: false,
         health_facility: false,
-        sub_county: false
+        sub_county: true
       },
       // remote pagination
       currentPage: 1,
@@ -44,12 +46,22 @@ export default class Midwives extends Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "users",
-        role: this.state.role
+        role: this.state.role,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -250,6 +262,7 @@ export default class Midwives extends Component {
                 exportCSV
               >
                 <TableHeaderColumn
+                  width='200px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={this.nameFormatter}
                   csvFormat={this.nameFormatter}
@@ -273,6 +286,7 @@ export default class Midwives extends Component {
                   Email
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  width='200px'
                   hidden={this.state.manageColomns.health_facility}
                   dataFormat={this.healthFormatter}
                   csvFormat={this.healthFormatter}

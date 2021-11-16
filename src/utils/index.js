@@ -1,4 +1,3 @@
-/* eslint-disable */
 import moment from "moment";
 import _ from "underscore";
 
@@ -151,6 +150,6 @@ export const hideRowIfRecordExists = (row, appointments) => {
         return e.id;
       })
       .indexOf(row.id);
-    return indexOfGirl != 0 && "tr-hidden";
+    return indexOfGirl !== 0 && "tr-hidden";
   }
 };

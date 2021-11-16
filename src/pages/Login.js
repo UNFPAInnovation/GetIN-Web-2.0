@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import '../styles/Login.scss';
 import Logo from '../assets/images/Logo.png';
@@ -68,6 +67,7 @@ export default class Login extends Component {
                 <img
                   className='text-center loginLogo'
                   src={Logo}
+                  alt="GetIn logo"
                 />
               </div>
 

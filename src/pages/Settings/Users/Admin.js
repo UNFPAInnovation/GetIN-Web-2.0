@@ -23,7 +23,7 @@ export default class VHT extends Component {
       to: moment(endOfDay).local().format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
-        email: false,
+        email: true,
         name: false,
         phone: false,
         gender: false,

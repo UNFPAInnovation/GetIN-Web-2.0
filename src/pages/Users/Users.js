@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-import {Tabs, Tab, Modal, DropdownButton, MenuItem} from 'react-bootstrap';
+import {Tabs, Tab} from 'react-bootstrap';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 
@@ -12,7 +11,7 @@ const AmbulanceDrivers = React.lazy(() => import("./Ambulance"));
 
 
 
-export default class Users extends React.Component {
+export default class Users extends Component {
     constructor(props, context) {
       super(props, context);
       this.state = {
@@ -36,9 +35,6 @@ export default class Users extends React.Component {
         this.setState({ [modal]: true });
       }
 
-    componentDidMount(){
-
-    }
     handleChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;

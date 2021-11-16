@@ -1,8 +1,6 @@
-/* eslint-disable */
 const axios = require('axios');
 exports.get =  function(requesturl="", headers={}, callback){
   let error_ = null;
-  let data_ = {};
   axios({
     method: 'get',
     url: requesturl,
@@ -10,7 +8,6 @@ exports.get =  function(requesturl="", headers={}, callback){
     headers: headers,
   })
   .then(function(res){
-    data_ = res.data;
     return callback(error_, res);
   })
   .catch(function (error) {
@@ -41,11 +38,6 @@ exports.html =  function(requesturl="", headers={}, callback){
 exports.post =  function(requesturl="", headers={}, data_sent={}, callback){
   let error_ = null;
   let data_ = {};
-  const encodeForm = (data) => {
-    return Object.keys(data)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-        .join('&');
-  }
   axios({
     method: 'post',
     url: requesturl,

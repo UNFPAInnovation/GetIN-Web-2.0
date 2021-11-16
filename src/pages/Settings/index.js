@@ -34,9 +34,6 @@ export default class Users extends React.Component {
         this.setState({ [modal]: true });
       }
 
-    componentDidMount(){
-      //this.getChews();
-    }
     handleChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;

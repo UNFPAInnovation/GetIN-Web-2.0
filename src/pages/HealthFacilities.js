@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +9,7 @@ import { fromInitialDate, endOfDay, getData } from "../utils/index";
 import {GlobalContext} from '../context/GlobalState';
 const Fuse = require("fuse.js");
 
-export default class HealthFacilities extends React.Component {
+export default class HealthFacilities extends Component {
   static contextType = GlobalContext;
 
   constructor(props, context) {
@@ -31,7 +30,7 @@ export default class HealthFacilities extends React.Component {
         subcounty: false,
         midwives: false,
         vhts: false,
-        level: false,
+        level: true,
         av_deliveries: false,
         ambulances: false
       },
@@ -292,7 +291,6 @@ export default class HealthFacilities extends React.Component {
                     pagination={true}
                     options={options}
                     exportCSV
-                    pagination
                   >
                     <TableHeaderColumn
                       isKey={true}
@@ -303,6 +301,7 @@ export default class HealthFacilities extends React.Component {
                       #
                     </TableHeaderColumn>
                     <TableHeaderColumn
+                      width='200px'
                       hidden={this.state.manageColomns.name}
                       dataSort={true}
                       dataField='name'
@@ -310,6 +309,7 @@ export default class HealthFacilities extends React.Component {
                       Name
                     </TableHeaderColumn>
                     <TableHeaderColumn
+                      width='200px'
                       hidden={this.state.manageColomns.subcounty}
                       dataFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
                       csvFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
