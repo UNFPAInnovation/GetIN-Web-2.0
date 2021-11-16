@@ -1,19 +1,160 @@
 import React, { Component } from "react";
-// import _ from "underscore";
 import { Modal } from "react-bootstrap";
-// const alertifyjs = require("alertifyjs");
-// const service = require("../../../api/services");
+const alertifyjs = require("alertifyjs");
+const service = require("../../../api/services");
 
 export default class HealthFacilityModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
-    }
+      facilityName: '',
+      facilityLevel: '',
+      district: '',
+      parish: '',
+      county:'',
+      subCounty:'',
+      village:'',
+      districts:[],
+      parishes:[],
+      counties:[],
+      subcounties:[],
+      villages:[],
+      isLoading:false
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.addHealthFacilty = this.addHealthFacilty.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  getDistricts() {
+    const thisApp = this;
+    service.getDistricts(function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          districts: []
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          districts: response.results
+        });
+      }
+    });
+  }
+
+  getParishes() {
+    const thisApp = this;
+    service.getParishes(function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: []
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: response.results
+        });
+      }
+    });
+  }
+
+  getVillages() {
+    const thisApp = this;
+    service.getVillages(function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          villages: []
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          villages: response.results
+        });
+      }
+    });
+  }
+
+  getSubCounties() {
+    const thisApp = this;
+    service.getSubCounties(function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: []
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: response.results
+        });
+      }
+    });
+  }
+
+  getCounties() {
+    const thisApp = this;
+    service.getSubCounties(function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          counties: []
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          counties: response.results
+        });
+      }
+    });
+  }
+
+  addHealthFacilty(e) {
+    e.preventDefault();
+    const thisApp = this;
+    service.addHealthFacility(
+      {
+        name: this.state.facilityName,
+        sub_county_id: this.state.subCounty,
+        facility_level: this.state.facilityLevel,
+        district: this.state.district,
+        parish: this.state.parish,
+        county: this.state.county,
+        village:this.state.village,
+      },
+      function(error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true
+        });
+        alertifyjs.error("Request failed, try again ", function () {});
+      } else {
+        thisApp.setState({
+          isLoaded: true
+        });
+        alertifyjs.success("Added successfully", 2, function () {});
+        window.location.reload();
+      }
+    });
   }
 
   componentDidMount() {
-
+    this.getDistricts();
+    this.getParishes();
+    this.getVillages();
+    this.getSubCounties();
+    this.getCounties();
   }
 
   render() {
@@ -26,16 +167,16 @@ export default class HealthFacilityModal extends Component {
           <Modal.Title>Add a new Health Facility</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form>
+          <form onSubmit={this.addHealthFacilty}>
             <div className="col-md-12">
               <div className="form-group col-md-6">
                 <label>Health Facility Name:</label>
                 <input
                   required
                   type="text"
-                //   onChange={/*No function yet*/}
-                  name="FacilityName"
-                //   value={'Facility Name'}
+                  onChange={this.handleChange}
+                  name="facilityName"
+                  value={this.state.facilityName}
                   className="form-control"
                   placeholder="Facility HC II"
                   autoFocus={true}
@@ -47,9 +188,9 @@ export default class HealthFacilityModal extends Component {
                 <select
                   required
                   className="form-control"
-                  name="district"
-                //   onChange={/*No function yet*/}
-                //   value={'Level'}
+                  name="facilityLevel"
+                  onChange={this.handleChange}
+                  value={this.facilityLevel}
                 >
                   <option defaultValue value={null}>
                     Select Level
@@ -70,33 +211,22 @@ export default class HealthFacilityModal extends Component {
             <div className="col-md-12">
               <br className="clear-both" />
               <div className="form-group col-md-6">
-                <label>Midwife</label>
-                <select
-                  required
-                  className="form-control"
-                  name="midwife"
-                //   onChange={/*No function yet*/}
-                //   value={'midwife'}
-                >
-                  <option defaultValue value={null}>
-                    Select Midwife
-                  </option>
-                  {/* Map array of midwives */}
-                </select>
-              </div>
-              <div className="form-group col-md-6">
                 <label>District</label>
                 <select
                   required
                   className="form-control"
                   name="district"
-                //   onChange={/*No function yet*/}
-                //   value={'district'}
+                  onChange={this.handleChange}
+                  value={this.state.district}
                 >
                   <option defaultValue value={null}>
                     Select District
                   </option>
-                  {/*Map array of districts*/}
+                  {this.state.districts?(this.state.districts.map(district=>{
+                    return(
+                      <option key={district.id} defaultValue value={district.name}>{district.name}</option>
+                    )
+                  })):'Loading ...'}
                 </select>
               </div>
 
@@ -106,13 +236,17 @@ export default class HealthFacilityModal extends Component {
                   required
                   className="form-control"
                   name="subCounty"
-                //   onChange={/*No function yet*/}
-                //   value={'subCounty'}
+                  onChange={this.handleChange}
+                  value={this.state.subCounty}
                 >
                   <option defaultValue value={null}>
                     Select Subcounty
                   </option>
-                  {/*Map array of subcounties*/}
+                  {this.state.subcounties?(this.state.subcounties.map(subcounty=>{
+                    return(
+                      <option key={subcounty.id} defaultValue value={subcounty.id}>{subcounty.name}</option>
+                    )
+                  })):'Loading ...'}
                 </select>
               </div>
 
@@ -121,30 +255,18 @@ export default class HealthFacilityModal extends Component {
                 <select
                   required
                   className="form-control"
-                  name="Village"
-                //   onChange={/*No function yet*/}
-                //   value={'village'}
+                  name="village"
+                  onChange={this.handleChange}
+                  value={this.state.village}
                 >
                   <option defaultValue value={null}>
                     Select Village
                   </option>
-                  {/*Map array of villages*/}
-                </select>
-              </div>
-
-              <div className="form-group col-md-6">
-                <label>VHT's</label>
-                <select
-                  required
-                  className="form-control"
-                  name="VHT's"
-                //   onChange={/*No function yet*/}
-                //   value={'vhts'}
-                >
-                  <option defaultValue value={null}>
-                    Select VHT's
-                  </option>
-                  {/*Map array of VHT's*/}
+                  {this.state.villages?this.state.villages.map(village=>{
+                    return(
+                      <option key={village.id} defaultValue value={village.name}>{village.name}</option>
+                    )
+                  }):'Loading ...'}
                 </select>
               </div>
 
@@ -154,13 +276,17 @@ export default class HealthFacilityModal extends Component {
                   required
                   className="form-control"
                   name="county"
-                //   onChange={/*No function yet*/}
-                //   value={'county'}
+                  onChange={this.handleChange}
+                  value={this.state.county}
                 >
                   <option defaultValue value={null}>
                     Select County
                   </option>
-                  {/*Map array of counties*/}
+                  {this.state.counties?this.state.counties.map(county=>{
+                    return(
+                      <option key={county.id} defaultValue value={county.name}>{county.name}</option>
+                    )
+                  }):'Loading ...'}
                 </select>
               </div>
 
@@ -170,13 +296,17 @@ export default class HealthFacilityModal extends Component {
                   required
                   className="form-control"
                   name="parish"
-                //   onChange={/*No function yet*/}
-                //   value={'parish'}
+                  onChange={this.handleChange}
+                  value={this.state.parish}
                 >
                   <option defaultValue value={null}>
                     Select Parish
                   </option>
-                  {/*Map array of parishes*/}
+                  {this.state.parishes?this.state.parishes.map(parish=>{
+                    return(
+                      <option key={parish.id} defaultValue value={parish.name}>{parish.name}</option>
+                    )
+                  }):'Loading ...'}
                 </select>
               </div>
 
