@@ -29,7 +29,7 @@ export default class HealthFacilities extends Component {
         subcounty: false,
         midwives: false,
         vhts: false,
-        level: false,
+        level: true,
         av_deliveries: false,
         ambulances: false
       },
@@ -81,7 +81,7 @@ export default class HealthFacilities extends Component {
     const thisApp = this;
     getData(
       {
-        name: "getHealthFacilities",
+        name: "getHealthFacilitiesByDistrict",
         districtId: this.context.districtId
       },
       function(error, response) {
@@ -313,6 +313,7 @@ export default class HealthFacilities extends Component {
                       #
                     </TableHeaderColumn>
                     <TableHeaderColumn
+                      width='200px'
                       hidden={this.state.manageColomns.name}
                       dataSort={true}
                       dataField='name'
@@ -320,6 +321,7 @@ export default class HealthFacilities extends Component {
                       Name
                     </TableHeaderColumn>
                     <TableHeaderColumn
+                      width='200px'
                       hidden={this.state.manageColomns.subcounty}
                       dataFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}
                       csvFormat={(cell, row, item)=>this.getSubCountyName(cell, row, 'name')}

@@ -1,4 +1,3 @@
-/* eslint-disable */
 const api = require("./index");
 const addr = require("../env_config").default;
 const sessionStorage = window.sessionStorage;
@@ -114,7 +113,7 @@ exports.verifyToken = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Not authorized, please login");
         } else {
           return callback(null, response.data);
@@ -131,7 +130,7 @@ exports.usersChew = function(callback) {
          if(error){
             return callback(error);
          }else{
-              if (response.status != 200) {
+              if (response.status !== 200) {
                  return callback("Couldnt get chews");
              }
               else{
@@ -147,7 +146,7 @@ exports.getHealthFacilitiesByDistrict =  function(districtId='',callback){
         if(error){
            return callback(error);
         }else{
-             if (response.status != 200) {
+             if (response.status !== 200) {
                 return callback("Couldnt get health facilities");
             }
              else{
@@ -165,7 +164,7 @@ exports.usersMidwives =  function(callback){
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnt get chews");
         } else {
           return callback(null, response.data);
@@ -183,7 +182,7 @@ exports.usersMidwives = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldn't get midwives");
         } else {
           return callback(null, response.data);
@@ -202,7 +201,7 @@ exports.usersAmbulanceDrivers = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldn't get ambulance drivers");
         } else {
           return callback(null, response.data);
@@ -219,7 +218,7 @@ exports.followUps =  function(from, to,districtId='', callback){
         if(error){
            return callback(error);
         }else{
-             if (response.status != 200) {
+             if (response.status !== 200) {
                 return callback("Couldnot get follow ups");
             }
              else{
@@ -238,7 +237,7 @@ exports.getVillages = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get subcounties");
         } else {
           return callback(null, response.data);
@@ -256,7 +255,7 @@ exports.mappedGirls = function(from, to, callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get mapped girls");
         } else {
           return callback(null, response.data);
@@ -276,7 +275,7 @@ exports.mappedGirlsEncounter = function(from, to,districtId, callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get mapped girls");
         } else {
           return callback(null, response.data);
@@ -295,7 +294,7 @@ exports.deliveries = function(delivery_location, from, to,districtId='', callbac
        if (error) {
          return callback(error);
        } else {
-         if (response.status != 200) {
+         if (response.status !== 200) {
            return callback("Failed get deliveries");
          } else {
            return callback(null, response.data);
@@ -313,7 +312,7 @@ exports.getSubCounties = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get subcounties");
         } else {
           return callback(null, response.data);
@@ -332,7 +331,7 @@ exports.getHealthFacilities = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get subcounties");
         } else {
           return callback(null, response.data);
@@ -351,7 +350,7 @@ exports.getParishes = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get parishes");
         } else {
           return callback(null, response.data);
@@ -371,7 +370,7 @@ exports.Appointments = function(status, from, to,districtId='', callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Couldnot get appointments");
         } else {
           return callback(null, response.data);
@@ -391,7 +390,7 @@ exports.users = function(role,districtId='',callback) {
          if(error){
             return callback(error);
          }else{
-              if (response.status != 200) {
+              if (response.status !== 200) {
                  return callback("Couldnt get users");
              }
               else{
@@ -411,7 +410,7 @@ exports.listSms = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Could not get sent sms");
         } else {
           return callback(null, response.data);
@@ -430,7 +429,7 @@ exports.getAllUsers = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Could not get users");
         } else {
           return callback(null, response.data);
@@ -463,7 +462,7 @@ exports.getDistricts = function(callback) {
       if (error) {
         return callback(error);
       } else {
-        if (response.status != 200) {
+        if (response.status !== 200) {
           return callback("Could not get districts");
         } else {
           return callback(null, response.data);

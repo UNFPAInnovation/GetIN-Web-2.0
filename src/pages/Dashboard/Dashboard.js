@@ -26,12 +26,6 @@ import {GlobalContext} from '../../context/GlobalState';
 
 import { fromInitialDate } from "../../utils/index";
 
-// const startOfMonth = moment()
-//   .subtract(1, "months")
-//   .date(1)
-//   .local()
-//   .format("YYYY-MM-DD");
-
 const todaysDate = moment()
   .local()
   .format("YYYY-MM-DD");

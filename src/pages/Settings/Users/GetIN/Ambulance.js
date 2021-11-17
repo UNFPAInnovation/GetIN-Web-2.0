@@ -8,9 +8,11 @@ import moment from "moment";
 import Check from "../../../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { GlobalContext } from "../../../../context/GlobalState";
 const Fuse = require("fuse.js");
 
 export default class AmbulanceDrivers extends Component {
+  static contextType = GlobalContext;
   constructor(props) {
     super(props);
 
@@ -28,11 +30,11 @@ export default class AmbulanceDrivers extends Component {
         .format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
-        email: false,
+        email: true,
         name: false,
         gender: false,
         username: false,
-        parish: false,
+        parish: true,
         phone: false,
         number_plate: false
       },
@@ -48,12 +50,22 @@ export default class AmbulanceDrivers extends Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "users",
-        role: this.state.role
+        role: this.state.role,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -247,6 +259,7 @@ export default class AmbulanceDrivers extends Component {
                 exportCSV
               >
                 <TableHeaderColumn
+                  width='200px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={this.nameFormatter}
                   csvFormat={this.nameFormatter}

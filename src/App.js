@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component, Suspense } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
@@ -33,7 +32,7 @@ class App extends Component {
     };
     this.IsAdminLoggedin.bind(this);
     this.loginValidate.bind(this);
-    if (window.location.pathname == "/") {
+    if (window.location.pathname === "/") {
       this.loginValidate();
     } else {
       this.IsAdminLoggedin();

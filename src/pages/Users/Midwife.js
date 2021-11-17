@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { fromInitialDate, endOfDay, getData } from "../../utils/index";
 import moment from "moment";
@@ -262,7 +261,6 @@ export default class Midwives extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.name}

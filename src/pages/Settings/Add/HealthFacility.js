@@ -10,15 +10,11 @@ export default class HealthFacilityModal extends Component {
       facilityName: '',
       facilityLevel: '',
       district: '',
-      parish: '',
       county:'',
       subCounty:'',
-      village:'',
       districts:[],
-      parishes:[],
       counties:[],
       subcounties:[],
-      villages:[],
       isLoading:false
     };
 
@@ -46,41 +42,7 @@ export default class HealthFacilityModal extends Component {
       } else {
         thisApp.setState({
           isLoaded: true,
-          districts: response.results
-        });
-      }
-    });
-  }
-
-  getParishes() {
-    const thisApp = this;
-    service.getParishes(function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          parishes: []
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          parishes: response.results
-        });
-      }
-    });
-  }
-
-  getVillages() {
-    const thisApp = this;
-    service.getVillages(function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          villages: []
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          villages: response.results
+          districts: response.results.filter((district)=> district.id !== 7 && district.id !== 4 && district.id !== 2 )
         });
       }
     });
@@ -129,9 +91,7 @@ export default class HealthFacilityModal extends Component {
         sub_county_id: this.state.subCounty,
         facility_level: this.state.facilityLevel,
         district: this.state.district,
-        parish: this.state.parish,
-        county: this.state.county,
-        village:this.state.village,
+        county: this.state.county
       },
       function(error, response) {
       if (error) {
@@ -151,8 +111,6 @@ export default class HealthFacilityModal extends Component {
 
   componentDidMount() {
     this.getDistricts();
-    this.getParishes();
-    this.getVillages();
     this.getSubCounties();
     this.getCounties();
   }
@@ -249,27 +207,7 @@ export default class HealthFacilityModal extends Component {
                   })):'Loading ...'}
                 </select>
               </div>
-
-              <div className="form-group col-md-6">
-                <label>Village</label>
-                <select
-                  required
-                  className="form-control"
-                  name="village"
-                  onChange={this.handleChange}
-                  value={this.state.village}
-                >
-                  <option defaultValue value={null}>
-                    Select Village
-                  </option>
-                  {this.state.villages?this.state.villages.map(village=>{
-                    return(
-                      <option key={village.id} defaultValue value={village.name}>{village.name}</option>
-                    )
-                  }):'Loading ...'}
-                </select>
-              </div>
-
+              
               <div className="form-group col-md-6">
                 <label>County</label>
                 <select
@@ -289,27 +227,7 @@ export default class HealthFacilityModal extends Component {
                   }):'Loading ...'}
                 </select>
               </div>
-
-              <div className="form-group col-md-6">
-                <label>Parish</label>
-                <select
-                  required
-                  className="form-control"
-                  name="parish"
-                  onChange={this.handleChange}
-                  value={this.state.parish}
-                >
-                  <option defaultValue value={null}>
-                    Select Parish
-                  </option>
-                  {this.state.parishes?this.state.parishes.map(parish=>{
-                    return(
-                      <option key={parish.id} defaultValue value={parish.name}>{parish.name}</option>
-                    )
-                  }):'Loading ...'}
-                </select>
-              </div>
-
+              
               <br className="clear-both" />
               <div className="row">
                 <div className="col-md-offset-9 col-md-2">

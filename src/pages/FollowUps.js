@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -442,10 +441,9 @@ export default class FollowUps extends Component {
                 options={options}
                 exportCSV
                 condensed
-                pagination
               >
                 <TableHeaderColumn
-                  width='220px'
+                  width='200px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}

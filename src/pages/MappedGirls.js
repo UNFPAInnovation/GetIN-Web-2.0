@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,7 +41,7 @@ export default class MappedGirls extends Component {
         village: true,
         vht: true,
         name: false,
-        redeemed_service: false,
+        redeemed_service: true,
         trimester: true,
         next_of_kin_name: true,
         education_level: true,
@@ -219,12 +218,10 @@ export default class MappedGirls extends Component {
     }
   }
   familyPlanningFormatter(cell, row) {
-    let familyPlanning = "";
     if (row.family_planning[0].using_family_planning) {
-      return (familyPlanning = "Yes, " + row.family_planning[0].method);
+      return ("Yes, " + row.family_planning[0].method);
     } else {
-      return (familyPlanning =
-        "None, " + row.family_planning[0].no_family_planning_reason);
+      return ("None, " + row.family_planning[0].no_family_planning_reason);
     }
   }
   observationFormatter(cell, row, item) {
@@ -525,10 +522,9 @@ export default class MappedGirls extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
-                  width="150px"
+                  width="200px"
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
