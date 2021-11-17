@@ -155,6 +155,9 @@ export default class MappedGirls extends Component {
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
   }
+  getPhone(cell, row) {
+    return row.girl.phone_number;
+  }
   getVHT(cell, row) {
     return `${row.user.first_name} ${row.user.last_name} ${row.user.phone}`;
   }
@@ -320,6 +323,13 @@ export default class MappedGirls extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.name} /> Name
+              </MenuItem>
+              <MenuItem
+                onClick={(e, phone_number) => this.updateTable("phone_number")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.phone_number} /> Phone
               </MenuItem>
 
               <MenuItem
@@ -518,7 +528,7 @@ export default class MappedGirls extends Component {
                 pagination
               >
                 <TableHeaderColumn
-                  width="300px"
+                  width="150px"
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
@@ -529,11 +539,12 @@ export default class MappedGirls extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   dataSort={true}
-                  hidden={true}
-                  isKey
-                  dataField="phone_number"
+                  hidden={this.state.manageColomns.phone_number}
+                  dataField="phone_number" 
+                  dataFormat={this.getPhone}
+                  csvFormat={this.getPhone}
                 >
-                  Phone number
+                  Phone
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.village}
@@ -672,6 +683,7 @@ export default class MappedGirls extends Component {
                   csvFormat={this.dateFormatter}
                   dataSort={true}
                   dataField="created_at"
+                  isKey
                 >
                   Date Mapped
                 </TableHeaderColumn>

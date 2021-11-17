@@ -37,9 +37,7 @@ export const nameFormatter = function(cell, row) {
   return (
     row.girl.first_name +
     " " +
-    row.girl.last_name +
-    " - " +
-    row.girl.phone_number
+    row.girl.last_name
   );
 };
 export const chewFormatter = function(cell, row) {

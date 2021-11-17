@@ -126,15 +126,21 @@ export default class Home extends Component {
       });
     }
   }
-  deliveryFormatter(cell, row) {
-    if (row.mother_alive && row.baby_alive) {
-      return ("Mother Alive, Baby Alive");
-    } else if (!row.mother_alive && row.baby_alive) {
-      return ("Mother Dead, Baby Alive");
-    } else if (row.mother_alive && !row.baby_alive) {
-      return ("Mother Alive, Baby Dead");
-    } else if (!row.mother_alive && !row.baby_alive) {
-      return ("Mother Dead, Baby Dead");
+  motherStatusFormatter(cell, row) {
+    if (row.mother_alive) {
+      return ("Mother Alive");
+    } else if (!row.mother_alive) {
+      return ("Mother Dead");
+    } else {
+      return ("Not recorded");
+    }
+  }
+
+  babyStatusFormatter(cell, row) {
+    if (row.baby_alive) {
+      return ("Baby Alive");
+    } else if (!row.baby_alive) {
+      return ("Baby Dead");
     } else {
       return ("Not recorded");
     }
@@ -342,8 +348,16 @@ export default class Home extends Component {
               eventKey={3.1}
             >
               {" "}
-              <Check state={this.state.manageColomns.delivery} /> Delivery
-              status
+              <Check state={this.state.manageColomns.delivery} /> 
+              Baby's Status
+            </MenuItem>
+            <MenuItem
+              onClick={(e, delivery) => this.updateTable("delivery")}
+              eventKey={3.1}
+            >
+              {" "}
+              <Check state={this.state.manageColomns.delivery} /> 
+              Mother's Status
             </MenuItem>
             <MenuItem
               onClick={(e, family_planning) =>
@@ -390,7 +404,7 @@ export default class Home extends Component {
               condensed
             >
               <TableHeaderColumn
-                width='220px'
+                width='150px'
                 hidden={this.state.manageColomns.name}
                 dataFormat={nameFormatter}
                 csvFormat={nameFormatter}
@@ -472,11 +486,19 @@ export default class Home extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.delivery}
-                dataFormat={this.deliveryFormatter}
-                csvFormat={this.deliveryFormatter}
-                dataField='delivery'
+                dataFormat={this.motherStatusFormatter}
+                csvFormat={this.motherStatusFormatter}
+                dataField="Mother's Status"
               >
-                Status of delivery
+                Status of Mother
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                hidden={this.state.manageColomns.delivery}
+                dataFormat={this.babyStatusFormatter}
+                csvFormat={this.babyStatusFormatter}
+                dataField="Baby's Status"
+              >
+                Status of Baby
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.family_planning}

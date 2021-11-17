@@ -49,11 +49,11 @@ const AgeGroupOfMappedGirlsPieChart = data => {
             ).reduce((a, b) => a + b, 0)
           },
           {
-            name: '20-24 year olds',
+            name: '20-50 year olds',
             y: aggregateAgesByMonth(
               data,
               months,
-              'mappedGirlsInAgeGroup20_24'
+              'mappedGirlsInAgeGroup20_50'
             ).reduce((a, b) => a + b, 0)
           }
         ]
