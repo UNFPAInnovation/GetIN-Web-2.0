@@ -14,10 +14,11 @@ export default class VHT extends Component {
     super(props);
 
     this.state = {
-      modal:false,
+      modal: false,
       users: [],
       users_copy: [],
       search: null,
+      updateObj: null,
       isLoaded: false,
       loadingText: "Loading ..",
       role: "chew",
@@ -43,6 +44,7 @@ export default class VHT extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.actionsFormatter = this.actionsFormatter.bind(this);
   }
   handleClose(modal) {
     this.setState({ [modal]: false });
@@ -55,9 +57,9 @@ export default class VHT extends Component {
     this.loadData();
   }
 
-  componentDidUpdate(){
-    if(this.context.change){
-      this.setState({isLoaded:false});
+  componentDidUpdate() {
+    if (this.context.change) {
+      this.setState({ isLoaded: false });
       this.loadData();
       this.context.contextChange(false);
     }
@@ -69,7 +71,7 @@ export default class VHT extends Component {
       {
         name: "users",
         role: this.state.role,
-        districtId:this.context.districtId
+        districtId: this.context.districtId,
       },
       function (error, response) {
         if (error) {
@@ -138,8 +140,19 @@ export default class VHT extends Component {
       row.village && row.village.parish && row.village.parish.sub_county.name
     );
   }
+  isActiveFormatter(cell, row){
+    return cell ? "Active" : "Deactivated";
+  }
   actionsFormatter(cell, row) {
-    return <button>View</button>;
+    return (
+      <button
+        onClick={() =>
+          this.setState({ updateObj: row }, () => this.handleShow("modal"))
+        }
+      >
+        View
+      </button>
+    );
   }
   handleInputChange(event) {
     const target = event.target;
@@ -318,6 +331,12 @@ export default class VHT extends Component {
                 >
                   Username
                 </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="is_active"
+                  dataFormat={this.isActiveFormatter}
+                >
+                  Status
+                </TableHeaderColumn>
                 <TableHeaderColumn dataFormat={this.actionsFormatter}>
                   Actions
                 </TableHeaderColumn>
@@ -327,10 +346,13 @@ export default class VHT extends Component {
             )}
           </div>
         </div>
-        <UpdateModal
-          handleClose={(d) => this.handleClose(d)}
-          show={this.state.modal}
-        />
+        {this.state.updateObj && (
+          <UpdateModal
+            handleClose={(d) => this.handleClose(d)}
+            show={this.state.modal}
+            data={this.state.updateObj}
+          />
+        )}
       </div>
     );
   }

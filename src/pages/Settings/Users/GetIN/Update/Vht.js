@@ -8,6 +8,7 @@ export default class ChewModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       first_name: null,
       last_name: null,
       username: null,
@@ -20,10 +21,10 @@ export default class ChewModal extends Component {
       villages: [],
       villages_copy: [],
       sub_counties: [],
-      loading: false
+      loading: false,
+      is_active: true,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.updateVillagesList = this.updateVillagesList.bind(this);
   }
   handleChange(event) {
     const target = event.target;
@@ -31,23 +32,24 @@ export default class ChewModal extends Component {
     const name = target.name;
     this.setState(
       {
-        [name]: value
+        [name]: value,
       },
-      function() {
+      function () {
         if (name === "sub_county") {
-          this.updateVillagesList();
+          //this.updateVillagesList();
         }
       }
     );
   }
-  addChew(e) {
+  updateChew(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
-      loading: true
+      loading: true,
     });
-    alertifyjs.message("Adding CHEW..", 2, function() {});
-    service.addUser(
+    alertifyjs.message("Updating CHEW..", 2, function () {});
+    service.updateChew(
+      this.state.id,
       {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
@@ -57,146 +59,145 @@ export default class ChewModal extends Component {
         village: this.state.village,
         password: this.state.password,
         phone: this.state.phone_number,
-        role: "chew"
+        role: "chew",
       },
-      function(error, response) {
+      function (error, response) {
         if (error) {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.error("Request failed, try again ", function() {});
+          alertifyjs.error("Request failed, try again ", function () {});
         } else {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.success("Added successfully", 2, function() {});
+          alertifyjs.success("Updated successfully", 2, function () {});
           window.location.reload();
         }
       }
     );
   }
-  getVillages() {
+  updateStatus() {
     const thisApp = this;
     thisApp.setState({
-      villages: [],
-      villages_copy: [],
-      loadingText: "Loading..."
+      loading: true,
     });
-    service.getVillages(function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          villages: []
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          villages: response.results,
-          villages_copy: response.results
-        });
-      }
-    });
-  }
-  getSubCounties() {
-    const thisApp = this;
-    thisApp.setState({
-      sub_counties: [],
-      sub_counties_copy: [],
-      loadingText: "Loading..."
-    });
-
-    service.getSubCounties(function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: []
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: response.results
-        });
-      }
-    });
-  }
-  updateVillagesList() {
-    const thisApp = this;
-    if (thisApp.state.sub_county) {
-      let subcounty_villages = _.filter(
-        thisApp.state.villages_copy,
-        function(village) {
-          return (
-            village.parish.sub_county.id === parseInt(thisApp.state.sub_county)
-          );
+    alertifyjs.message(`${this.state.is_active ?("Activating"):("Deactivating")}`, 2, function () {});
+    service.updateChew(
+      this.state.id,
+      {
+        is_active: this.state.is_active,
+      },
+      function (error, response) {
+        if (error) {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.error("Request failed, try again ", function () {});
+        } else {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.success("Updated successfully", 2, function () {});
+          window.location.reload();
         }
-
-        //village.parish.sub_county.id === this.state.sub_county;
-      );
-      thisApp.setState({
-        villages: subcounty_villages,
-        village: null
-      });
-    }
+      }
+    );
   }
+
   componentDidMount() {
-    this.getVillages();
-    this.getSubCounties();
+    const updateData = this.props.data;
+    console.log(updateData);
+    this.setState({
+      id: updateData.id,
+      first_name: updateData.first_name,
+      last_name: updateData.last_name,
+      username: updateData.username,
+      password: updateData.password,
+      gender: updateData.gender,
+      email: updateData.email,
+      phone_number: updateData.phone,
+      is_active: updateData.is_active,
+      // village: updateData.village.name,
+      // subcounty: updateData.village.parish.subcounty.name,
+    });
   }
   render() {
     return (
       <Modal
         show={this.props.show}
-        onHide={() => this.props.handleClose("chew")}
+        onHide={() => this.props.handleClose("modal")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Update VHT</Modal.Title>
+          <div className="row">
+            <div className="col-md-10">
+              <Modal.Title>
+                <span> Update VHT</span>{" "}
+              </Modal.Title>
+            </div>
+            <div className="col-md-2">
+              <button
+                className={`btn btn-sm ${
+                  this.state.is_active ? "btn-danger" : "btn-success"
+                }`}
+                onClick={() =>
+                  this.setState(
+                    { is_active: this.state.is_active ? false : true },
+                    () => this.updateStatus()
+                  )
+                }
+              >
+                {this.state.is_active ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </div>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={e => this.addChew(e)}>
-            <div className='col-md-12'>
-              <div className='form-group col-md-6'>
+          <form onSubmit={(e) => this.updateChew(e)}>
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>First name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='first_name'
+                  name="first_name"
                   value={this.state.first_name}
-                  className='form-control'
-                  placeholder='John'
+                  className="form-control"
+                  placeholder="John"
                   autoFocus={true}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Last name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='last_name'
+                  name="last_name"
                   value={this.state.last_name}
-                  className='form-control'
-                  placeholder='Musoke'
+                  className="form-control"
+                  placeholder="Musoke"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Phone number</label>
                 <input
                   required
-                  type='tel'
+                  type="tel"
                   onChange={this.handleChange}
-                  name='phone_number'
+                  name="phone_number"
                   value={this.state.phone_number}
-                  className='form-control'
-                  placeholder='070XXXXXX'
+                  className="form-control"
+                  placeholder="070XXXXXX"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Gender</label>
                 <select
                   required
-                  className='form-control'
-                  name='gender'
+                  className="form-control"
+                  name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
                 >
@@ -207,51 +208,51 @@ export default class ChewModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className='form-group col-md-12'>
+              <div className="form-group col-md-12">
                 <label>Email address</label>
                 <input
-                  type='email'
-                  className='form-control'
-                  name='email'
+                  type="email"
+                  className="form-control"
+                  name="email"
                   onChange={this.handleChange}
                   value={this.state.email}
-                  placeholder='jmusoke@gmail.com'
+                  placeholder="jmusoke@gmail.com"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Username</label>
                 <input
                   required
-                  type='text'
-                  className='form-control'
-                  name='username'
+                  type="text"
+                  className="form-control"
+                  name="username"
                   onChange={this.handleChange}
                   value={this.state.username}
-                  placeholder='jmusoke'
+                  placeholder="jmusoke"
                 ></input>
               </div>
 
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Password</label>
                 <input
                   required
-                  className='form-control'
-                  name='password'
+                  className="form-control"
+                  name="password"
                   onChange={this.handleChange}
                   value={this.state.password}
-                  type='password'
-                  placeholder='Password'
+                  type="password"
+                  placeholder="Password"
                 ></input>
               </div>
             </div>
-            <div className='col-md-12'>
-              <br className='clear-both' />
-              <div className='form-group col-md-6'>
+            <div className="col-md-12">
+              <br className="clear-both" />
+              <div className="form-group col-md-6">
                 <label>Sub counties</label>
                 <select
                   required
-                  className='form-control'
-                  name='sub_county'
+                  className="form-control"
+                  name="sub_county"
                   onChange={this.handleChange}
                   value={this.state.sub_county}
                 >
@@ -266,12 +267,12 @@ export default class ChewModal extends Component {
                 </select>
               </div>
 
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Villages</label>
                 <select
                   required
-                  className='form-control'
-                  name='village'
+                  className="form-control"
+                  name="village"
                   onChange={this.handleChange}
                   value={this.state.village}
                 >
@@ -285,18 +286,18 @@ export default class ChewModal extends Component {
                   ))}
                 </select>
               </div>
-              <br className='clear-both' />
-              <button type='submit' className='btn btn-primary'>
+              <br className="clear-both" />
+              <button type="submit" className="btn btn-primary">
                 {this.state.loading ? "Updating Chew" : "Update"}
               </button>
-              <br className='clear-both' />
+              <br className="clear-both" />
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <button
-            className='btn btn-default'
-            onClick={() => this.props.handleClose("chew")}
+            className="btn btn-default"
+            onClick={() => this.props.handleClose("modal")}
           >
             Close
           </button>

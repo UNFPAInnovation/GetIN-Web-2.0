@@ -61,6 +61,15 @@ exports.addChew = function(data, callback) {
     }
   );
 };
+exports.updateChew = function (id, data, callback) {
+  api.patch(`${addr}/api/v1/users/${id}`, OPTIONS, data, function (error, response) {
+    if (error) {
+      return callback(error);
+    } else {
+      return callback(null, response);
+    }
+  });
+};
 exports.addMidwife = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
