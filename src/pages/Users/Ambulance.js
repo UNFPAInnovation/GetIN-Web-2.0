@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import {
   fromInitialDate,
   endOfDay,
-  getData
+  getData,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
@@ -37,7 +38,8 @@ export default class AmbulanceDrivers extends Component {
         username: false,
         parish: false,
         phone: false,
-        number_plate: false
+        number_plate: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -50,6 +52,7 @@ export default class AmbulanceDrivers extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -57,6 +60,7 @@ export default class AmbulanceDrivers extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
   
@@ -206,6 +210,13 @@ export default class AmbulanceDrivers extends Component {
                 <Check state={this.state.manageColomns.email} /> Email
               </MenuItem>
               <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, parish) => this.updateTable("parish")}
                 eventKey={3.1}
               >
@@ -281,6 +292,15 @@ export default class AmbulanceDrivers extends Component {
                   dataField='email'
                 >
                   Email
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataSort={true}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.parish}

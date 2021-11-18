@@ -322,6 +322,44 @@ exports.getSubCounties = function(callback) {
   );
 };
 
+exports.getSubCountiesByCounty = function(countyId='',callback) {
+  api.get(
+    addr + `/api/v1/subcounties${countyId && `?county=${countyId}`}`,
+    OPTIONS,
+    function(error, response) {
+      //callback of the method here
+      if (error) {
+        return callback(error);
+      } else {
+        if (response.status !== 200) {
+          return callback("Couldnot get subcounties");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+    );
+  };
+
+  exports.getCountiesByDistrict = function(districtId='',callback) {
+    api.get(
+      addr + `/api/v1/counties${districtId && `?district=${districtId}`}`,
+      OPTIONS,
+      function(error, response) {
+        //callback of the method here
+        if (error) {
+          return callback(error);
+        } else {
+          if (response.status !== 200) {
+            return callback("Couldnot get Counties");
+          } else {
+            return callback(null, response.data);
+          }
+        }
+      }
+    );
+  };
+
 exports.getHealthFacilities = function(callback) {
   api.get(
     addr + `/api/v1/healthfacilities`,

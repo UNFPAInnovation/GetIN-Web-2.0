@@ -153,3 +153,6 @@ export const hideRowIfRecordExists = (row, appointments) => {
     return indexOfGirl !== 0 && "tr-hidden";
   }
 };
+export const getDistrict = (cell, row)=> {
+  return row.girl.village.parish.sub_county.county.district.name;
+}

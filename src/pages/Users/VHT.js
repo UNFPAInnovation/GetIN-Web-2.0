@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { fromInitialDate, endOfDay, getData } from "../../utils/index";
+import { fromInitialDate, endOfDay, getData,getDistrict } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
@@ -32,7 +32,8 @@ export default class VHT extends Component {
         gender: false,
         village: false,
         username: false,
-        sub_county: false
+        sub_county: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -218,6 +219,13 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.village} /> Village
               </MenuItem>
               <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, sub_county) => this.updateTable("sub_county")}
                 eventKey={3.1}
               >
@@ -291,6 +299,14 @@ export default class VHT extends Component {
                   dataField='village'
                 >
                   Village
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.sub_county}

@@ -20,6 +20,8 @@ export default class HealthFacilityModal extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.addHealthFacilty = this.addHealthFacilty.bind(this);
+    this.handleDistrictChange = this.handleDistrictChange.bind(this);
+    this.handleCountyChange = this.handleCountyChange.bind(this);
   }
 
   handleChange(event) {
@@ -29,6 +31,34 @@ export default class HealthFacilityModal extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  handleDistrictChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index]
+    const optionId =  optionElement.getAttribute('id');
+    console.log(optionId);
+    this.getCountiesByDistrict(optionId);
+  }
+
+  handleCountyChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index]
+    const optionId =  optionElement.getAttribute('id');
+    console.log(optionId);
+    this.getSubCountiesByCounty(optionId);
   }
 
   getDistricts() {
@@ -48,9 +78,10 @@ export default class HealthFacilityModal extends Component {
     });
   }
 
-  getSubCounties() {
+  getSubCountiesByCounty(id) {
     const thisApp = this;
-    service.getSubCounties(function(error, response) {
+    service.getSubCountiesByCounty(id,
+      function(error, response) {
       if (error) {
         thisApp.setState({
           isLoaded: true,
@@ -65,9 +96,9 @@ export default class HealthFacilityModal extends Component {
     });
   }
 
-  getCounties() {
+  getCountiesByDistrict(id) {
     const thisApp = this;
-    service.getSubCounties(function(error, response) {
+    service.getCountiesByDistrict(id,function(error, response) {
       if (error) {
         thisApp.setState({
           isLoaded: true,
@@ -111,8 +142,6 @@ export default class HealthFacilityModal extends Component {
 
   componentDidMount() {
     this.getDistricts();
-    this.getSubCounties();
-    this.getCounties();
   }
 
   render() {
@@ -136,7 +165,7 @@ export default class HealthFacilityModal extends Component {
                   name="facilityName"
                   value={this.state.facilityName}
                   className="form-control"
-                  placeholder="Facility HC II"
+                  placeholder="Facility"
                   autoFocus={true}
                 ></input>
               </div>
@@ -162,6 +191,9 @@ export default class HealthFacilityModal extends Component {
                   <option defaultValue value={'HC IV'}>
                     HC IV
                   </option> 
+                  <option defaultValue value={'Hospital'}>
+                    Hospital
+                  </option> 
                 </select>
               </div>
 
@@ -174,7 +206,7 @@ export default class HealthFacilityModal extends Component {
                   required
                   className="form-control"
                   name="district"
-                  onChange={this.handleChange}
+                  onChange={this.handleDistrictChange}
                   value={this.state.district}
                 >
                   <option defaultValue value={null}>
@@ -182,51 +214,59 @@ export default class HealthFacilityModal extends Component {
                   </option>
                   {this.state.districts?(this.state.districts.map(district=>{
                     return(
-                      <option key={district.id} defaultValue value={district.name}>{district.name}</option>
+                      <option key={district.id} id={district.id} defaultValue value={district.name}>{district.name}</option>
                     )
                   })):'Loading ...'}
                 </select>
               </div>
 
-              <div className="form-group col-md-6">
-                <label>Subcounty</label>
-                <select
-                  required
-                  className="form-control"
-                  name="subCounty"
-                  onChange={this.handleChange}
-                  value={this.state.subCounty}
-                >
-                  <option defaultValue value={null}>
-                    Select Subcounty
-                  </option>
-                  {this.state.subcounties?(this.state.subcounties.map(subcounty=>{
-                    return(
-                      <option key={subcounty.id} defaultValue value={subcounty.id}>{subcounty.name}</option>
-                    )
-                  })):'Loading ...'}
-                </select>
-              </div>
+              {
+                this.state.district && (
+                  <div className="form-group col-md-6">
+                    <label>County</label>
+                    <select
+                      required
+                      className="form-control"
+                      name="county"
+                      onChange={this.handleCountyChange}
+                      value={this.state.county}
+                    >
+                      <option defaultValue value={null}>
+                        Select County
+                      </option>
+                      {this.state.counties?this.state.counties.map(county=>{
+                        return(
+                          <option key={county.id} id={county.id} defaultValue value={county.name}>{county.name}</option>
+                        )
+                      }):'Loading ...'}
+                    </select>
+                  </div>
+                )
+              }  
+
+              {this.state.county && (
+                  <div className="form-group col-md-6">
+                    <label>Subcounty</label>
+                    <select
+                      required
+                      className="form-control"
+                      name="subCounty"
+                      onChange={this.handleChange}
+                      value={this.state.subCounty}
+                    >
+                      <option defaultValue value={null}>
+                        Select Subcounty
+                      </option>
+                      {this.state.subcounties?(this.state.subcounties.map(subcounty=>{
+                        return(
+                          <option key={subcounty.id} defaultValue value={subcounty.id}>{subcounty.name}</option>
+                        )
+                      })):'Loading ...'}
+                    </select>
+                  </div>
+                )
+              }    
               
-              <div className="form-group col-md-6">
-                <label>County</label>
-                <select
-                  required
-                  className="form-control"
-                  name="county"
-                  onChange={this.handleChange}
-                  value={this.state.county}
-                >
-                  <option defaultValue value={null}>
-                    Select County
-                  </option>
-                  {this.state.counties?this.state.counties.map(county=>{
-                    return(
-                      <option key={county.id} defaultValue value={county.name}>{county.name}</option>
-                    )
-                  }):'Loading ...'}
-                </select>
-              </div>
               
               <br className="clear-both" />
               <div className="row">
