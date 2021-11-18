@@ -14,7 +14,8 @@ import {
   getData,
   nameFormatter,
   ageFormatter,
-  trimesterFormatter
+  trimesterFormatter,
+  getDistrict
 } from "../utils/index";
 // import context
 import {GlobalContext} from '../context/GlobalState';
@@ -56,7 +57,8 @@ export default class FollowUps extends Component {
         swollen_feet: true,
         next_appointment: true,
         follow_date: false,
-        anc: false
+        anc: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -69,6 +71,7 @@ export default class FollowUps extends Component {
 
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
   
   componentDidUpdate(){
@@ -76,6 +79,7 @@ export default class FollowUps extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -291,6 +295,13 @@ export default class FollowUps extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.village} /> Village
               </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
               {/* <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>         */}
               <MenuItem
                 onClick={(e, trimester) => this.updateTable("trimester")}
@@ -443,7 +454,7 @@ export default class FollowUps extends Component {
                 condensed
               >
                 <TableHeaderColumn
-                  width='200px'
+                  width='150px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
@@ -461,6 +472,7 @@ export default class FollowUps extends Component {
                   Phone number
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  width="120px"
                   hidden={this.state.manageColomns.village}
                   dataFormat={(cell, row, item) =>
                     this.getVillageItem(cell, row, "name")
@@ -471,6 +483,15 @@ export default class FollowUps extends Component {
                   dataField='village'
                 >
                   Village
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  width='120px'
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField="district"
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   width='80px'
