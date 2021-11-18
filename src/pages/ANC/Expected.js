@@ -7,7 +7,8 @@ import {
   trimesterFormatter,
   chewFormatter,
   nameFormatter,
-  hideRowIfRecordExists
+  hideRowIfRecordExists,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -42,7 +43,8 @@ export default class ExpectedAppointments extends Component {
         vht: true,
         trimester: false,
         //  remaining_visits:false,
-        date: false
+        date: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -86,6 +88,7 @@ export default class ExpectedAppointments extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -93,6 +96,7 @@ export default class ExpectedAppointments extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -316,6 +320,13 @@ export default class ExpectedAppointments extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.trimester} /> Trimester
               </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
               {/* <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>              */}
               <MenuItem
                 onClick={(e, date) => this.updateTable("date")}
@@ -406,6 +417,15 @@ export default class ExpectedAppointments extends Component {
                   dataField='date'
                 >
                   Date
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataSort={true}
+                  csvFormat={getDistrict}
+                  dataFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
               </BootstrapTable>
             ) : (

@@ -13,6 +13,7 @@ import {
   enumFormatter,
   getData,
   nameFormatter,
+  getDistrict
 } from "../utils/index";
 // import context
 import {GlobalContext} from '../context/GlobalState';
@@ -56,6 +57,7 @@ export default class MappedGirls extends Component {
         bleeding_heavily: true,
         blurred_vision: true,
         swollen_feet: true,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -69,6 +71,7 @@ export default class MappedGirls extends Component {
 
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -76,6 +79,7 @@ export default class MappedGirls extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -337,6 +341,13 @@ export default class MappedGirls extends Component {
                 <Check state={this.state.manageColomns.village} /> Village
               </MenuItem>
               <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, parish) => this.updateTable("parish")}
                 eventKey={3.1}
               >
@@ -534,6 +545,7 @@ export default class MappedGirls extends Component {
                   Name
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  width='120px'
                   dataSort={true}
                   hidden={this.state.manageColomns.phone_number}
                   dataField="phone_number" 
@@ -553,6 +565,15 @@ export default class MappedGirls extends Component {
                   dataField="village"
                 >
                   Village
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  width='120px'
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField="district"
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.parish}

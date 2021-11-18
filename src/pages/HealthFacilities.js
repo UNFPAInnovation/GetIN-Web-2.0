@@ -5,7 +5,7 @@ import { faHospital } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
-import { fromInitialDate, endOfDay, getData } from "../utils/index";
+import { fromInitialDate, endOfDay, getData} from "../utils/index";
 import {GlobalContext} from '../context/GlobalState';
 const Fuse = require("fuse.js");
 
@@ -30,9 +30,10 @@ export default class HealthFacilities extends Component {
         subcounty: false,
         midwives: false,
         vhts: false,
-        level: true,
+        level: false,
         av_deliveries: false,
-        ambulances: false
+        ambulances: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -46,6 +47,7 @@ export default class HealthFacilities extends Component {
 
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -53,6 +55,7 @@ export default class HealthFacilities extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -117,7 +120,11 @@ export default class HealthFacilities extends Component {
     }
   }
   getHealthFacilities(cell, row){
-    if(row.facility_level == null) return ;
+    if(row.facility_level == null){
+      let splitFacilityName = row.name.split(' ');
+      return splitFacilityName.slice(1).join(' ');
+      
+    }
     return row.facility_level
   }
   getSubCountyName(cell,row, item){
@@ -135,6 +142,13 @@ export default class HealthFacilities extends Component {
   }
   getAverageDeliveries(cell,row){
     return row.average_deliveries
+  }
+  facilityNameFormatter(cell,row){
+    let splitName = row.name.split(' ');  
+    return splitName[0] 
+  }
+  getDistrict(cell, row){
+    return row.sub_county.county.district.name;
   }
   search(event) {
     this.setState({ search: event.target.value });
@@ -229,6 +243,14 @@ export default class HealthFacilities extends Component {
                     Subcounty
                   </MenuItem>
                   <MenuItem
+                    onClick={(e, district) => this.updateTable("district")}
+                    eventKey={3.1}
+                  >
+                    {" "}
+                    <Check state={this.state.manageColomns.district} />{" "}
+                    District
+                  </MenuItem>
+                  <MenuItem
                     onClick={(e, midwives) => this.updateTable("midwives")}
                     eventKey={3.1}
                   >
@@ -301,10 +323,11 @@ export default class HealthFacilities extends Component {
                       #
                     </TableHeaderColumn>
                     <TableHeaderColumn
-                      width='200px'
+                      width='150px'
                       hidden={this.state.manageColomns.name}
                       dataSort={true}
                       dataField='name'
+                      dataFormat={this.facilityNameFormatter}
                     >
                       Name
                     </TableHeaderColumn>
@@ -317,6 +340,16 @@ export default class HealthFacilities extends Component {
                       dataField='sub_county'
                     >
                       Subcounty
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
+                      width='150px'
+                      hidden={this.state.manageColomns.district}
+                      dataFormat={this.getDistrict}
+                      csvFormat={this.getDistrict}
+                      dataSort={true}
+                      dataField='district'
+                    >
+                      District
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       hidden={this.state.manageColomns.midwives}

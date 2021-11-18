@@ -29,7 +29,7 @@ export default class HealthFacilities extends Component {
         subcounty: false,
         midwives: false,
         vhts: false,
-        level: true,
+        level: false,
         av_deliveries: false,
         ambulances: false
       },
@@ -117,7 +117,11 @@ export default class HealthFacilities extends Component {
     }
   }
   getHealthFacilities(cell, row){
-    if(row.facility_level == null) return ;
+    if(row.facility_level == null){
+      let splitFacilityName = row.name.split(' ');
+      return splitFacilityName.slice(1).join(' ');
+      
+    }
     return row.facility_level
   }
   getSubCountyName(cell,row, item){
@@ -135,6 +139,10 @@ export default class HealthFacilities extends Component {
   }
   getAverageDeliveries(cell,row){
     return row.average_deliveries
+  }
+  facilityNameFormatter(cell,row){
+    let splitName = row.name.split(' ');  
+    return splitName[0] 
   }
   search(event) {
     this.setState({ search: event.target.value });
@@ -313,10 +321,11 @@ export default class HealthFacilities extends Component {
                       #
                     </TableHeaderColumn>
                     <TableHeaderColumn
-                      width='200px'
+                      width='150px'
                       hidden={this.state.manageColomns.name}
                       dataSort={true}
                       dataField='name'
+                      dataFormat={this.facilityNameFormatter}
                     >
                       Name
                     </TableHeaderColumn>

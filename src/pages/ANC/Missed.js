@@ -7,7 +7,8 @@ import {
   trimesterFormatter,
   nameFormatter,
   chewFormatter,
-  hideRowIfRecordExists
+  hideRowIfRecordExists,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -44,7 +45,8 @@ export default class MissedAppointments extends Component {
         vht: true,
         trimester: false,
         missed_appointments: false,
-        date: false
+        date: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -60,6 +62,7 @@ export default class MissedAppointments extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -67,6 +70,7 @@ export default class MissedAppointments extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -325,6 +329,13 @@ export default class MissedAppointments extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.trimester} /> Trimester
               </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
               {/* <MenuItem onClick={(e, missed_appointments) => this.updateTable("missed_appointments")} eventKey={3.1}> <Check state={this.state.manageColomns.missed_appointments} /> Missed Appointments</MenuItem>              */}
               <MenuItem
                 onClick={(e, date) => this.updateTable("date")}
@@ -413,6 +424,15 @@ export default class MissedAppointments extends Component {
                   dataField='date'
                 >
                   Date
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataSort={true}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
               </BootstrapTable>
             ) : (

@@ -6,7 +6,8 @@ import {
   enumFormatter,
   getData,
   nameFormatter,
-  ageFormatter
+  ageFormatter,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
@@ -51,7 +52,8 @@ export default class Home extends Component {
         received_postnatal_care: true,
         delivery: false,
         family_planning: false,
-        delivery_date: false
+        delivery_date: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -63,6 +65,7 @@ export default class Home extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
 
   componentDidUpdate(){
@@ -70,6 +73,7 @@ export default class Home extends Component {
       this.setState({isLoaded:false});
       this.loadData();
       this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
     }
   }
 
@@ -296,6 +300,13 @@ export default class Home extends Component {
               <Check state={this.state.manageColomns.village} /> Village
             </MenuItem>
             <MenuItem
+              onClick={(e, district) => this.updateTable("district")}
+              eventKey={3.1}
+            >
+              {" "}
+              <Check state={this.state.manageColomns.district} /> District
+            </MenuItem>
+            <MenuItem
               onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin")}
               eventKey={3.1}
             >
@@ -430,6 +441,14 @@ export default class Home extends Component {
                 dataField='village'
               >
                 Village
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                hidden={this.state.manageColomns.district}
+                dataFormat={getDistrict}
+                csvFormat={getDistrict}
+                dataField='district'
+              >
+                District
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.next_of_kin}
