@@ -21,9 +21,7 @@ export default class Midwives extends Component {
       status: "All",
       role: "midwife",
       from: fromInitialDate,
-      to: moment(endOfDay)
-        .local()
-        .format("YYYY-MM-DD"),
+      to: moment(endOfDay).local().format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
         email: true,
@@ -32,12 +30,13 @@ export default class Midwives extends Component {
         gender: false,
         username: false,
         health_facility: false,
-        sub_county: true
+        sub_county: true,
+        district: true,
       },
       // remote pagination
       currentPage: 1,
       sizePerPage: 20,
-      totalDataSize: 0
+      totalDataSize: 0,
     };
     this.updateTable = this.updateTable.bind(this);
     this.search = this.search.bind(this);
@@ -47,9 +46,9 @@ export default class Midwives extends Component {
     this.loadData();
   }
 
-  componentDidUpdate(){
-    if(this.context.change){
-      this.setState({isLoaded:false});
+  componentDidUpdate() {
+    if (this.context.change) {
+      this.setState({ isLoaded: false });
       this.loadData();
       this.context.contextChange(false);
     }
@@ -61,18 +60,18 @@ export default class Midwives extends Component {
       {
         name: "users",
         role: this.state.role,
-        districtId:this.context.districtId
+        districtId: this.context.districtId,
       },
-      function(error, response) {
+      function (error, response) {
         if (error) {
           thisApp.setState({
-            isLoaded: true
+            isLoaded: true,
           });
         } else {
           thisApp.setState({
             isLoaded: true,
             users: response.results,
-            users_copy: response.results
+            users_copy: response.results,
           });
         }
       }
@@ -82,7 +81,7 @@ export default class Midwives extends Component {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
       this.setState({
-        users: this.state.users_copy
+        users: this.state.users_copy,
       });
     } else {
       let options = {
@@ -92,13 +91,13 @@ export default class Midwives extends Component {
         distance: 100,
         maxPatternLength: 32,
         minMatchCharLength: 1,
-        keys: ["first_name", "last_name", "phone_number", "email", "phone"]
+        keys: ["first_name", "last_name", "phone_number", "email", "phone"],
       };
 
       var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
       var result = fuse.search(event.target.value);
       this.setState({
-        users: result
+        users: result,
       });
     }
   }
@@ -110,18 +109,18 @@ export default class Midwives extends Component {
     if (this.state.manageColomns[colomn] === true) {
       manageColomns[colomn] = false;
       this.setState({
-        manageColomns: manageColomns
+        manageColomns: manageColomns,
       });
     } else {
       manageColomns[colomn] = true;
       this.setState({
-        manageColomns: manageColomns
+        manageColomns: manageColomns,
       });
     }
   }
-  healthFormatter(cell, row){
-    if(row.health_facility == null) return ;
-    return row.health_facility.name
+  healthFormatter(cell, row) {
+    if (row.health_facility == null) return;
+    return row.health_facility.name;
   }
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
@@ -131,6 +130,9 @@ export default class Midwives extends Component {
       row.village && row.village.parish && row.village.parish.sub_county.name
     );
   }
+  districtFormatter(cell, row) {
+    return row?.village?.parish?.sub_county?.county?.district?.name;
+  }
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -139,7 +141,7 @@ export default class Midwives extends Component {
     this.setState(
       {
         [name]: value,
-        isLoaded: false
+        isLoaded: false,
       },
       () => this.loadData()
     );
@@ -159,31 +161,31 @@ export default class Midwives extends Component {
       prePage: "Prev", // Previous page button text
       nextPage: "Next", // Next page button text
       firstPage: "First", // First page button text
-      paginationPosition: "bottom" // default is bottom, top and both is all available
+      paginationPosition: "bottom", // default is bottom, top and both is all available
     };
 
     return (
       <div>
-        <div className='col-md-12'>
-          <br className='clear-both' />
-          <form className='form-inline pull-right'>
-            <div className='form-group'>
-              <label htmlFor='email'>Search:</label>
+        <div className="col-md-12">
+          <br className="clear-both" />
+          <form className="form-inline pull-right">
+            <div className="form-group">
+              <label htmlFor="email">Search:</label>
               <input
-                name='from'
+                name="from"
                 value={this.state.search}
                 onChange={this.search}
-                placeholder='Type something here'
-                className='search form-control'
-                type='text'
+                placeholder="Type something here"
+                className="search form-control"
+                type="text"
               />
             </div>
 
             <NavDropdown
               eventKey={3}
-              className='pull-right'
-              title='Manage columns'
-              id='basic-nav-dropdown'
+              className="pull-right"
+              title="Manage columns"
+              id="basic-nav-dropdown"
             >
               <MenuItem
                 onClick={(e, name) => this.updateTable("name")}
@@ -224,6 +226,13 @@ export default class Midwives extends Component {
                 <Check state={this.state.manageColomns.sub_county} /> Sub County
               </MenuItem>
               <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, gender) => this.updateTable("gender")}
                 eventKey={3.1}
               >
@@ -240,7 +249,7 @@ export default class Midwives extends Component {
             </NavDropdown>
           </form>
 
-          <div className='padding-top content-container col-md-12'>
+          <div className="padding-top content-container col-md-12">
             {this.state.isLoaded === true ? (
               <BootstrapTable
                 data={users}
@@ -248,50 +257,48 @@ export default class Midwives extends Component {
                 hover
                 csvFileName={
                   "Midwives_users" +
-                  moment(Date.now())
-                    .local()
-                    .format("YYYY_MM_DD_HHmmss") +
+                  moment(Date.now()).local().format("YYYY_MM_DD_HHmmss") +
                   ".csv"
                 }
-                ref='table'
+                ref="table"
                 remote={false}
-                headerContainerClass='table-header'
-                tableContainerClass='table-responsive table-onScreen'
+                headerContainerClass="table-header"
+                tableContainerClass="table-responsive table-onScreen"
                 pagination={true}
                 options={options}
                 exportCSV
               >
                 <TableHeaderColumn
-                  width='200px'
+                  width="200px"
                   hidden={this.state.manageColomns.name}
                   dataFormat={this.nameFormatter}
                   csvFormat={this.nameFormatter}
                   dataSort={true}
-                  dataField='first_name'
+                  dataField="first_name"
                 >
                   Name
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.phone}
                   dataSort={true}
-                  dataField='phone'
+                  dataField="phone"
                 >
                   Phone
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.email}
                   dataSort={true}
-                  dataField='email'
+                  dataField="email"
                 >
                   Email
                 </TableHeaderColumn>
                 <TableHeaderColumn
-                  width='200px'
+                  width="200px"
                   hidden={this.state.manageColomns.health_facility}
                   dataFormat={this.healthFormatter}
                   csvFormat={this.healthFormatter}
                   dataSort={true}
-                  dataField='health_facility'
+                  dataField="health_facility"
                 >
                   Health facility
                 </TableHeaderColumn>
@@ -299,20 +306,28 @@ export default class Midwives extends Component {
                   hidden={this.state.manageColomns.sub_county}
                   dataFormat={this.subCountyFormatter}
                   csvFormat={this.subCountyFormatter}
-                  dataField='sub_county'
+                  dataField="sub_county"
                 >
                   Sub county
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={this.districtFormatter}
+                  csvFormat={this.districtFormatter}
+                  dataField="district"
+                >
+                  District
+                </TableHeaderColumn>
+                <TableHeaderColumn
                   hidden={this.state.manageColomns.gender}
-                  dataField='gender'
+                  dataField="gender"
                 >
                   Gender
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.username}
                   isKey
-                  dataField='username'
+                  dataField="username"
                 >
                   Username
                 </TableHeaderColumn>

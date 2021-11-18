@@ -61,6 +61,15 @@ exports.addChew = function(data, callback) {
     }
   );
 };
+exports.updateChew = function (id, data, callback) {
+  api.patch(`${addr}/api/v1/users/${id}`, OPTIONS, data, function (error, response) {
+    if (error) {
+      return callback(error);
+    } else {
+      return callback(null, response);
+    }
+  });
+};
 exports.addMidwife = function(data, callback) {
   api.post(
     addr + "/api/v1/users",
@@ -338,6 +347,25 @@ exports.getSubCountiesByCounty = function(countyId='',callback) {
         }
       }
     }
+    );
+  };
+
+  exports.getParishBySubCounty = function (subCountyId = "", callback) {
+    api.get(
+      addr + `/api/v1/parishes${subCountyId && `?sub_county=${subCountyId}`}`,
+      OPTIONS,
+      function (error, response) {
+        //callback of the method here
+        if (error) {
+          return callback(error);
+        } else {
+          if (response.status !== 200) {
+            return callback("Couldnot get parishes");
+          } else {
+            return callback(null, response.data);
+          }
+        }
+      }
     );
   };
 
