@@ -350,6 +350,25 @@ exports.getSubCountiesByCounty = function(countyId='',callback) {
     );
   };
 
+  exports.getParishBySubCounty = function (subCountyId = "", callback) {
+    api.get(
+      addr + `/api/v1/parishes${subCountyId && `?sub_county=${subCountyId}`}`,
+      OPTIONS,
+      function (error, response) {
+        //callback of the method here
+        if (error) {
+          return callback(error);
+        } else {
+          if (response.status !== 200) {
+            return callback("Couldnot get parishes");
+          } else {
+            return callback(null, response.data);
+          }
+        }
+      }
+    );
+  };
+
   exports.getCountiesByDistrict = function(districtId='',callback) {
     api.get(
       addr + `/api/v1/counties${districtId && `?district=${districtId}`}`,
