@@ -247,45 +247,9 @@ export default class ChewModal extends Component {
             </div>
             <div className="col-md-12">
               <br className="clear-both" />
-              <div className="form-group col-md-6">
-                <label>Sub counties</label>
-                <select
-                  required
-                  className="form-control"
-                  name="sub_county"
-                  onChange={this.handleChange}
-                  value={this.state.sub_county}
-                >
-                  <option defaultValue value={null}>
-                    Select subcounty
-                  </option>
-                  {this.state.sub_counties.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              
 
-              <div className="form-group col-md-6">
-                <label>Villages</label>
-                <select
-                  required
-                  className="form-control"
-                  name="village"
-                  onChange={this.handleChange}
-                  value={this.state.village}
-                >
-                  <option defaultValue value={null}>
-                    Select Village
-                  </option>
-                  {this.state.villages.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              
               <br className="clear-both" />
               <button type="submit" className="btn btn-primary">
                 {this.state.loading ? "Updating Chew" : "Update"}

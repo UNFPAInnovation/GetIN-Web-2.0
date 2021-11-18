@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { fromInitialDate, endOfDay, getData } from "../../../../utils/index";
 import moment from "moment";
 import Check from "../../../../components/Check";
-import { NavDropdown, MenuItem } from "react-bootstrap";
+import { NavDropdown, MenuItem, Label } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { GlobalContext } from "../../../../context/GlobalState";
 const Fuse = require("fuse.js");
@@ -31,6 +31,8 @@ export default class VHT extends Component {
         phone: false,
         gender: false,
         village: true,
+        district: true,
+        county: true,
         username: false,
         sub_county: true,
       },
@@ -47,7 +49,7 @@ export default class VHT extends Component {
     this.actionsFormatter = this.actionsFormatter.bind(this);
   }
   handleClose(modal) {
-    this.setState({ [modal]: false });
+    this.setState({ [modal]: false, updateObj:null });
   }
 
   handleShow(modal) {
@@ -140,12 +142,26 @@ export default class VHT extends Component {
       row.village && row.village.parish && row.village.parish.sub_county.name
     );
   }
-  isActiveFormatter(cell, row){
+  countyFormatter(cell, row) {
+    return row?.village?.parish?.sub_county?.county?.name;
+  }
+  districtFormatter(cell, row) {
+    return row?.village?.parish?.sub_county?.county?.district?.name;
+  }
+  isActiveStyleFormatter(cell, row) {
+    return (
+      <Label bsStyle={cell ? "success" : "danger"}>
+        {cell ? "Active" : "Deactivated"}
+      </Label>
+    );
+  }
+  isActiveFormatter(cell, row) {
     return cell ? "Active" : "Deactivated";
   }
   actionsFormatter(cell, row) {
     return (
       <button
+        className="btn btn-xs btn-default"
         onClick={() =>
           this.setState({ updateObj: row }, () => this.handleShow("modal"))
         }
@@ -169,7 +185,10 @@ export default class VHT extends Component {
   }
   render() {
     let users = this.state.users;
-
+    const statusType = {
+      true: "Active",
+      false: "Deactivated",
+    };
     const options = {
       page: 1, // which page you want to show as default
       // onPageChange: this.onPageChange,
@@ -250,6 +269,20 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.sub_county} /> Sub County
               </MenuItem>
               <MenuItem
+                onClick={(e, county) => this.updateTable("county")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.county} /> County
+              </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, username) => this.updateTable("username")}
                 eventKey={3.1}
               >
@@ -325,6 +358,22 @@ export default class VHT extends Component {
                   Sub county
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  hidden={this.state.manageColomns.county}
+                  dataFormat={this.countyFormatter}
+                  csvFormat={this.countyFormatter}
+                  dataField="county"
+                >
+                  County
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={this.districtFormatter}
+                  csvFormat={this.districtFormatter}
+                  dataField="district"
+                >
+                  District
+                </TableHeaderColumn>
+                <TableHeaderColumn
                   hidden={this.state.manageColomns.username}
                   isKey
                   dataField="username"
@@ -333,7 +382,9 @@ export default class VHT extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   dataField="is_active"
-                  dataFormat={this.isActiveFormatter}
+                  dataFormat={(cell=> statusType[cell])}
+                  filterFormatted
+                  filter={{ type: "SelectFilter", options: statusType }}
                 >
                   Status
                 </TableHeaderColumn>
