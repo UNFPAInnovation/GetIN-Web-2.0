@@ -154,5 +154,5 @@ export const hideRowIfRecordExists = (row, appointments) => {
   }
 };
 export const getDistrict = (cell, row)=> {
-  return row.girl.village.parish.sub_county.county.district.name;
+  return row?.girl?.village?.parish?.sub_county?.county?.district?.name;
 }
