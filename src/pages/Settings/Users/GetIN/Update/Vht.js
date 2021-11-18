@@ -29,6 +29,7 @@ export default class ChewModal extends Component {
     this.handleDistrictChange = this.handleDistrictChange.bind(this);
     this.handleCountyChange = this.handleCountyChange.bind(this);
     this.handleSubCountyChange = this.handleSubCountyChange.bind(this);
+    this.handleParishChange = this.handleParishChange.bind(this);
   }
   handleChange(event) {
     const target = event.target;
@@ -85,6 +86,20 @@ export default class ChewModal extends Component {
     const optionId = optionElement.getAttribute("id");
     console.log(optionId);
     this.getParishBySubCounty(optionId);
+  }
+
+  handleParishChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    console.log(optionId);
+    
   }
   updateChew(e) {
     e.preventDefault();
@@ -429,9 +444,9 @@ export default class ChewModal extends Component {
                   <select
                     required
                     className="form-control"
-                    name="subCounty"
+                    name="subcounty"
                     onChange={this.handleSubCountyChange}
-                    value={this.state.subCounty}
+                    value={this.state.subcounty}
                   >
                     <option defaultValue value={null}>
                       Select Subcounty
@@ -460,7 +475,7 @@ export default class ChewModal extends Component {
                     required
                     className="form-control"
                     name="parish"
-                    onChange={this.handleChange}
+                    onChange={this.handleParishChange}
                     value={this.state.parish}
                   >
                     <option defaultValue value={null}>
@@ -471,10 +486,41 @@ export default class ChewModal extends Component {
                           return (
                             <option
                               key={parish.id}
+                              id={parish.id}
                               defaultValue
                               value={parish.id}
                             >
                               {parish.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+
+              {this.state.parish && (
+                <div className="form-group col-md-6">
+                  <label>Village</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="village"
+                    onChange={this.handleChange}
+                    value={this.state.village}
+                  >
+                    <option defaultValue value={null}>
+                      Select Village
+                    </option>
+                    {this.state.villages
+                      ? this.state.villages.map((village) => {
+                          return (
+                            <option
+                              key={village.id}
+                              defaultValue
+                              value={village.id}
+                            >
+                              {village.name}
                             </option>
                           );
                         })
