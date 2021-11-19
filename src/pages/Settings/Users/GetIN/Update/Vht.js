@@ -18,10 +18,12 @@ export default class ChewModal extends Component {
       village: null,
       subcounty: null,
       county: null,
+      district:null,
       villages: [],
       villages_copy: [],
       subcounties: [],
       parishes: [],
+      parish:null,
       loading: false,
       is_active: true,
     };
@@ -56,7 +58,6 @@ export default class ChewModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
-    console.log(optionId);
     this.getCountiesByDistrict(optionId);
   }
 
@@ -70,7 +71,6 @@ export default class ChewModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
-    console.log(optionId);
     this.getSubCountiesByCounty(optionId);
   }
 
@@ -84,7 +84,6 @@ export default class ChewModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
-    console.log(optionId);
     this.getParishBySubCounty(optionId);
   }
 
@@ -98,8 +97,7 @@ export default class ChewModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
-    console.log(optionId);
-    
+    this.getVillagesByParish(optionId);
   }
   updateChew(e) {
     e.preventDefault();
@@ -108,7 +106,7 @@ export default class ChewModal extends Component {
       loading: true,
     });
     alertifyjs.message("Updating CHEW..", 2, function () {});
-    service.updateChew(
+    service.updateUser(
       this.state.id,
       {
         first_name: this.state.first_name,
@@ -116,10 +114,8 @@ export default class ChewModal extends Component {
         username: this.state.username,
         email: this.state.email,
         gender: this.state.gender,
-        village: this.state.village,
-        password: this.state.password,
+        village: parseInt(this.state.village),
         phone: this.state.phone_number,
-        role: "chew",
       },
       function (error, response) {
         if (error) {
@@ -132,7 +128,7 @@ export default class ChewModal extends Component {
             loading: false,
           });
           alertifyjs.success("Updated successfully", 2, function () {});
-          window.location.reload();
+          //  window.location.reload();
         }
       }
     );
@@ -219,6 +215,22 @@ export default class ChewModal extends Component {
       }
     });
   }
+  getVillagesByParish(id){
+    const thisApp = this;
+    service.getVillagesByParish(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          villages: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          villages: response.results,
+        });
+      }
+    });
+  }
 
   getCountiesByDistrict(id) {
     const thisApp = this;
@@ -244,13 +256,10 @@ export default class ChewModal extends Component {
       first_name: updateData.first_name,
       last_name: updateData.last_name,
       username: updateData.username,
-      password: updateData.password,
       gender: updateData.gender,
       email: updateData.email,
       phone_number: updateData.phone,
       is_active: updateData.is_active,
-      // village: updateData.village.name,
-      // subcounty: updateData.village.parish.subcounty.name,
     });
   }
   render() {
@@ -362,19 +371,6 @@ export default class ChewModal extends Component {
                   placeholder="jmusoke"
                 ></input>
               </div>
-
-              <div className="form-group col-md-6">
-                <label>Password</label>
-                <input
-                  required
-                  className="form-control"
-                  name="password"
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                  type="password"
-                  placeholder="Password"
-                ></input>
-              </div>
             </div>
             <div className="col-md-12">
               <br className="clear-both" />
@@ -397,7 +393,7 @@ export default class ChewModal extends Component {
                             key={district.id}
                             id={district.id}
                             defaultValue
-                            value={district.name}
+                            value={district.id}
                           >
                             {district.name}
                           </option>
@@ -427,7 +423,7 @@ export default class ChewModal extends Component {
                               key={county.id}
                               id={county.id}
                               defaultValue
-                              value={county.name}
+                              value={county.id}
                             >
                               {county.name}
                             </option>

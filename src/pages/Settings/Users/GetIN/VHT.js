@@ -31,6 +31,7 @@ export default class VHT extends Component {
         phone: false,
         gender: false,
         village: true,
+        parish: true,
         district: true,
         county: true,
         username: false,
@@ -49,7 +50,7 @@ export default class VHT extends Component {
     this.actionsFormatter = this.actionsFormatter.bind(this);
   }
   handleClose(modal) {
-    this.setState({ [modal]: false, updateObj:null });
+    this.setState({ [modal]: false, updateObj: null });
   }
 
   handleShow(modal) {
@@ -136,6 +137,9 @@ export default class VHT extends Component {
   }
   villageFormatter(cell, row) {
     return row.village && row.village.name;
+  }
+  parishFormatter(cell, row) {
+    return row?.village?.parish?.name;
   }
   subCountyFormatter(cell, row) {
     return (
@@ -262,6 +266,13 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.village} /> Village
               </MenuItem>
               <MenuItem
+                onClick={(e, parish) => this.updateTable("parish")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.parish} /> Parish
+              </MenuItem>
+              <MenuItem
                 onClick={(e, sub_county) => this.updateTable("sub_county")}
                 eventKey={3.1}
               >
@@ -350,6 +361,14 @@ export default class VHT extends Component {
                   Village
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  hidden={this.state.manageColomns.parish}
+                  dataFormat={this.parishFormatter}
+                  csvFormat={this.parishFormatter}
+                  dataField="parish"
+                >
+                  Parish
+                </TableHeaderColumn>
+                <TableHeaderColumn
                   hidden={this.state.manageColomns.sub_county}
                   dataFormat={this.subCountyFormatter}
                   csvFormat={this.subCountyFormatter}
@@ -382,7 +401,7 @@ export default class VHT extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   dataField="is_active"
-                  dataFormat={(cell=> statusType[cell])}
+                  dataFormat={(cell) => statusType[cell]}
                   filterFormatted
                   filter={{ type: "SelectFilter", options: statusType }}
                 >

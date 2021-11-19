@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { fromInitialDate, endOfDay, getData } from "../../../../utils/index";
 import moment from "moment";
 import Check from "../../../../components/Check";
-import { NavDropdown, MenuItem } from "react-bootstrap";
+import { NavDropdown, MenuItem, Label } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { GlobalContext } from "../../../../context/GlobalState";
 const Fuse = require("fuse.js");
+const UpdateModal = React.lazy(() => import("./Update/Midwife.js"));
 
 export default class Midwives extends Component {
   static contextType = GlobalContext;
@@ -15,6 +16,7 @@ export default class Midwives extends Component {
     this.state = {
       users: [],
       users_copy: [],
+      updateObj: null,
       search: null,
       isLoaded: false,
       loadingText: "Loading ..",
@@ -41,6 +43,16 @@ export default class Midwives extends Component {
     this.updateTable = this.updateTable.bind(this);
     this.search = this.search.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.actionsFormatter = this.actionsFormatter.bind(this);
+  }
+  handleClose(modal) {
+    this.setState({ [modal]: false, updateObj: null });
+  }
+
+  handleShow(modal) {
+    this.setState({ [modal]: true });
   }
   componentDidMount() {
     this.loadData();
@@ -133,6 +145,28 @@ export default class Midwives extends Component {
   districtFormatter(cell, row) {
     return row?.village?.parish?.sub_county?.county?.district?.name;
   }
+  isActiveStyleFormatter(cell, row) {
+    return (
+      <Label bsStyle={cell ? "success" : "danger"}>
+        {cell ? "Active" : "Deactivated"}
+      </Label>
+    );
+  }
+  isActiveFormatter(cell, row) {
+    return cell ? "Active" : "Deactivated";
+  }
+  actionsFormatter(cell, row) {
+    return (
+      <button
+        className="btn btn-xs btn-default"
+        onClick={() =>
+          this.setState({ updateObj: row }, () => this.handleShow("modal"))
+        }
+      >
+        View
+      </button>
+    );
+  }
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -148,7 +182,10 @@ export default class Midwives extends Component {
   }
   render() {
     let users = this.state.users;
-
+ const statusType = {
+   true: "Active",
+   false: "Deactivated",
+ };
     const options = {
       page: 1, // which page you want to show as default
       // onPageChange: this.onPageChange,
@@ -331,12 +368,30 @@ export default class Midwives extends Component {
                 >
                   Username
                 </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="is_active"
+                  dataFormat={(cell) => statusType[cell]}
+                  filterFormatted
+                  filter={{ type: "SelectFilter", options: statusType }}
+                >
+                  Status
+                </TableHeaderColumn>
+                <TableHeaderColumn dataFormat={this.actionsFormatter}>
+                  Actions
+                </TableHeaderColumn>
               </BootstrapTable>
             ) : (
               <span>Loading</span>
             )}
           </div>
         </div>
+        {this.state.updateObj && (
+          <UpdateModal
+            handleClose={(d) => this.handleClose(d)}
+            show={this.state.modal}
+            data={this.state.updateObj}
+          />
+        )}
       </div>
     );
   }

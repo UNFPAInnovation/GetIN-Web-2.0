@@ -17,7 +17,7 @@ export default class MidwifeModal extends Component {
       phone_number: null,
       health_facility: null,
       health_facilities: [],
-      loading: false
+      loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -27,17 +27,19 @@ export default class MidwifeModal extends Component {
     const name = target.name;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
+
   submit(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
-      loading: true
+      loading: true,
     });
-    alertifyjs.message("Adding Midwife..", 2, function() {});
-    service.addUser(
+    alertifyjs.message("Adding Midwife..", 2, function () {});
+    service.updateUser(
+      this.state.id,
       {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
@@ -45,21 +47,19 @@ export default class MidwifeModal extends Component {
         email: this.state.email,
         gender: this.state.gender,
         health_facility: this.state.health_facility,
-        password: this.state.password,
         phone: this.state.phone_number,
-        role: "midwife"
       },
-      function(error, token) {
+      function (error, token) {
         if (error) {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.error("Request failed, try again", 5, function() {});
+          alertifyjs.error("Request failed, try again", 5, function () {});
         } else {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.success("Added successfully", 2, function() {});
+          alertifyjs.success("Updated successfully", 2, function () {});
           window.location.reload();
         }
       }
@@ -70,24 +70,67 @@ export default class MidwifeModal extends Component {
     thisApp.setState({
       health_facilities: [],
       health_facilities_copy: [],
-      loadingText: "Loading..."
+      loadingText: "Loading...",
     });
-    service.getHealthFacilities(function(error, response) {
+    service.getHealthFacilities(function (error, response) {
       if (error) {
         thisApp.setState({
           isLoaded: true,
-          health_facilities: []
+          health_facilities: [],
         });
       } else {
         thisApp.setState({
           isLoaded: true,
-          health_facilities: response.results
+          health_facilities: response.results,
         });
       }
     });
   }
+  updateStatus() {
+    const thisApp = this;
+    thisApp.setState({
+      loading: true,
+    });
+    alertifyjs.message(
+      `${this.state.is_active ? "Activating" : "Deactivating"}`,
+      2,
+      function () {}
+    );
+    service.updateChew(
+      this.state.id,
+      {
+        is_active: this.state.is_active,
+      },
+      function (error, response) {
+        if (error) {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.error("Request failed, try again ", function () {});
+        } else {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.success("Updated successfully", 2, function () {});
+          window.location.reload();
+        }
+      }
+    );
+  }
   componentDidMount() {
     this.getHealthFacilities();
+    const updateData = this.props.data;
+    this.setState({
+      id: updateData.id,
+      first_name: updateData.first_name,
+      last_name: updateData.last_name,
+      username: updateData.username,
+      gender: updateData.gender,
+      email: updateData.email,
+      phone_number: updateData.phone,
+      health_facility:updateData.health_facility.id,
+      is_active: updateData.is_active,
+    });
   }
   render() {
     return (
@@ -96,54 +139,75 @@ export default class MidwifeModal extends Component {
         onHide={() => this.props.handleClose("midwife")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a new Midwife</Modal.Title>
+          <div className="row">
+            <div className="col-md-10">
+              <Modal.Title>
+                <span> Update Midwife</span>{" "}
+              </Modal.Title>
+            </div>
+            <div className="col-md-2">
+              <button
+                className={`btn btn-sm ${
+                  this.state.is_active ? "btn-danger" : "btn-success"
+                }`}
+                onClick={() =>
+                  this.setState(
+                    { is_active: this.state.is_active ? false : true },
+                    () => this.updateStatus()
+                  )
+                }
+              >
+                {this.state.is_active ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </div>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={e => this.submit(e)}>
-            <div className='col-md-12'>
-              <div className='form-group col-md-6'>
+          <form onSubmit={(e) => this.submit(e)}>
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>First name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='first_name'
+                  name="first_name"
                   value={this.state.first_name}
-                  className='form-control'
-                  placeholder='John'
+                  className="form-control"
+                  placeholder="John"
                   autoFocus={true}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Last name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='last_name'
+                  name="last_name"
                   value={this.state.last_name}
-                  className='form-control'
-                  placeholder='Musoke'
+                  className="form-control"
+                  placeholder="Musoke"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Phone number</label>
                 <input
                   required
-                  type='tel'
+                  type="tel"
                   onChange={this.handleChange}
-                  name='phone_number'
+                  name="phone_number"
                   value={this.state.phone_number}
-                  className='form-control'
-                  placeholder='070XXXXXX'
+                  className="form-control"
+                  placeholder="070XXXXXX"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Gender</label>
                 <select
                   required
-                  className='form-control'
-                  name='gender'
+                  className="form-control"
+                  name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
                 >
@@ -154,50 +218,37 @@ export default class MidwifeModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Email address</label>
                 <input
-                  type='email'
-                  className='form-control'
-                  name='email'
+                  type="email"
+                  className="form-control"
+                  name="email"
                   onChange={this.handleChange}
                   value={this.state.email}
-                  placeholder='jmusoke@gmail.com'
+                  placeholder="jmusoke@gmail.com"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Username</label>
                 <input
                   required
-                  type='text'
-                  className='form-control'
-                  name='username'
+                  type="text"
+                  className="form-control"
+                  name="username"
                   onChange={this.handleChange}
                   value={this.state.username}
-                  placeholder='jmusoke'
-                ></input>
-              </div>
-
-              <div className='form-group col-md-6'>
-                <label>Password</label>
-                <input
-                  required
-                  className='form-control'
-                  name='password'
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                  type='password'
-                  placeholder='Password'
+                  placeholder="jmusoke"
                 ></input>
               </div>
             </div>
-            <div className='col-md-12'>
-              <br className='clear-both' />
-              <div className='form-group col-md-6'>
+            <div className="col-md-12">
+              <br className="clear-both" />
+              <div className="form-group col-md-6">
                 <label>Health facility</label>
                 <select
-                  className='form-control'
-                  name='health_facility'
+                  className="form-control"
+                  name="health_facility"
                   onChange={this.handleChange}
                   value={this.state.health_facility}
                 >
@@ -211,17 +262,17 @@ export default class MidwifeModal extends Component {
                   ))}
                 </select>
               </div>
-              <br className='clear-both' />
-              <button type='submit' className='btn btn-primary'>
-                {this.state.loading ? "Adding Midwife" : "Submit"}
+              <br className="clear-both" />
+              <button type="submit" className="btn btn-primary">
+                {this.state.loading ? "Updating Midwife" : "Update"}
               </button>
-              <br className='clear-both' />
+              <br className="clear-both" />
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <button
-            className='btn btn-default'
+            className="btn btn-default"
             onClick={() => this.props.handleClose("midwife")}
           >
             Close

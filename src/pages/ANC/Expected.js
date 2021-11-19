@@ -157,12 +157,10 @@ export default class ExpectedAppointments extends Component {
 
     // update from date filter
     if(target.name === 'from' && target.type === 'date'){
-      console.log(target.value);
       this.context.dateFromChange(target.value);
     }
     // update to date filter
     if(target.name === 'to' && target.type === 'date'){
-      console.log(target.value);
       this.context.dateToChange(target.value);
     }
   }
