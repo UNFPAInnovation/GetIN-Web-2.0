@@ -1,15 +1,18 @@
 import React, { Component } from "react";
-import { fromInitialDate, endOfDay, getData,getDistrict } from "../../utils/index";
+import {
+  fromInitialDate,
+  endOfDay,
+  getData,
+} from "../../../../utils/index";
 import moment from "moment";
-import Check from "../../components/Check";
+import Check from "../../../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import { GlobalContext } from "../../context/GlobalState";
+import { GlobalContext } from "../../../../context/GlobalState";
 const Fuse = require("fuse.js");
 
-export default class VHT extends Component {
+export default class AmbulanceDrivers extends Component {
   static contextType = GlobalContext;
-
   constructor(props) {
     super(props);
 
@@ -19,21 +22,21 @@ export default class VHT extends Component {
       search: null,
       isLoaded: false,
       loadingText: "Loading ..",
-      role: "chew",
+      status: "All",
       from: fromInitialDate,
+      role: "ambulance",
       to: moment(endOfDay)
         .local()
         .format("YYYY-MM-DD"),
       showCoords: true,
       manageColomns: {
-        email: false,
+        email: true,
         name: false,
-        phone: false,
         gender: false,
-        village: false,
         username: false,
-        sub_county: false,
-        district:true
+        parish: true,
+        phone: false,
+        number_plate: false
       },
       // remote pagination
       currentPage: 1,
@@ -47,6 +50,7 @@ export default class VHT extends Component {
   componentDidMount() {
     this.loadData();
   }
+
   componentDidUpdate(){
     if(this.context.change){
       this.setState({isLoaded:false});
@@ -78,6 +82,7 @@ export default class VHT extends Component {
       }
     );
   }
+
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -92,7 +97,7 @@ export default class VHT extends Component {
         distance: 100,
         maxPatternLength: 32,
         minMatchCharLength: 1,
-        keys: ["first_name", "last_name", "phone", "email", "phone"]
+        keys: ["first_name", "last_name", "phone_number", "email", "phone"]
       };
 
       var fuse = new Fuse(this.state.users_copy, options); // "list" is the item array
@@ -101,6 +106,9 @@ export default class VHT extends Component {
         users: result
       });
     }
+  }
+  parishFormatter(cell, row) {
+    return row.village && row.village.parish && row.village.parish.name;
   }
 
   updateTable(colomn) {
@@ -121,14 +129,6 @@ export default class VHT extends Component {
   }
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
-  }
-  villageFormatter(cell, row) {
-    return row.village && row.village.name;
-  }
-  subCountyFormatter(cell, row) {
-    return (
-      row.village && row.village.parish && row.village.parish.sub_county.name
-    );
   }
   handleInputChange(event) {
     const target = event.target;
@@ -160,7 +160,6 @@ export default class VHT extends Component {
       firstPage: "First", // First page button text
       paginationPosition: "bottom" // default is bottom, top and both is all available
     };
-
     return (
       <div>
         <div className='col-md-12'>
@@ -177,6 +176,7 @@ export default class VHT extends Component {
                 type='text'
               />
             </div>
+
             <NavDropdown
               eventKey={3}
               className='pull-right'
@@ -205,6 +205,13 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.email} /> Email
               </MenuItem>
               <MenuItem
+                onClick={(e, parish) => this.updateTable("parish")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.parish} /> Parish
+              </MenuItem>
+              <MenuItem
                 onClick={(e, gender) => this.updateTable("gender")}
                 eventKey={3.1}
               >
@@ -212,32 +219,19 @@ export default class VHT extends Component {
                 <Check state={this.state.manageColomns.gender} /> Gender
               </MenuItem>
               <MenuItem
-                onClick={(e, village) => this.updateTable("village")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.village} /> Village
-              </MenuItem>
-              <MenuItem
-                onClick={(e, district) => this.updateTable("district")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.district} /> District
-              </MenuItem>
-              <MenuItem
-                onClick={(e, sub_county) => this.updateTable("sub_county")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.sub_county} /> Sub County
-              </MenuItem>
-              <MenuItem
                 onClick={(e, username) => this.updateTable("username")}
                 eventKey={3.1}
               >
                 {" "}
                 <Check state={this.state.manageColomns.username} /> Username
+              </MenuItem>
+              <MenuItem
+                onClick={(e, number_plate) => this.updateTable("number_plate")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.number_plate} /> Number
+                plate
               </MenuItem>
             </NavDropdown>
           </form>
@@ -249,21 +243,23 @@ export default class VHT extends Component {
                 striped
                 hover
                 csvFileName={
-                  "VHT_USERS_" +
+                  "Ambulance_users_" +
                   moment(Date.now())
                     .local()
                     .format("YYYY_MM_DD_HHmmss") +
                   ".csv"
                 }
                 ref='table'
-                remote={false}
+                remote={true}
                 headerContainerClass='table-header'
                 tableContainerClass='table-responsive table-onScreen'
+                fetchInfo={{ dataTotalSize: this.state.totalDataSize }}
                 pagination={true}
                 options={options}
                 exportCSV
               >
                 <TableHeaderColumn
+                  width='200px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={this.nameFormatter}
                   csvFormat={this.nameFormatter}
@@ -287,34 +283,19 @@ export default class VHT extends Component {
                   Email
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  hidden={this.state.manageColomns.parish}
+                  dataSort={true}
+                  dataFormat={this.parishFormatter}
+                  csvFormat={this.parishFormatter}
+                  dataField='parish'
+                >
+                  Parish
+                </TableHeaderColumn>
+                <TableHeaderColumn
                   hidden={this.state.manageColomns.gender}
                   dataField='gender'
                 >
                   Gender
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.village}
-                  dataFormat={this.villageFormatter}
-                  csvFormat={this.villageFormatter}
-                  dataField='village'
-                >
-                  Village
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.district}
-                  dataFormat={getDistrict}
-                  csvFormat={getDistrict}
-                  dataField='district'
-                >
-                  District
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.sub_county}
-                  dataFormat={this.subCountyFormatter}
-                  csvFormat={this.subCountyFormatter}
-                  dataField='sub_county'
-                >
-                  Sub county
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.username}
@@ -322,6 +303,12 @@ export default class VHT extends Component {
                   dataField='username'
                 >
                   Username
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.number_place}
+                  dataField='number_plate'
+                >
+                  Number plate
                 </TableHeaderColumn>
               </BootstrapTable>
             ) : (

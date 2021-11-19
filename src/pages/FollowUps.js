@@ -14,11 +14,17 @@ import {
   getData,
   nameFormatter,
   ageFormatter,
-  trimesterFormatter
+  trimesterFormatter,
+  getDistrict
 } from "../utils/index";
+// import context
+import {GlobalContext} from '../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class FollowUps extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -51,7 +57,8 @@ export default class FollowUps extends Component {
         swollen_feet: true,
         next_appointment: true,
         follow_date: false,
-        anc: false
+        anc: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -61,16 +68,29 @@ export default class FollowUps extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
   }
+
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
+  
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "followUps",
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -100,6 +120,15 @@ export default class FollowUps extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      this.context.dateToChange(target.value);
+    }
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
@@ -227,7 +256,7 @@ export default class FollowUps extends Component {
               <label htmlFor='email'>From:</label>
               <input
                 name='from'
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -237,7 +266,7 @@ export default class FollowUps extends Component {
               <label htmlFor='email'>To:</label>
               <input
                 name='to'
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -262,6 +291,13 @@ export default class FollowUps extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.village} /> Village
+              </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
               </MenuItem>
               {/* <MenuItem onClick={(e, sub_county) => this.updateTable("sub_county")} eventKey={3.1}> <Check state={this.state.manageColomns.sub_county} /> Sub County</MenuItem>         */}
               <MenuItem
@@ -413,10 +449,9 @@ export default class FollowUps extends Component {
                 options={options}
                 exportCSV
                 condensed
-                pagination
               >
                 <TableHeaderColumn
-                  width='220px'
+                  width='150px'
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
@@ -434,6 +469,7 @@ export default class FollowUps extends Component {
                   Phone number
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  width="120px"
                   hidden={this.state.manageColomns.village}
                   dataFormat={(cell, row, item) =>
                     this.getVillageItem(cell, row, "name")
@@ -444,6 +480,15 @@ export default class FollowUps extends Component {
                   dataField='village'
                 >
                   Village
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  width='120px'
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField="district"
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   width='80px'

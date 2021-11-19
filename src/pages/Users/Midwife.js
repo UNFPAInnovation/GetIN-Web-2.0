@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { fromInitialDate, endOfDay, getData } from "../../utils/index";
+import { fromInitialDate, endOfDay, getData,getDistrict } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import {GlobalContext} from '../../context/GlobalState';
 const Fuse = require("fuse.js");
 
 export default class Midwives extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -30,7 +33,8 @@ export default class Midwives extends Component {
         gender: false,
         username: false,
         health_facility: false,
-        sub_county: false
+        sub_county: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -43,13 +47,25 @@ export default class Midwives extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "users",
-        role: this.state.role
+        role: this.state.role,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -212,6 +228,13 @@ export default class Midwives extends Component {
                 <Check state={this.state.manageColomns.sub_county} /> Sub County
               </MenuItem>
               <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
+              </MenuItem>
+              <MenuItem
                 onClick={(e, gender) => this.updateTable("gender")}
                 eventKey={3.1}
               >
@@ -248,7 +271,6 @@ export default class Midwives extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.name}
@@ -281,6 +303,14 @@ export default class Midwives extends Component {
                   dataField='health_facility'
                 >
                   Health facility
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.sub_county}

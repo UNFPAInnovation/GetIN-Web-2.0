@@ -13,10 +13,16 @@ import {
   enumFormatter,
   getData,
   nameFormatter,
+  getDistrict
 } from "../utils/index";
+// import context
+import {GlobalContext} from '../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class MappedGirls extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -36,7 +42,7 @@ export default class MappedGirls extends Component {
         village: true,
         vht: true,
         name: false,
-        redeemed_service: false,
+        redeemed_service: true,
         trimester: true,
         next_of_kin_name: true,
         education_level: true,
@@ -51,26 +57,40 @@ export default class MappedGirls extends Component {
         bleeding_heavily: true,
         blurred_vision: true,
         swollen_feet: true,
+        district:true
       },
       // remote pagination
       currentPage: 1,
       sizePerPage: 20,
-      totalDataSize: 0,
+      totalDataSize: 0
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
   }
+
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "mappedGirlsEncounter",
-        from: this.state.from,
-        to: this.state.to,
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId: this.context.districtId
       },
       function (error, response) {
         if (error) {
@@ -100,6 +120,15 @@ export default class MappedGirls extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      this.context.dateToChange(target.value);
+    }
   }
 
   updateTable(colomn) {
@@ -126,6 +155,9 @@ export default class MappedGirls extends Component {
   }
   nextOfKinFormatter(cell, row) {
     return row.girl.next_of_kin_phone_number;
+  }
+  getPhone(cell, row) {
+    return row.girl.phone_number;
   }
   getVHT(cell, row) {
     return `${row.user.first_name} ${row.user.last_name} ${row.user.phone}`;
@@ -188,12 +220,10 @@ export default class MappedGirls extends Component {
     }
   }
   familyPlanningFormatter(cell, row) {
-    let familyPlanning = "";
     if (row.family_planning[0].using_family_planning) {
-      return (familyPlanning = "Yes, " + row.family_planning[0].method);
+      return ("Yes, " + row.family_planning[0].method);
     } else {
-      return (familyPlanning =
-        "None, " + row.family_planning[0].no_family_planning_reason);
+      return ("None, " + row.family_planning[0].no_family_planning_reason);
     }
   }
   observationFormatter(cell, row, item) {
@@ -263,7 +293,7 @@ export default class MappedGirls extends Component {
               <label htmlFor="email">From:</label>
               <input
                 name="from"
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className="form-control"
                 type="date"
@@ -273,7 +303,7 @@ export default class MappedGirls extends Component {
               <label htmlFor="email">To:</label>
               <input
                 name="to"
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className="form-control"
                 type="date"
@@ -293,6 +323,13 @@ export default class MappedGirls extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.name} /> Name
               </MenuItem>
+              <MenuItem
+                onClick={(e, phone_number) => this.updateTable("phone_number")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.phone_number} /> Phone
+              </MenuItem>
 
               <MenuItem
                 onClick={(e, village) => this.updateTable("village")}
@@ -300,6 +337,13 @@ export default class MappedGirls extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.village} /> Village
+              </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
               </MenuItem>
               <MenuItem
                 onClick={(e, parish) => this.updateTable("parish")}
@@ -487,10 +531,9 @@ export default class MappedGirls extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
               >
                 <TableHeaderColumn
-                  width="300px"
+                  width="200px"
                   hidden={this.state.manageColomns.name}
                   dataFormat={nameFormatter}
                   csvFormat={nameFormatter}
@@ -500,12 +543,14 @@ export default class MappedGirls extends Component {
                   Name
                 </TableHeaderColumn>
                 <TableHeaderColumn
+                  width='120px'
                   dataSort={true}
-                  hidden={true}
-                  isKey
-                  dataField="phone_number"
+                  hidden={this.state.manageColomns.phone_number}
+                  dataField="phone_number" 
+                  dataFormat={this.getPhone}
+                  csvFormat={this.getPhone}
                 >
-                  Phone number
+                  Phone
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.village}
@@ -518,6 +563,15 @@ export default class MappedGirls extends Component {
                   dataField="village"
                 >
                   Village
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  width='120px'
+                  hidden={this.state.manageColomns.district}
+                  dataFormat={getDistrict}
+                  csvFormat={getDistrict}
+                  dataField="district"
+                >
+                  District
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.parish}
@@ -644,6 +698,7 @@ export default class MappedGirls extends Component {
                   csvFormat={this.dateFormatter}
                   dataSort={true}
                   dataField="created_at"
+                  isKey
                 >
                   Date Mapped
                 </TableHeaderColumn>

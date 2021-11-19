@@ -3,12 +3,12 @@ import {
   fromInitialDate,
   endOfDay,
   dateFormatter,
-  enumFormatter,
   getData,
   trimesterFormatter,
   chewFormatter,
   nameFormatter,
-  hideRowIfRecordExists
+  hideRowIfRecordExists,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import _ from "underscore";
@@ -18,9 +18,12 @@ import { NavDropdown, MenuItem } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { GlobalContext } from "../../context/GlobalState";
 const Fuse = require("fuse.js");
 
 export default class ExpectedAppointments extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +43,8 @@ export default class ExpectedAppointments extends Component {
         vht: true,
         trimester: false,
         //  remaining_visits:false,
-        date: false
+        date: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -84,15 +88,27 @@ export default class ExpectedAppointments extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "Appointments",
         status: this.state.status,
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -138,6 +154,15 @@ export default class ExpectedAppointments extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      this.context.dateToChange(target.value);
+    }
   }
   search(event) {
     this.setState({ search: event.target.value });
@@ -249,7 +274,7 @@ export default class ExpectedAppointments extends Component {
               <label htmlFor='email'>From:</label>
               <input
                 name='from'
-                value={this.state.from}
+                value={this.context.dateFrom}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -259,7 +284,7 @@ export default class ExpectedAppointments extends Component {
               <label htmlFor='email'>To:</label>
               <input
                 name='to'
-                value={this.state.to}
+                value={this.context.dateTo}
                 onChange={this.handleInputChange}
                 className='form-control'
                 type='date'
@@ -292,6 +317,13 @@ export default class ExpectedAppointments extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.trimester} /> Trimester
+              </MenuItem>
+              <MenuItem
+                onClick={(e, district) => this.updateTable("district")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.district} /> District
               </MenuItem>
               {/* <MenuItem onClick={(e, remaining_visits) => this.updateTable("remaining_visits")} eventKey={3.1}> <Check state={this.state.manageColomns.remaining_visits} /> Remaining Visits</MenuItem>              */}
               <MenuItem
@@ -327,7 +359,6 @@ export default class ExpectedAppointments extends Component {
                 pagination={true}
                 options={options}
                 exportCSV
-                pagination
                 expandableRow={this.isExpandableRow}
                 expandComponent={this.expandComponent}
                 expandColumnOptions={{
@@ -368,7 +399,7 @@ export default class ExpectedAppointments extends Component {
                   hidden={this.state.manageColomns.trimester}
                   // dataSort={true}
                   filterFormatted
-                  dataFormat={enumFormatter}
+                  // dataFormat={enumFormatter}
                   csvFormat={trimesterFormatter}
                   dataFormat={trimesterFormatter}
                   filter={{ type: "SelectFilter", options: trimesterType }}
@@ -384,6 +415,15 @@ export default class ExpectedAppointments extends Component {
                   dataField='date'
                 >
                   Date
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.district}
+                  dataSort={true}
+                  csvFormat={getDistrict}
+                  dataFormat={getDistrict}
+                  dataField='district'
+                >
+                  District
                 </TableHeaderColumn>
               </BootstrapTable>
             ) : (

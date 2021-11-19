@@ -6,15 +6,22 @@ import {
   enumFormatter,
   getData,
   nameFormatter,
-  ageFormatter
+  ageFormatter,
+  getDistrict
 } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+// import context
+import {GlobalContext} from '../../context/GlobalState';
+
 const Fuse = require("fuse.js");
 
 export default class Home extends Component {
+
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
 
@@ -45,7 +52,8 @@ export default class Home extends Component {
         received_postnatal_care: true,
         delivery: false,
         family_planning: false,
-        delivery_date: false
+        delivery_date: false,
+        district:true
       },
       // remote pagination
       currentPage: 1,
@@ -57,15 +65,27 @@ export default class Home extends Component {
   }
   componentDidMount() {
     this.loadData();
+    this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
   }
+
+  componentDidUpdate(){
+    if(this.context.change){
+      this.setState({isLoaded:false});
+      this.loadData();
+      this.context.contextChange(false);
+      this.context.districtId?this.setState({manageColomns:{...this.state.manageColomns,district:true}}):this.setState({manageColomns:{...this.state.manageColomns,district:false}})
+    }
+  }
+
   loadData() {
     const thisApp = this;
     getData(
       {
         name: "deliveries",
         delivery_location: this.state.delivery_location,
-        from: this.state.from,
-        to: this.state.to
+        from: this.context.dateFrom,
+        to: this.context.dateTo,
+        districtId:this.context.districtId
       },
       function(error, response) {
         if (error) {
@@ -110,31 +130,34 @@ export default class Home extends Component {
       });
     }
   }
-  deliveryFormatter(cell, row) {
-    let delivery = "";
-    if (row.mother_alive && row.baby_alive) {
-      return (delivery = "Mother Alive, Baby Alive");
-    } else if (!row.mother_alive && row.baby_alive) {
-      return (delivery = "Mother Dead, Baby Alive");
-    } else if (row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Alive, Baby Dead");
-    } else if (!row.mother_alive && !row.baby_alive) {
-      return (delivery = "Mother Dead, Baby Dead");
+  motherStatusFormatter(cell, row) {
+    if (row.mother_alive) {
+      return ("Mother Alive");
+    } else if (!row.mother_alive) {
+      return ("Mother Dead");
     } else {
-      return (delivery = "Not recorded");
+      return ("Not recorded");
+    }
+  }
+
+  babyStatusFormatter(cell, row) {
+    if (row.baby_alive) {
+      return ("Baby Alive");
+    } else if (!row.baby_alive) {
+      return ("Baby Dead");
+    } else {
+      return ("Not recorded");
     }
   }
   familyPlanningFormatter(cell, row) {
-    let familyPlanning = "";
     if(row.family_planning.length === 0) return;
     if (
       row.family_planning &&
       row.family_planning[0].using_family_planning === true
     ) {
-      return (familyPlanning = "Yes, " + row.family_planning[0].method);
+      return ("Yes, " + row.family_planning[0].method);
     } else {
-      return (familyPlanning =
-        "None, " + row.family_planning &&
+      return ("None, " + row.family_planning &&
         row.family_planning[0].no_family_planning_reason);
     }
   }
@@ -151,7 +174,18 @@ export default class Home extends Component {
       },
       () => thisApp.loadData()
     );
+
+    // update from date filter
+    if(target.name === 'from' && target.type === 'date'){
+      this.context.dateFromChange(target.value);
+    }
+    // update to date filter
+    if(target.name === 'to' && target.type === 'date'){
+      this.context.dateToChange(target.value);
+    }
+
   }
+
   search(event) {
     this.setState({ search: event.target.value });
     if (event.target.value.length <= 0) {
@@ -229,7 +263,7 @@ export default class Home extends Component {
             <label htmlFor='email'>From:</label>
             <input
               name='from'
-              value={this.state.from}
+              value={this.context.dateFrom}
               onChange={this.handleInputChange}
               className='form-control'
               type='date'
@@ -239,7 +273,7 @@ export default class Home extends Component {
             <label htmlFor='email'>To:</label>
             <input
               name='to'
-              value={this.state.to}
+              value={this.context.dateTo}
               onChange={this.handleInputChange}
               className='form-control'
               type='date'
@@ -264,6 +298,13 @@ export default class Home extends Component {
             >
               {" "}
               <Check state={this.state.manageColomns.village} /> Village
+            </MenuItem>
+            <MenuItem
+              onClick={(e, district) => this.updateTable("district")}
+              eventKey={3.1}
+            >
+              {" "}
+              <Check state={this.state.manageColomns.district} /> District
             </MenuItem>
             <MenuItem
               onClick={(e, next_of_kin_name) => this.updateTable("next_of_kin")}
@@ -316,8 +357,16 @@ export default class Home extends Component {
               eventKey={3.1}
             >
               {" "}
-              <Check state={this.state.manageColomns.delivery} /> Delivery
-              status
+              <Check state={this.state.manageColomns.delivery} /> 
+              Baby's Status
+            </MenuItem>
+            <MenuItem
+              onClick={(e, delivery) => this.updateTable("delivery")}
+              eventKey={3.1}
+            >
+              {" "}
+              <Check state={this.state.manageColomns.delivery} /> 
+              Mother's Status
             </MenuItem>
             <MenuItem
               onClick={(e, family_planning) =>
@@ -362,10 +411,9 @@ export default class Home extends Component {
               options={options}
               exportCSV
               condensed
-              pagination
             >
               <TableHeaderColumn
-                width='220px'
+                width='150px'
                 hidden={this.state.manageColomns.name}
                 dataFormat={nameFormatter}
                 csvFormat={nameFormatter}
@@ -393,6 +441,14 @@ export default class Home extends Component {
                 dataField='village'
               >
                 Village
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                hidden={this.state.manageColomns.district}
+                dataFormat={getDistrict}
+                csvFormat={getDistrict}
+                dataField='district'
+              >
+                District
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.next_of_kin}
@@ -447,11 +503,19 @@ export default class Home extends Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.delivery}
-                dataFormat={this.deliveryFormatter}
-                csvFormat={this.deliveryFormatter}
-                dataField='delivery'
+                dataFormat={this.motherStatusFormatter}
+                csvFormat={this.motherStatusFormatter}
+                dataField="Mother's Status"
               >
-                Status of delivery
+                Status of Mother
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                hidden={this.state.manageColomns.delivery}
+                dataFormat={this.babyStatusFormatter}
+                csvFormat={this.babyStatusFormatter}
+                dataField="Baby's Status"
+              >
+                Status of Baby
               </TableHeaderColumn>
               <TableHeaderColumn
                 hidden={this.state.manageColomns.family_planning}

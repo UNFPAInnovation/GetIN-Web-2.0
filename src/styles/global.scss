@@ -128,6 +128,25 @@ a:focus {
 .container-fluid {
   padding: 0;
 }
+// Top Nav bar
+.top-navbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#district-nav-dropdown{
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 11px;
+  text-decoration: none;
+}
+
+#district-nav{
+  list-style: none !important;
+  line-height: 60px;
+}
+
 .navbar-brand {
   color: #4cc4d4 !important;
   font-size: 24px;
@@ -366,6 +385,7 @@ a:focus {
     border-radius: 11px;
     list-style: none !important;
   }
+  
 }
 .checkboxWrapper {
   width: 18px;
@@ -445,7 +465,11 @@ Dashboard Cards
   }
   &.card-purple {
     background: #da4453; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #89216b, #da4453); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+      to right,
+      #89216b,
+      #da4453
+    ); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #89216b,
@@ -454,7 +478,11 @@ Dashboard Cards
   }
   &.card-blue {
     background: #56ccf2; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2f80ed, #56ccf2); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+      to right,
+      #2f80ed,
+      #56ccf2
+    ); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #2f80ed,
@@ -463,7 +491,11 @@ Dashboard Cards
   }
   &.card-orange {
     background: #ff4b1f; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #ff9068, #ff4b1f); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+      to right,
+      #ff9068,
+      #ff4b1f
+    ); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(
       to right,
       #ff9068,
@@ -736,6 +768,7 @@ Dashboard Cards
 }
 .modal-dialog {
   width: 80%;
+  min-height: 600px;
   height: 70vh;
   .modal-content {
     height: 100%;
@@ -748,4 +781,21 @@ Dashboard Cards
 /* Table row styling ANC*/
 .tr-hidden {
   display: none !important;
+}
+
+.search-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  padding: 5px;
+  margin-bottom: 5px;
+  .dropdown {
+    line-height: 30px !important;
+    margin-right: 15px;
+  }
+  .form-control {
+    margin-bottom: 0;
+  }
 }

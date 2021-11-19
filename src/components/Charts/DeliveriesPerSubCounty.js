@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {Line} from 'react-chartjs-2';
 const service = require('../../api/services');

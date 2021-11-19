@@ -9,17 +9,21 @@ import {
   faBaby,
   faUsers,
   faHome,
-  faEnvelope
+  faEnvelope,
+  faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { GlobalContext } from "../context/GlobalState";
+import Logo from "../assets/images/Logo.png";
+
 export default class SideNav extends Component {
   constructor(props) {
     super(props);
     this.state = {
       mini: false,
       show: true,
-      district: ""
+      district: "",
     };
     this.ToggleMenu = this.ToggleMenu.bind(this);
   }
@@ -28,7 +32,7 @@ export default class SideNav extends Component {
     let detailComponent = document.getElementById("detailComponent");
     if (this.state.mini === false) {
       this.setState({
-        mini: true
+        mini: true,
       });
       sideNavBar.classList.remove("col-md-2");
       sideNavBar.classList.add("col-md-1");
@@ -36,7 +40,7 @@ export default class SideNav extends Component {
       detailComponent.classList.add("col-md-11");
     } else {
       this.setState({
-        mini: false
+        mini: false,
       });
       sideNavBar.classList.remove("col-md-1");
       sideNavBar.classList.add("col-md-2");
@@ -49,40 +53,43 @@ export default class SideNav extends Component {
     let stateX = this.state.show;
     if (stateX === false) {
       this.setState({
-        show: true
+        show: true,
       });
     } else {
       this.setState({
-        show: false
+        show: false,
       });
     }
   }
   activeMenu() {
     document.getElementById("girlsLink").classList.remove("active");
     document.getElementById("dashboardLink").classList.remove("active");
-    document.getElementById("usersLink").classList.remove("active");
+    document.getElementById("usersLink")?.classList.remove("active");
     document.getElementById("anc_visitsLink").classList.remove("active");
     document.getElementById("follow_upsLink").classList.remove("active");
     document.getElementById("messagesLink").classList.remove("active");
     document.getElementById("healthFacilitiesLink").classList.remove("active");
     document.getElementById("deliveriesLink").classList.remove("active");
+    sessionStorage.getItem('role') === 'manager' && document.getElementById("settingsLink").classList.remove("active");
 
-    if (window.location.pathname == "/dashboard") {
+    if (window.location.pathname === "/dashboard") {
       document.getElementById("dashboardLink").classList.add("active");
-    } else if (window.location.pathname == "/girls") {
+    } else if (window.location.pathname === "/girls") {
       document.getElementById("girlsLink").classList.add("active");
-    } else if (window.location.pathname == "/users") {
-      document.getElementById("usersLink").classList.add("active");
-    } else if (window.location.pathname == "/anc_visits") {
+    } else if (window.location.pathname === "/users") {
+      document.getElementById("usersLink")?.classList.add("active");
+    } else if (window.location.pathname === "/anc_visits") {
       document.getElementById("anc_visitsLink").classList.add("active");
-    } else if (window.location.pathname == "/follow_ups") {
+    } else if (window.location.pathname === "/follow_ups") {
       document.getElementById("follow_upsLink").classList.add("active");
-    } else if (window.location.pathname == "/deliveries") {
+    } else if (window.location.pathname === "/deliveries") {
       document.getElementById("deliveriesLink").classList.add("active");
-    } else if (window.location.pathname == "/health_facilities") {
+    } else if (window.location.pathname === "/health_facilities") {
       document.getElementById("healthFacilitiesLink").classList.add("active");
-    } else if (window.location.pathname == "/messages") {
+    } else if (window.location.pathname === "/messages") {
       document.getElementById("messagesLink").classList.add("active");
+    } else if (window.location.pathname === "/settings") {
+      document.getElementById("settingsLink").classList.add("active");
     }
   }
   componentDidUpdate(prevProps) {
@@ -92,18 +99,23 @@ export default class SideNav extends Component {
     this.activeMenu();
     let district = sessionStorage.getItem("district");
     this.setState({
-      district: district
+      district: district,
     });
   }
+
+  static contextType = GlobalContext;
+
   render() {
+    let role = sessionStorage.getItem("role");
+    let district = sessionStorage.getItem('district');
     return (
       <div className={this.state.show ? "sideNav" : "sideNav hiddenMenu"}>
         <nav className="headerNav navbar navbar-default navbar-static-top">
           <div className="navbar-header">
             <a className="navbar-brand" href="/dashboard">
-              <img src={require("../assets/images/Logo.png")} />
+              <img alt="GETIN" src={Logo} />
               <span className="brand">GetIN</span>
-              <span className="district">{this.state.district}</span>
+              <span className="district">{district !== 'undefined' ?district:this.context.district}</span>
             </a>
             <button
               type="button"
@@ -153,18 +165,28 @@ export default class SideNav extends Component {
                 <FontAwesomeIcon icon={faHospital} />
               </Link>
             </ListGroupItem>
-            <ListGroupItem id="usersLink">
-              <Link to="/users">
-                {this.state.mini === false && "Users"}{" "}
-                <FontAwesomeIcon icon={faUsers} />
-              </Link>
-            </ListGroupItem>
+            {role !== "manager" && (
+              <ListGroupItem id="usersLink">
+                <Link to="/users">
+                  {this.state.mini === false && "Users"}{" "}
+                  <FontAwesomeIcon icon={faUsers} />
+                </Link>
+              </ListGroupItem>
+            )}
             <ListGroupItem id="messagesLink">
               <Link to="/messages">
                 {this.state.mini === false && "Messages"}{" "}
                 <FontAwesomeIcon icon={faEnvelope} />
               </Link>
             </ListGroupItem>
+            {role === 'manager' && (
+              <ListGroupItem id="settingsLink">
+                <Link to="/settings">
+                  {this.state.mini === false && "Settings"}{" "}
+                  <FontAwesomeIcon icon={faCog} />
+                </Link>
+              </ListGroupItem>
+            )}
           </ListGroup>
         </div>
       </div>

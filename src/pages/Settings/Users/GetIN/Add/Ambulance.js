@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import _ from "underscore";
 import { Modal } from "react-bootstrap";
 const alertifyjs = require("alertifyjs");
-const service = require("../../../api/services");
+const service = require("../../../../../api/services");
 
-export default class ChewModal extends Component {
+
+export default class AmbulanceModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,38 +15,29 @@ export default class ChewModal extends Component {
       gender: null,
       email: null,
       phone_number: null,
-      village: null,
-      subcounty: null,
-      villages: [],
-      villages_copy: [],
-      sub_counties: [],
+      number_plate: null,
+      parish: null,
+      parishes: [],
       loading: false
     };
     this.handleChange = this.handleChange.bind(this);
-    this.updateVillagesList = this.updateVillagesList.bind(this);
   }
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    this.setState(
-      {
-        [name]: value
-      },
-      function() {
-        if (name === "sub_county") {
-          this.updateVillagesList();
-        }
-      }
-    );
+
+    this.setState({
+      [name]: value
+    });
   }
-  addChew(e) {
+  submit(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
       loading: true
     });
-    alertifyjs.message("Adding CHEW..", 2, function() {});
+    alertifyjs.message("Adding Ambulance..", 2, function() {});
     service.addUser(
       {
         first_name: this.state.first_name,
@@ -54,105 +45,63 @@ export default class ChewModal extends Component {
         username: this.state.username,
         email: this.state.email,
         gender: this.state.gender,
-        village: this.state.village,
+        parish: this.state.parish,
+        number_plate: this.state.number_plate,
         password: this.state.password,
         phone: this.state.phone_number,
-        role: "chew"
+        role: "ambulance"
       },
-      function(error, response) {
+      function(error, token) {
         if (error) {
           thisApp.setState({
             loading: false
           });
-          alertifyjs.error("Request failed, try again ", function() {});
+          alertifyjs.error("Request failed, try again", 5, function() {});
         } else {
           thisApp.setState({
             loading: false
           });
-          alertifyjs.success("Added successfully", 2, function() {});
+          alertifyjs.success("Added successfully", 3, function() {});
           window.location.reload();
         }
       }
     );
   }
-  getVillages() {
+  getParishes() {
     const thisApp = this;
     thisApp.setState({
-      villages: [],
-      villages_copy: [],
+      parishes: [],
+      parishes_copy: [],
       loadingText: "Loading..."
     });
-    service.getVillages(function(error, response) {
+    service.getParishes(function(error, response) {
       if (error) {
         thisApp.setState({
           isLoaded: true,
-          villages: []
+          health_facilities: []
         });
       } else {
         thisApp.setState({
           isLoaded: true,
-          villages: response.results,
-          villages_copy: response.results
+          parishes: response.results
         });
       }
     });
-  }
-  getSubCounties() {
-    const thisApp = this;
-    thisApp.setState({
-      sub_counties: [],
-      sub_counties_copy: [],
-      loadingText: "Loading..."
-    });
-
-    service.getSubCounties(function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: []
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          sub_counties: response.results
-        });
-      }
-    });
-  }
-  updateVillagesList() {
-    const thisApp = this;
-    if (thisApp.state.sub_county) {
-      let subcounty_villages = _.filter(
-        thisApp.state.villages_copy,
-        function(village) {
-          return (
-            village.parish.sub_county.id === parseInt(thisApp.state.sub_county)
-          );
-        }
-
-        //village.parish.sub_county.id === this.state.sub_county;
-      );
-      thisApp.setState({
-        villages: subcounty_villages,
-        village: null
-      });
-    }
   }
   componentDidMount() {
-    this.getVillages();
-    this.getSubCounties();
+    this.getParishes();
   }
   render() {
     return (
       <Modal
         show={this.props.show}
-        onHide={() => this.props.handleClose("chew")}
+        onHide={() => this.props.handleClose("ambulance")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a new VHT</Modal.Title>
+          <Modal.Title>Add a new Ambulance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={e => this.addChew(e)}>
+          <form onSubmit={e => this.submit(e)}>
             <div className='col-md-12'>
               <div className='form-group col-md-6'>
                 <label>First name</label>
@@ -207,7 +156,7 @@ export default class ChewModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className='form-group col-md-12'>
+              <div className='form-group col-md-6'>
                 <label>Email address</label>
                 <input
                   type='email'
@@ -243,42 +192,33 @@ export default class ChewModal extends Component {
                   placeholder='Password'
                 ></input>
               </div>
+              <div className='form-group col-md-6'>
+                <label>Number plate</label>
+                <input
+                  required
+                  className='form-control'
+                  name='number_plate'
+                  onChange={this.handleChange}
+                  value={this.state.number_plate}
+                  type='text'
+                  placeholder='Number plate'
+                ></input>
+              </div>
             </div>
             <div className='col-md-12'>
               <br className='clear-both' />
               <div className='form-group col-md-6'>
-                <label>Sub counties</label>
+                <label>Parish</label>
                 <select
-                  required
                   className='form-control'
-                  name='sub_county'
+                  name='parish'
                   onChange={this.handleChange}
-                  value={this.state.sub_county}
+                  value={this.state.parish}
                 >
                   <option defaultValue value={null}>
-                    Select subcounty
+                    Select Parish
                   </option>
-                  {this.state.sub_counties.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className='form-group col-md-6'>
-                <label>Villages</label>
-                <select
-                  required
-                  className='form-control'
-                  name='village'
-                  onChange={this.handleChange}
-                  value={this.state.village}
-                >
-                  <option defaultValue value={null}>
-                    Select Village
-                  </option>
-                  {this.state.villages.map((value, key) => (
+                  {this.state.parishes.map((value, key) => (
                     <option key={key} value={value.id}>
                       {value.name}
                     </option>
@@ -287,7 +227,7 @@ export default class ChewModal extends Component {
               </div>
               <br className='clear-both' />
               <button type='submit' className='btn btn-primary'>
-                {this.state.loading ? "Adding Chew" : "Submit"}
+                {this.state.loading ? "Adding Ambulance" : "Submit"}
               </button>
               <br className='clear-both' />
             </div>
@@ -296,7 +236,7 @@ export default class ChewModal extends Component {
         <Modal.Footer>
           <button
             className='btn btn-default'
-            onClick={() => this.props.handleClose("chew")}
+            onClick={() => this.props.handleClose("ambulance")}
           >
             Close
           </button>

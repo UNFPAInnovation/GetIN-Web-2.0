@@ -36,9 +36,7 @@ export const nameFormatter = function(cell, row) {
   return (
     row.girl.first_name +
     " " +
-    row.girl.last_name +
-    " - " +
-    row.girl.phone_number
+    row.girl.last_name
   );
 };
 export const chewFormatter = function(cell, row) {
@@ -50,7 +48,7 @@ export const chewFormatter = function(cell, row) {
 export const getData = function(action, callback) {
   switch (action.name) {
     case "Appointments":
-      service.Appointments(action.status, action.from, action.to, function(
+      service.Appointments(action.status, action.from, action.to,action.districtId, function(
         error,
         response
       ) {
@@ -66,6 +64,7 @@ export const getData = function(action, callback) {
         action.delivery_location,
         action.from,
         action.to,
+        action.districtId,
         function(error, response) {
           if (error) {
             return callback(error);
@@ -76,7 +75,7 @@ export const getData = function(action, callback) {
       );
       break;
     case "users":
-      service.users(action.role, function(error, response) {
+      service.users(action.role,action.districtId,function(error, response) {
         if (error) {
           return callback(error);
         } else {
@@ -93,8 +92,35 @@ export const getData = function(action, callback) {
         }
       });
       break;
+    case "getHealthFacilitiesByDistrict":
+      service.getHealthFacilitiesByDistrict(action.districtId,function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
     case "listSms":
       service.listSms(function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
+    case "mappedGirlsEncounter":
+      service.mappedGirlsEncounter(action.from,action.to,action.districtId,function(error, response) {
+        if (error) {
+          return callback(error);
+        } else {
+          return callback(null, response);
+        }
+      });
+      break;
+    case "followUps":
+      service.followUps(action.from,action.to,action.districtId,function(error, response) {
         if (error) {
           return callback(error);
         } else {
@@ -124,6 +150,9 @@ export const hideRowIfRecordExists = (row, appointments) => {
         return e.id;
       })
       .indexOf(row.id);
-    return indexOfGirl != 0 && "tr-hidden";
+    return indexOfGirl !== 0 && "tr-hidden";
   }
 };
+export const getDistrict = (cell, row)=> {
+  return row?.girl?.village?.parish?.sub_county?.county?.district?.name;
+}
