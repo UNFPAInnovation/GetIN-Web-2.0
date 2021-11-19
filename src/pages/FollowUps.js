@@ -123,12 +123,10 @@ export default class FollowUps extends Component {
 
     // update from date filter
     if(target.name === 'from' && target.type === 'date'){
-      console.log(target.value);
       this.context.dateFromChange(target.value);
     }
     // update to date filter
     if(target.name === 'to' && target.type === 'date'){
-      console.log(target.value);
       this.context.dateToChange(target.value);
     }
   }
@@ -210,7 +208,6 @@ export default class FollowUps extends Component {
   }
 
   render() {
-    console.log('Context:', this.context);
     let followUps = this.state.followUps;
     const YesNoFormat = {
       true: "Yes",

@@ -43,7 +43,6 @@ export default class HealthFacilityModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index]
     const optionId =  optionElement.getAttribute('id');
-    console.log(optionId);
     this.getCountiesByDistrict(optionId);
   }
 
@@ -57,7 +56,6 @@ export default class HealthFacilityModal extends Component {
     const index = target.selectedIndex;
     const optionElement = target.childNodes[index]
     const optionId =  optionElement.getAttribute('id');
-    console.log(optionId);
     this.getSubCountiesByCounty(optionId);
   }
 

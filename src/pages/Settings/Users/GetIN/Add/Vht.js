@@ -16,12 +16,20 @@ export default class ChewModal extends Component {
       phone_number: null,
       village: null,
       subcounty: null,
+      county: null,
+      district: null,
       villages: [],
       villages_copy: [],
-      sub_counties: [],
-      loading: false
+      subcounties: [],
+      parishes: [],
+      parish: null,
+      loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleDistrictChange = this.handleDistrictChange.bind(this);
+    this.handleCountyChange = this.handleCountyChange.bind(this);
+    this.handleSubCountyChange = this.handleSubCountyChange.bind(this);
+    this.handleParishChange = this.handleParishChange.bind(this);
   }
   handleChange(event) {
     const target = event.target;
@@ -29,22 +37,72 @@ export default class ChewModal extends Component {
     const name = target.name;
     this.setState(
       {
-        [name]: value
+        [name]: value,
       },
-      function() {
+      function () {
         if (name === "sub_county") {
-          this.updateVillagesList();
         }
       }
     );
+  }
+  handleDistrictChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getCountiesByDistrict(optionId);
+  }
+
+  handleCountyChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getSubCountiesByCounty(optionId);
+  }
+
+  handleSubCountyChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getParishBySubCounty(optionId);
+  }
+
+  handleParishChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getVillagesByParish(optionId);
   }
   addChew(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
-      loading: true
+      loading: true,
     });
-    alertifyjs.message("Adding CHEW..", 2, function() {});
+    alertifyjs.message("Adding CHEW..", 2, function () {});
     service.addUser(
       {
         first_name: this.state.first_name,
@@ -53,25 +111,116 @@ export default class ChewModal extends Component {
         email: this.state.email,
         gender: this.state.gender,
         village: this.state.village,
+        parish: this.state.parish,
+        subcounty: this.state.subcounty,
+        county: this.state.county,
+        district: this.state.district,
         password: this.state.password,
         phone: this.state.phone_number,
-        role: "chew"
+        role: "chew",
       },
-      function(error, response) {
+      function (error, response) {
         if (error) {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.error("Request failed, try again ", function() {});
+          alertifyjs.error("Request failed, try again ", function () {});
         } else {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.success("Added successfully", 2, function() {});
+          alertifyjs.success("Added successfully", 2, function () {});
           window.location.reload();
         }
       }
     );
+  }
+  getDistricts() {
+    const thisApp = this;
+    service.getDistricts(function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          districts: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          districts: response.results.filter(
+            (district) =>
+              district.id !== 7 && district.id !== 4 && district.id !== 2
+          ),
+        });
+      }
+    });
+  }
+  getParishBySubCounty(id) {
+    const thisApp = this;
+    service.getParishBySubCounty(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: response.results,
+        });
+      }
+    });
+  }
+  getSubCountiesByCounty(id) {
+    const thisApp = this;
+    service.getSubCountiesByCounty(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: response.results,
+        });
+      }
+    });
+  }
+  getVillagesByParish(id) {
+    const thisApp = this;
+    service.getVillagesByParish(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          villages: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          villages: response.results,
+        });
+      }
+    });
+  }
+
+  getCountiesByDistrict(id) {
+    const thisApp = this;
+    service.getCountiesByDistrict(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          counties: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          counties: response.results,
+        });
+      }
+    });
+  }
+  componentDidMount() {
+    this.getDistricts();
   }
   render() {
     return (
@@ -83,51 +232,51 @@ export default class ChewModal extends Component {
           <Modal.Title>Add a new VHT</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={e => this.addChew(e)}>
-            <div className='col-md-12'>
-              <div className='form-group col-md-6'>
+          <form onSubmit={(e) => this.addChew(e)}>
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>First name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='first_name'
+                  name="first_name"
                   value={this.state.first_name}
-                  className='form-control'
-                  placeholder='John'
+                  className="form-control"
+                  placeholder="John"
                   autoFocus={true}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Last name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='last_name'
+                  name="last_name"
                   value={this.state.last_name}
-                  className='form-control'
-                  placeholder='Musoke'
+                  className="form-control"
+                  placeholder="Musoke"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Phone number</label>
                 <input
                   required
-                  type='tel'
+                  type="tel"
                   onChange={this.handleChange}
-                  name='phone_number'
+                  name="phone_number"
                   value={this.state.phone_number}
-                  className='form-control'
-                  placeholder='070XXXXXX'
+                  className="form-control"
+                  placeholder="070XXXXXX"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Gender</label>
                 <select
                   required
-                  className='form-control'
-                  name='gender'
+                  className="form-control"
+                  name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
                 >
@@ -138,56 +287,207 @@ export default class ChewModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className='form-group col-md-12'>
+              <div className="form-group col-md-12">
                 <label>Email address</label>
                 <input
-                  type='email'
-                  className='form-control'
-                  name='email'
+                  type="email"
+                  className="form-control"
+                  name="email"
                   onChange={this.handleChange}
                   value={this.state.email}
-                  placeholder='jmusoke@gmail.com'
+                  placeholder="jmusoke@gmail.com"
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Username</label>
                 <input
                   required
-                  type='text'
-                  className='form-control'
-                  name='username'
+                  type="text"
+                  className="form-control"
+                  name="username"
                   onChange={this.handleChange}
                   value={this.state.username}
-                  placeholder='jmusoke'
+                  placeholder="jmusoke"
                 ></input>
               </div>
 
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Password</label>
                 <input
                   required
-                  className='form-control'
-                  name='password'
+                  className="form-control"
+                  name="password"
                   onChange={this.handleChange}
                   value={this.state.password}
-                  type='password'
-                  placeholder='Password'
+                  type="password"
+                  placeholder="Password"
                 ></input>
               </div>
+              <div className="form-group col-md-6">
+                <label>District</label>
+                <select
+                  required
+                  className="form-control"
+                  name="district"
+                  onChange={this.handleDistrictChange}
+                  value={this.state.district}
+                >
+                  <option defaultValue value={null}>
+                    Select District
+                  </option>
+                  {this.state.districts
+                    ? this.state.districts.map((district) => {
+                        return (
+                          <option
+                            key={district.id}
+                            id={district.id}
+                            defaultValue
+                            value={district.id}
+                          >
+                            {district.name}
+                          </option>
+                        );
+                      })
+                    : "Loading ..."}
+                </select>
+              </div>
+
+              {this.state.district && (
+                <div className="form-group col-md-6">
+                  <label>County</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="county"
+                    onChange={this.handleCountyChange}
+                    value={this.state.county}
+                  >
+                    <option defaultValue value={null}>
+                      Select County
+                    </option>
+                    {this.state.counties
+                      ? this.state.counties.map((county) => {
+                          return (
+                            <option
+                              key={county.id}
+                              id={county.id}
+                              defaultValue
+                              value={county.id}
+                            >
+                              {county.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+
+              {this.state.county && (
+                <div className="form-group col-md-6">
+                  <label>Subcounty</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="subcounty"
+                    onChange={this.handleSubCountyChange}
+                    value={this.state.subcounty}
+                  >
+                    <option defaultValue value={null}>
+                      Select Subcounty
+                    </option>
+                    {this.state.subcounties
+                      ? this.state.subcounties.map((subcounty) => {
+                          return (
+                            <option
+                              key={subcounty.id}
+                              defaultValue
+                              id={subcounty.id}
+                              value={subcounty.id}
+                            >
+                              {subcounty.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+              {this.state.subcounty && (
+                <div className="form-group col-md-6">
+                  <label>Parish</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="parish"
+                    onChange={this.handleParishChange}
+                    value={this.state.parish}
+                  >
+                    <option defaultValue value={null}>
+                      Select Parish
+                    </option>
+                    {this.state.parishes
+                      ? this.state.parishes.map((parish) => {
+                          return (
+                            <option
+                              key={parish.id}
+                              id={parish.id}
+                              defaultValue
+                              value={parish.id}
+                            >
+                              {parish.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+
+              {this.state.parish && (
+                <div className="form-group col-md-6">
+                  <label>Village</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="village"
+                    onChange={this.handleChange}
+                    value={this.state.village}
+                  >
+                    <option defaultValue value={null}>
+                      Select Village
+                    </option>
+                    {this.state.villages
+                      ? this.state.villages.map((village) => {
+                          return (
+                            <option
+                              key={village.id}
+                              defaultValue
+                              value={village.id}
+                            >
+                              {village.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
             </div>
-            <div className='col-md-12'>
-              <br className='clear-both' />
-              <br className='clear-both' />
-              <button type='submit' className='btn btn-primary'>
+            <div className="col-md-12">
+              <br className="clear-both" />
+
+              <br className="clear-both" />
+              <button type="submit" className="btn btn-primary">
                 {this.state.loading ? "Adding Chew" : "Submit"}
               </button>
-              <br className='clear-both' />
+              <br className="clear-both" />
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <button
-            className='btn btn-default'
+            className="btn btn-default"
             onClick={() => this.props.handleClose("chew")}
           >
             Close

@@ -61,7 +61,7 @@ exports.addChew = function(data, callback) {
     }
   );
 };
-exports.updateChew = function (id, data, callback) {
+exports.updateUser = function (id, data, callback) {
   api.patch(`${addr}/api/v1/users/${id}`, OPTIONS, data, function (error, response) {
     if (error) {
       return callback(error);
@@ -368,6 +368,25 @@ exports.getSubCountiesByCounty = function(countyId='',callback) {
       }
     );
   };
+
+    exports.getVillagesByParish = function (parishId = "", callback) {
+      api.get(
+        addr + `/api/v1/parishes${parishId && `?parish=${parishId}`}`,
+        OPTIONS,
+        function (error, response) {
+          //callback of the method here
+          if (error) {
+            return callback(error);
+          } else {
+            if (response.status !== 200) {
+              return callback("Couldnot get villages");
+            } else {
+              return callback(null, response.data);
+            }
+          }
+        }
+      );
+    };
 
   exports.getCountiesByDistrict = function(districtId='',callback) {
     api.get(
