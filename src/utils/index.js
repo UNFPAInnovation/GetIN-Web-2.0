@@ -10,7 +10,12 @@ export const prevMonthFirstDay = moment()
   .date(1)
   .local()
   .format("YYYY-MM-DD");
-export const fromInitialDate = "2019-11-01";
+
+export const fromInitialDate = moment()
+  .subtract(0, "months")
+  .date(1)
+  .local()
+  .format("YYYY-MM-DD");
 export const endOfDay = new Date().setHours(23, 59, 59, 999);
 export const dateFormatter = function(cell) {
   return moment(new Date(cell)).format("Do MMM YY hh a");
