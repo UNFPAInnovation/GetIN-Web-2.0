@@ -12,7 +12,7 @@ export const prevMonthFirstDay = moment()
   .format("YYYY-MM-DD");
 
 export const fromInitialDate = moment()
-  .subtract(0, "months")
+  .startOf('year')
   .date(1)
   .local()
   .format("YYYY-MM-DD");

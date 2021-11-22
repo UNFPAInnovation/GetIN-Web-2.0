@@ -57,7 +57,8 @@ export default class MappedGirls extends Component {
         bleeding_heavily: true,
         blurred_vision: true,
         swollen_feet: true,
-        district:true
+        district:true,
+        vht_phone:true
       },
       // remote pagination
       currentPage: 1,
@@ -160,7 +161,10 @@ export default class MappedGirls extends Component {
     return row.girl.phone_number;
   }
   getVHT(cell, row) {
-    return `${row.user.first_name} ${row.user.last_name} ${row.user.phone}`;
+    return `${row.user.first_name} ${row.user.last_name}`;
+  }
+  getVHTPhone(cell, row) {
+    return row.user.phone;
   }
   getVillageItem(cell, row, item) {
     return row.girl.village[item];
@@ -365,6 +369,13 @@ export default class MappedGirls extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.vht} /> VHT
+              </MenuItem>
+              <MenuItem
+                onClick={(e, vht_phone) => this.updateTable("vht_phone")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.vht_phone} /> VHT's-Phone
               </MenuItem>
              
               <MenuItem
@@ -600,9 +611,18 @@ export default class MappedGirls extends Component {
 
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.vht}
-                  width="300px"
+                  width="150px"
                   dataFormat={(cell, row, item) => this.getVHT(cell, row)}
                   csvFormat={(cell, row, item) => this.getVHT(cell, row)}
+                  dataField="vht"
+                >
+                  VHT
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  hidden={this.state.manageColomns.vht_phone}
+                  width="150px"
+                  dataFormat={this.getVHTPhone}
+                  csvFormat={this.getVHTPhone}
                   dataField="vht"
                 >
                   VHT

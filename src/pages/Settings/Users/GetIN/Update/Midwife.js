@@ -128,7 +128,7 @@ export default class MidwifeModal extends Component {
       gender: updateData.gender,
       email: updateData.email,
       phone_number: updateData.phone,
-      health_facility:updateData.health_facility.id,
+      health_facility:updateData?.health_facility?.id,
       is_active: updateData.is_active,
     });
   }
