@@ -15,8 +15,10 @@ export default class MidwifeModal extends Component {
       gender: null,
       email: null,
       phone_number: null,
+      district: null,
       health_facility: null,
       health_facilities: [],
+      districts: [],
       loading: false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -47,6 +49,7 @@ export default class MidwifeModal extends Component {
         health_facility: this.state.health_facility,
         password: this.state.password,
         phone: this.state.phone_number,
+        district: this.state.district,
         role: "midwife"
       },
       function(error, token) {
@@ -86,8 +89,30 @@ export default class MidwifeModal extends Component {
       }
     });
   }
+
+  getDistricts() {
+    const thisApp = this;
+    service.getDistricts(function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          districts: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          districts: response.results.filter(
+            (district) =>
+              district.id !== 7 && district.id !== 4 && district.id !== 2
+          ),
+        });
+      }
+    });
+  }
+
   componentDidMount() {
     this.getHealthFacilities();
+    this.getDistricts();
   }
   render() {
     return (
@@ -209,6 +234,35 @@ export default class MidwifeModal extends Component {
                       {value.name}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div className="form-group col-md-6">
+                <label>District</label>
+                <select
+                  required
+                  className="form-control"
+                  name="district"
+                  onChange={this.handleDistrictChange}
+                  value={this.state.district}
+                >
+                  <option defaultValue value={null}>
+                    Select District
+                  </option>
+                  {this.state.districts
+                    ? this.state.districts.map((district) => {
+                        return (
+                          <option
+                            key={district.id}
+                            id={district.id}
+                            defaultValue
+                            value={district.id}
+                          >
+                            {district.name}
+                          </option>
+                        );
+                      })
+                    : "Loading ..."}
                 </select>
               </div>
               <br className='clear-both' />
