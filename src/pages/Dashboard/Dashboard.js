@@ -17,6 +17,7 @@ import FollowUpsCard from "./components/FollowUpsCard/index";
 import MappedGirlsCard from "./components/MappedGirlsCard/index";
 import AgeGroupOfMappedGirlsBarChart from "./components/AgeGroupOfMappedGirlsBarChart/index";
 import MappedGirlsPerSubcountyBarChart from "./components/MappedGirlsPerSubcountyBarChart/index";
+import MappedGirlsPerDistrictBarChart from "./components/MappedGirlsPerDistrict/index";
 
 // Get Data
 import getData from "../../utils/getData";
@@ -101,9 +102,15 @@ export default function Dashboard() {
                   />
                 </Col>
                 <Col md={8}>
-                  <MappedGirlsPerSubcountyBarChart
-                    data={mappingEncountersStats && mappingEncountersStats}
-                  />
+                  {
+                    !districtId?(
+                      <MappedGirlsPerDistrictBarChart
+                      data={mappingEncountersStats && mappingEncountersStats} 
+                    />
+                    ):(<MappedGirlsPerSubcountyBarChart
+                      data={mappingEncountersStats && mappingEncountersStats}
+                    />)
+                  }
                 </Col>
               </Row>
             </Grid>
