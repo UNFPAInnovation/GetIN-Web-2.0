@@ -17,12 +17,25 @@ export default class MidwifeModal extends Component {
       phone_number: null,
       district: null,
       health_facility: null,
+      village: null,
+      subcounty: null,
+      county: null,
+      parish: null,
+      subcounties: [],
+      parishes: [],
+      villages: [],
+      villages_copy: [],
       health_facilities: [],
       districts: [],
       loading: false
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleDistrictChange = this.handleDistrictChange.bind(this);
+    this.handleCountyChange = this.handleCountyChange.bind(this);
+    this.handleSubCountyChange = this.handleSubCountyChange.bind(this);
+    this.handleParishChange = this.handleParishChange.bind(this);
   }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -32,6 +45,60 @@ export default class MidwifeModal extends Component {
       [name]: value
     });
   }
+
+  handleDistrictChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getCountiesByDistrict(optionId);
+    this.getHealthFacilities(optionId);
+  }
+
+  handleCountyChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getSubCountiesByCounty(optionId);
+  }
+
+  handleSubCountyChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getParishBySubCounty(optionId);
+  }
+
+  handleParishChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+    const index = target.selectedIndex;
+    const optionElement = target.childNodes[index];
+    const optionId = optionElement.getAttribute("id");
+    this.getVillagesByParish(optionId);
+  }
+
   submit(e) {
     e.preventDefault();
     const thisApp = this;
@@ -50,6 +117,7 @@ export default class MidwifeModal extends Component {
         password: this.state.password,
         phone: this.state.phone_number,
         district: this.state.district,
+        village:this.state.village,
         role: "midwife"
       },
       function(error, token) {
@@ -68,14 +136,15 @@ export default class MidwifeModal extends Component {
       }
     );
   }
-  getHealthFacilities() {
+
+  getHealthFacilities(id) {
     const thisApp = this;
     thisApp.setState({
       health_facilities: [],
       health_facilities_copy: [],
       loadingText: "Loading..."
     });
-    service.getHealthFacilities(function(error, response) {
+    service.getHealthFacilitiesByDistrict(id,function(error, response) {
       if (error) {
         thisApp.setState({
           isLoaded: true,
@@ -110,8 +179,75 @@ export default class MidwifeModal extends Component {
     });
   }
 
+  getParishBySubCounty(id) {
+    const thisApp = this;
+    service.getParishBySubCounty(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          parishes: response.results,
+        });
+      }
+    });
+  }
+
+  getSubCountiesByCounty(id) {
+    const thisApp = this;
+    service.getSubCountiesByCounty(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          subcounties: response.results,
+        });
+      }
+    });
+  }
+
+  getVillagesByParish(id) {
+    const thisApp = this;
+    service.getVillagesByParish(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          villages: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          villages: response.results,
+        });
+      }
+    });
+  }
+
+  getCountiesByDistrict(id) {
+    const thisApp = this;
+    service.getCountiesByDistrict(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          counties: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          counties: response.results,
+        });
+      }
+    });
+  }
+
   componentDidMount() {
-    this.getHealthFacilities();
     this.getDistricts();
   }
   render() {
@@ -218,25 +354,6 @@ export default class MidwifeModal extends Component {
             </div>
             <div className='col-md-12'>
               <br className='clear-both' />
-              <div className='form-group col-md-6'>
-                <label>Health facility</label>
-                <select
-                  className='form-control'
-                  name='health_facility'
-                  onChange={this.handleChange}
-                  value={this.state.health_facility}
-                >
-                  <option defaultValue value={null}>
-                    Select Health Facility
-                  </option>
-                  {this.state.health_facilities.map((value, key) => (
-                    <option key={key} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               <div className="form-group col-md-6">
                 <label>District</label>
                 <select
@@ -265,6 +382,150 @@ export default class MidwifeModal extends Component {
                     : "Loading ..."}
                 </select>
               </div>
+
+              {this.state.district && ( 
+                <div className='form-group col-md-6'>
+                  <label>Health facility</label>
+                  <select
+                    className='form-control'
+                    name='health_facility'
+                    onChange={this.handleChange}
+                    value={this.state.health_facility}
+                  >
+                    <option defaultValue value={null}>
+                      Select Health Facility
+                    </option>
+                    {this.state.health_facilities.map((value, key) => (
+                      <option key={key} value={value.id}>
+                        {value.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>)
+              }
+
+              {this.state.district && (
+                <div className="form-group col-md-6">
+                  <label>County</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="county"
+                    onChange={this.handleCountyChange}
+                    value={this.state.county}
+                  >
+                    <option defaultValue value={null}>
+                      Select County
+                    </option>
+                    {this.state.counties
+                      ? this.state.counties.map((county) => {
+                          return (
+                            <option
+                              key={county.id}
+                              id={county.id}
+                              defaultValue
+                              value={county.id}
+                            >
+                              {county.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+
+              {this.state.county && (
+                <div className="form-group col-md-6">
+                  <label>Subcounty</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="subcounty"
+                    onChange={this.handleSubCountyChange}
+                    value={this.state.subcounty}
+                  >
+                    <option defaultValue value={null}>
+                      Select Subcounty
+                    </option>
+                    {this.state.subcounties
+                      ? this.state.subcounties.map((subcounty) => {
+                          return (
+                            <option
+                              key={subcounty.id}
+                              defaultValue
+                              id={subcounty.id}
+                              value={subcounty.id}
+                            >
+                              {subcounty.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+              {this.state.subcounty && (
+                <div className="form-group col-md-6">
+                  <label>Parish</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="parish"
+                    onChange={this.handleParishChange}
+                    value={this.state.parish}
+                  >
+                    <option defaultValue value={null}>
+                      Select Parish
+                    </option>
+                    {this.state.parishes
+                      ? this.state.parishes.map((parish) => {
+                          return (
+                            <option
+                              key={parish.id}
+                              id={parish.id}
+                              defaultValue
+                              value={parish.id}
+                            >
+                              {parish.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+
+              {this.state.parish && (
+                <div className="form-group col-md-6">
+                  <label>Village</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="village"
+                    onChange={this.handleChange}
+                    value={this.state.village}
+                  >
+                    <option defaultValue value={null}>
+                      Select Village
+                    </option>
+                    {this.state.villages
+                      ? this.state.villages.map((village) => {
+                          return (
+                            <option
+                              key={village.id}
+                              defaultValue
+                              value={village.id}
+                            >
+                              {village.name}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
+              <br className='clear-both' />
               <br className='clear-both' />
               <button type='submit' className='btn btn-primary'>
                 {this.state.loading ? "Adding Midwife" : "Submit"}

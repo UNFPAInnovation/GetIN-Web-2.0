@@ -111,10 +111,6 @@ export default class ChewModal extends Component {
         email: this.state.email,
         gender: this.state.gender,
         village: this.state.village,
-        parish: this.state.parish,
-        subcounty: this.state.subcounty,
-        county: this.state.county,
-        district: this.state.district,
         password: this.state.password,
         phone: this.state.phone_number,
         role: "chew",
@@ -129,6 +125,7 @@ export default class ChewModal extends Component {
           thisApp.setState({
             loading: false,
           });
+          // console.log(this.state);
           alertifyjs.success("Added successfully", 2, function () {});
           window.location.reload();
         }

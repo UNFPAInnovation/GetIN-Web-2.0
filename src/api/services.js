@@ -369,9 +369,9 @@ exports.getSubCountiesByCounty = function(countyId='',callback) {
     );
   };
 
-    exports.getVillagesByParish = function (parishId = "", callback) {
+    exports.getVillagesByParish = function (parishId="", callback) {
       api.get(
-        addr + `/api/v1/parishes${parishId && `?parish=${parishId}`}`,
+        addr + `/api/v1/villages${parishId && `?parish=${parishId}`}`,
         OPTIONS,
         function (error, response) {
           //callback of the method here
