@@ -46,7 +46,8 @@ export default class AttendedAppointments extends Component {
         trimester: false,
         attended_appointments: true,
         date: false,
-        district:true
+        district:true,
+        services_received:false
       },
       // remote pagination
       currentPage: 1,
@@ -216,7 +217,8 @@ export default class AttendedAppointments extends Component {
     let results = [];
     this.setState(
       {
-        appointments: this.state.appointments_copy
+        appointments: this.state.appointments_copy,
+        isLoaded:false
       },
       function() {
         if (filter && filter.trimester && filter.trimester.value) {
@@ -229,15 +231,66 @@ export default class AttendedAppointments extends Component {
             }
           });
           this.setState({
-            appointments: results
+            appointments: results,
+            isLoaded:true
           });
+        }
+        else if (filter && filter.services_received && filter.services_received.value) {
+          console.log('Am running 2--- ');
+          this.state.appointments.forEach(function(element) {
+            let regex = new RegExp(filter.services_received.value.toString(),'g');
+        
+            if (
+              regex.test(element.girl.services_received.toString())
+            ) {
+              results.push(element);
+            }
+          });
+          this.setState({
+            appointments: results,
+            isLoaded:true
+          });
+          
         } else {
           this.setState({
-            appointments: this.state.appointments_copy
+            appointments: this.state.appointments_copy,
+            isLoaded:true
           });
         }
       }
     );
+  }
+
+  servicesFormatter = function(cell, row) {
+    let servicesArray = row.girl.services_received.split(',');
+
+    let updatedServicesArray = servicesArray.map((service)=>{
+        switch(service){
+          case 'AN1':
+            return 'ANC1';
+          case 'AN2':
+            return 'ANC2';
+          case 'AN3':
+            return 'ANC3';
+          case 'AN4':
+            return 'ANC4';
+          case 'SVD':
+            return 'Normal Delivery';
+          case 'ASD':
+            return 'Assisted Delivery';
+          case 'CES':
+            return 'C-Section';
+          case 'RTK':
+            return 'Referral Transport';
+          case 'SIM':
+            return 'Simple Malaria';
+          case 'SMA':
+            return 'Severe Malaria';
+          default:
+            return service;
+        }
+    })
+    return updatedServicesArray.join(', ');
   }
 
   render() {
@@ -247,6 +300,25 @@ export default class AttendedAppointments extends Component {
       "2": "2nd",
       "3": "3rd"
     };
+
+    const serviceType = {
+      "AN1": "ANC1",
+      "AN2": "ANC2",
+      "AN3": "ANC3",
+      "SVD": "Normal Delivery",
+      "ASD": "Assisted Delivery",
+      "CES": "C-Section",
+      "RTK": "Referral Transport",
+      "SIM": "Simple Malaria",
+      "SMA": "Severe Malaria",
+      "UTI": "UTI",
+      "PAC": "PAC",
+      "IUD": "IUD",
+      "JAD": "JAD",
+      "LEV": "LEV",
+      "IMP": "IMP"
+    };
+    
     const options = {
       page: 1, // which page you want to show as default
       // onPageChange: this.onPageChange,
@@ -325,6 +397,13 @@ export default class AttendedAppointments extends Component {
               >
                 {" "}
                 <Check state={this.state.manageColomns.trimester} /> Trimester
+              </MenuItem>
+              <MenuItem
+                onClick={(e, services_received) => this.updateTable("services_received")}
+                eventKey={3.1}
+              >
+                {" "}
+                <Check state={this.state.manageColomns.services_received} /> Services Received
               </MenuItem>
               <MenuItem
                 onClick={(e, district) => this.updateTable("district")}
@@ -430,6 +509,17 @@ export default class AttendedAppointments extends Component {
                   dataField='attended_appointments'
                 >
                   Attended Appointments
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  width='200px'
+                  hidden={this.state.manageColomns.services_received}
+                  dataFormat={this.servicesFormatter}
+                  csvFormat={this.servicesFormatter}
+                  filter={{ type: "SelectFilter", options: serviceType }}
+                  dataSort={true}
+                  dataField='services_received'
+                >
+                  Services Received
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.date}
