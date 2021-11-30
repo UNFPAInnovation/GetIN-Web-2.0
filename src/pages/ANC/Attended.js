@@ -493,9 +493,7 @@ export default class AttendedAppointments extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.trimester}
-                  // dataSort={true}
                   filterFormatted
-                  // dataFormat={enumFormatter}
                   dataFormat={trimesterFormatter}
                   csvFormat={trimesterFormatter}
                   filter={{ type: "SelectFilter", options: trimesterType }}

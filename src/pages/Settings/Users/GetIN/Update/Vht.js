@@ -26,13 +26,23 @@ export default class ChewModal extends Component {
       parish:null,
       loading: false,
       is_active: true,
+      fieldUpdate:false,
+      disableEdit:true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleDistrictChange = this.handleDistrictChange.bind(this);
     this.handleCountyChange = this.handleCountyChange.bind(this);
     this.handleSubCountyChange = this.handleSubCountyChange.bind(this);
     this.handleParishChange = this.handleParishChange.bind(this);
+    this.enableEdit = this.enableEdit.bind(this);
   }
+
+  enableEdit(){
+    this.setState({
+      disableEdit:false
+    })
+  }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -128,7 +138,7 @@ export default class ChewModal extends Component {
             loading: false,
           });
           alertifyjs.success("Updated successfully", 2, function () {});
-          //  window.location.reload();
+          window.location.reload();
         }
       }
     );
@@ -143,7 +153,7 @@ export default class ChewModal extends Component {
       2,
       function () {}
     );
-    service.updateChew(
+    service.updateUser(
       this.state.id,
       {
         is_active: this.state.is_active,
@@ -175,10 +185,7 @@ export default class ChewModal extends Component {
       } else {
         thisApp.setState({
           isLoaded: true,
-          districts: response.results.filter(
-            (district) =>
-              district.id !== 7 && district.id !== 4 && district.id !== 2
-          ),
+          districts: response.results
         });
       }
     });
@@ -259,6 +266,7 @@ export default class ChewModal extends Component {
       gender: updateData.gender,
       email: updateData.email,
       phone_number: updateData.phone,
+      district: updateData.village.parish.sub_county.county.district.name,
       is_active: updateData.is_active,
     });
   }
@@ -270,12 +278,12 @@ export default class ChewModal extends Component {
       >
         <Modal.Header closeButton>
           <div className="row">
-            <div className="col-md-10">
+            <div className="col-md-8">
               <Modal.Title>
                 <span> Update VHT</span>{" "}
               </Modal.Title>
             </div>
-            <div className="col-md-2">
+            <div className="col-md-4">
               <button
                 className={`btn btn-sm ${
                   this.state.is_active ? "btn-danger" : "btn-success"
@@ -288,6 +296,13 @@ export default class ChewModal extends Component {
                 }
               >
                 {this.state.is_active ? "Deactivate" : "Activate"}
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                style={{marginLeft:'10px'}}
+                onClick={this.enableEdit}
+              >
+                {this.state.disableEdit?"Edit":"Editing"}
               </button>
             </div>
           </div>
@@ -306,6 +321,7 @@ export default class ChewModal extends Component {
                   className="form-control"
                   placeholder="John"
                   autoFocus={true}
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -318,6 +334,7 @@ export default class ChewModal extends Component {
                   value={this.state.last_name}
                   className="form-control"
                   placeholder="Musoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -330,6 +347,7 @@ export default class ChewModal extends Component {
                   value={this.state.phone_number}
                   className="form-control"
                   placeholder="070XXXXXX"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -340,6 +358,7 @@ export default class ChewModal extends Component {
                   name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
                     Select gender
@@ -348,7 +367,10 @@ export default class ChewModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className="form-group col-md-12">
+            </div>
+
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>Email address</label>
                 <input
                   type="email"
@@ -357,6 +379,7 @@ export default class ChewModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.email}
                   placeholder="jmusoke@gmail.com"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -369,6 +392,7 @@ export default class ChewModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.username}
                   placeholder="jmusoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
             </div>
@@ -382,9 +406,10 @@ export default class ChewModal extends Component {
                   name="district"
                   onChange={this.handleDistrictChange}
                   value={this.state.district}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
-                    Select District
+                    {this.state.district?this.state.district:"Select District"}
                   </option>
                   {this.state.districts
                     ? this.state.districts.map((district) => {
@@ -403,7 +428,7 @@ export default class ChewModal extends Component {
                 </select>
               </div>
 
-              {this.state.district && (
+              {(this.state.district && !this.state.disableEdit) && (
                 <div className="form-group col-md-6">
                   <label>County</label>
                   <select
@@ -525,6 +550,7 @@ export default class ChewModal extends Component {
                 </div>
               )}
 
+              <br className="clear-both" />
               <br className="clear-both" />
               <button type="submit" className="btn btn-primary">
                 {this.state.loading ? "Updating Chew" : "Update"}

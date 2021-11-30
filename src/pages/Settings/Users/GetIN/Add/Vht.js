@@ -22,7 +22,9 @@ export default class ChewModal extends Component {
       villages_copy: [],
       subcounties: [],
       parishes: [],
+      midwives: [],
       parish: null,
+      midwife: null,
       loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -56,6 +58,7 @@ export default class ChewModal extends Component {
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
     this.getCountiesByDistrict(optionId);
+    this.getMidWivesByDistrict(optionId);
   }
 
   handleCountyChange(event) {
@@ -113,6 +116,7 @@ export default class ChewModal extends Component {
         village: this.state.village,
         password: this.state.password,
         phone: this.state.phone_number,
+        midwife: this.state.midwife,
         role: "chew",
       },
       function (error, response) {
@@ -125,7 +129,6 @@ export default class ChewModal extends Component {
           thisApp.setState({
             loading: false,
           });
-          // console.log(this.state);
           alertifyjs.success("Added successfully", 2, function () {});
           window.location.reload();
         }
@@ -143,10 +146,7 @@ export default class ChewModal extends Component {
       } else {
         thisApp.setState({
           isLoaded: true,
-          districts: response.results.filter(
-            (district) =>
-              district.id !== 7 && district.id !== 4 && district.id !== 2
-          ),
+          districts: response.results
         });
       }
     });
@@ -195,6 +195,22 @@ export default class ChewModal extends Component {
         thisApp.setState({
           isLoaded: true,
           villages: response.results,
+        });
+      }
+    });
+  }
+  getMidWivesByDistrict(id) {
+    const thisApp = this;
+    service.getMidWivesByDistrict(id, function (error, response) {
+      if (error) {
+        thisApp.setState({
+          isLoaded: true,
+          midwives: [],
+        });
+      } else {
+        thisApp.setState({
+          isLoaded: true,
+          midwives: response.results,
         });
       }
     });
@@ -348,6 +364,36 @@ export default class ChewModal extends Component {
                     : "Loading ..."}
                 </select>
               </div>
+
+              {this.state.district && (
+                <div className="form-group col-md-6">
+                  <label>Midwife</label>
+                  <select
+                    required
+                    className="form-control"
+                    name="midwife"
+                    onChange={this.handleChange}
+                    value={this.state.midwife}
+                  >
+                    <option defaultValue value={null}>
+                      Select MidWife
+                    </option>
+                    {this.state.midwives
+                      ? this.state.midwives.map((midwife) => {
+                          return (
+                            <option
+                              key={midwife.id}
+                              defaultValue
+                              value={midwife.id}
+                            >
+                              {`${midwife.first_name} ${midwife.last_name}`}
+                            </option>
+                          );
+                        })
+                      : "Loading ..."}
+                  </select>
+                </div>
+              )}
 
               {this.state.district && (
                 <div className="form-group col-md-6">

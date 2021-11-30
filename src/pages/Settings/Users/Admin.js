@@ -6,6 +6,7 @@ import { NavDropdown, MenuItem, Button } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 const Fuse = require("fuse.js");
 const UserModal = React.lazy(() => import("../Add/User"));
+const UpdateModal = React.lazy(()=> import("../Update/Admin"))
 
 export default class VHT extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export default class VHT extends Component {
 
     this.state = {
       modal: false,
+      updateObj: null,
       users: [],
       users_copy: [],
       search: null,
@@ -39,10 +41,11 @@ export default class VHT extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.actionsFormatter = this.actionsFormatter.bind(this);
   }
 
   handleClose(modal) {
-    this.setState({ [modal]: false });
+    this.setState({ [modal]: false, updateObj: null  });
   }
 
   handleShow(modal) {
@@ -117,6 +120,18 @@ export default class VHT extends Component {
   }
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
+  }
+  actionsFormatter(cell, row) {
+    return (
+      <button
+        className="btn btn-xs btn-default"
+        onClick={() =>
+          this.setState({ updateObj: row }, () => this.handleShow("updateAdmin"))
+        }
+      >
+        View
+      </button>
+    );
   }
   handleInputChange(event) {
     const target = event.target;
@@ -209,7 +224,7 @@ export default class VHT extends Component {
             <div className="form-group">
               <Button
                 className="btn-primary"
-                onClick={() => this.handleShow("modal")}
+                onClick={() => this.handleShow("addAdmin")}
                 eventKey="1"
               >
                 Add Users
@@ -272,6 +287,9 @@ export default class VHT extends Component {
                 >
                   Username
                 </TableHeaderColumn>
+                <TableHeaderColumn dataFormat={this.actionsFormatter}>
+                  Actions
+                </TableHeaderColumn>
               </BootstrapTable>
             ) : (
               <span>Loading</span>
@@ -280,8 +298,15 @@ export default class VHT extends Component {
         </div>
         <UserModal
           handleClose={(d) => this.handleClose(d)}
-          show={this.state.modal}
+          show={this.state.addAdmin}
         />
+        {this.state.updateObj && (
+          <UpdateModal
+            handleClose={(d) => this.handleClose(d)}
+            show={this.state.updateAdmin}
+            data={this.state.updateObj}
+          />
+        )}
       </div>
     );
   }

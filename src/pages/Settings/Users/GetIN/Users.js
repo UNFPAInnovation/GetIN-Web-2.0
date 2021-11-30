@@ -4,11 +4,14 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 
 const VHT = React.lazy(() => import("./VHT"));
-const ChewModal = React.lazy(() => import("./Add/Vht"));
 const Midwives = React.lazy(() => import("./Midwife"));
-const MidwifeModal = React.lazy(() => import("./Add/Midwife"));
+const DHO = React.lazy(() => import("./Dho"));
 const AmbulanceDrivers = React.lazy(() => import("./Ambulance"));
+const ChewModal = React.lazy(() => import("./Add/Vht"));
+const MidwifeModal = React.lazy(() => import("./Add/Midwife"));
 const AmbulanceModal = React.lazy(() => import("./Add/Ambulance"));
+const DhoModal = React.lazy(() => import("./Add/Dho"));
+
 
 
 
@@ -16,11 +19,12 @@ export default class Users extends React.Component {
     constructor(props, context) {
       super(props, context);
       this.state = {
-        key: 'chews',
+        key: 'midwives',
 
         chew: false,
         midwife: false,
         ambulance:false,
+        dho:false,
 
         userType:"",
 
@@ -75,8 +79,14 @@ export default class Users extends React.Component {
                     Midwives
                   </MenuItem>
                   <MenuItem
-                    onClick={() => this.handleShow("ambulance")}
+                    onClick={() => this.handleShow("dho")}
                     eventKey="3"
+                  >
+                    DHO
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => this.handleShow("ambulance")}
+                    eventKey="4"
                   >
                     Ambulance
                   </MenuItem>
@@ -92,11 +102,14 @@ export default class Users extends React.Component {
                 activeKey={this.state.key}
                 onSelect={(key) => this.setState({ key })}
               >
+                <Tab eventKey="midwives" title="Midwives">
+                  <Midwives />
+                </Tab>
                 <Tab eventKey="chews" title="VHTs">
                   <VHT />
                 </Tab>
-                <Tab eventKey="midwives" title="Midwives">
-                  <Midwives />
+                <Tab eventKey="dhos" title="DHOs">
+                  <DHO />
                 </Tab>
                 <Tab eventKey="ambulances" title="Ambulance drivers">
                   <AmbulanceDrivers />
@@ -111,6 +124,10 @@ export default class Users extends React.Component {
           <MidwifeModal
             handleClose={(d) => this.handleClose(d)}
             show={this.state.midwife}
+          />
+          <DhoModal
+            handleClose={(d) => this.handleClose(d)}
+            show={this.state.dho}
           />
           <AmbulanceModal
             handleClose={(d) => this.handleClose(d)}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
 
 // React bootstrap components
@@ -32,16 +32,27 @@ const todaysDate = moment()
   .format("YYYY-MM-DD");
 
 export default function Dashboard() {
-  const { districtId } = useContext(GlobalContext);
+  const { districtId,district,updateDistrict} = useContext(GlobalContext);
   // State variables
   const [fromFilter, setFromFilter] = useState(fromInitialDate);
   const [toFilter, setToFilter] = useState(todaysDate);
+  const [isLoaded,setIsLoaded] = useState(false);
 
   // Fetch data using our custom useGetData hook
   const [{ followups, deliveries, mappingEncountersStats, isLoading }] =
     getData(fromFilter, toFilter, districtId);
 
   // Memoize the data
+  
+  useEffect(()=>{
+    const districtName = sessionStorage.getItem('district');
+    if(!isLoaded && districtName !== 'undefined'){
+      if(districtName){
+        updateDistrict(districtName);
+        setIsLoaded(true);
+      }
+    }
+  },[isLoaded,updateDistrict])
 
   return (
     <React.Fragment>
@@ -103,7 +114,7 @@ export default function Dashboard() {
                 </Col>
                 <Col md={8}>
                   {
-                    !districtId?(
+                    (!districtId && district === 'All Districts' )?(
                       <MappedGirlsPerDistrictBarChart
                       data={mappingEncountersStats && mappingEncountersStats} 
                     />

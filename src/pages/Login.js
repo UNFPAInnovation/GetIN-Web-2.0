@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import '../styles/Login.scss';
 import Logo from '../assets/images/Logo.png';
+import {GlobalContext} from '../context/GlobalState';
 const alertifyjs = require('alertifyjs');
 
 const service = require('../api/services');
 
 export default class Login extends Component {
+  static contextType = GlobalContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,33 +18,26 @@ export default class Login extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
   }
+
   login(e) {
     e.preventDefault();
-    //const thisApp = this;
-    alertifyjs.message('Signing in ..', 2, function() {
-     
-    });
+    alertifyjs.message('Signing in ..', 2, function() {});
+
     let data = {
       username: this.state.username,
       password: this.state.password
     };
-    service.login(data, function(error, token) {
+
+    service.login(data, function(error, district) {
       if (error) {
-        alertifyjs.error(
-          'Email / password combination is not valid.',
-          5,
-          function() {
-            
-          }
-        );
+        alertifyjs.error('Email / password combination is not valid.',5,function() {});
       } else {
-        alertifyjs.success('Signed Successfully', 5, function() {
-         
-        });
+        alertifyjs.success('Signed Successfully', 5, function() {});
         window.location.href = '/dashboard';
       }
     });
   }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -51,6 +47,7 @@ export default class Login extends Component {
       [name]: value
     });
   }
+
   render() {
     return (
       <div className='container'>
