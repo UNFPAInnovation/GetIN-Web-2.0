@@ -3,11 +3,11 @@ import { Modal } from "react-bootstrap";
 const alertifyjs = require("alertifyjs");
 const service = require("../../../../../api/services");
 
-
-export default class MidwifeModal extends Component {
+export default class DhoModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       first_name: null,
       last_name: null,
       username: null,
@@ -15,37 +15,47 @@ export default class MidwifeModal extends Component {
       gender: null,
       email: null,
       phone_number: null,
-      district: null,
-      health_facility: null,
       village: null,
       subcounty: null,
       county: null,
-      parish: null,
-      subcounties: [],
-      parishes: [],
+      district:null,
       villages: [],
       villages_copy: [],
-      health_facilities: [],
-      districts: [],
-      loading: false
+      subcounties: [],
+      parishes: [],
+      parish:null,
+      loading: false,
+      is_active: true,
+      fieldUpdate:false,
+      disableEdit:true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleDistrictChange = this.handleDistrictChange.bind(this);
     this.handleCountyChange = this.handleCountyChange.bind(this);
     this.handleSubCountyChange = this.handleSubCountyChange.bind(this);
     this.handleParishChange = this.handleParishChange.bind(this);
+    this.enableEdit = this.enableEdit.bind(this);
+  }
+
+  enableEdit(){
+    this.setState({
+      disableEdit:false
+    })
   }
 
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+    this.setState(
+      {
+        [name]: value,
+      },
+      function () {
+        
+      }
+    );
   }
-
   handleDistrictChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -57,7 +67,6 @@ export default class MidwifeModal extends Component {
     const optionElement = target.childNodes[index];
     const optionId = optionElement.getAttribute("id");
     this.getCountiesByDistrict(optionId);
-    this.getHealthFacilities(optionId);
   }
 
   handleCountyChange(event) {
@@ -103,66 +112,67 @@ export default class MidwifeModal extends Component {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
-      loading: true
+      loading: true,
     });
-    alertifyjs.message("Adding Midwife..", 2, function() {});
-    service.addUser(
+    alertifyjs.message("Updating DHO..", 2, function () {});
+    service.updateUser(
+      this.state.id,
       {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
         username: this.state.username,
         email: this.state.email,
         gender: this.state.gender,
-        health_facility: this.state.health_facility,
-        password: this.state.password,
+        village: parseInt(this.state.village),
         phone: this.state.phone_number,
-        district: this.state.district,
-        village:this.state.village,
-        role: "midwife"
       },
-      function(error, token) {
+      function (error, response) {
         if (error) {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.error("Request failed, try again", 5, function() {});
+          alertifyjs.error("Request failed, try again ", function () {});
         } else {
           thisApp.setState({
-            loading: false
+            loading: false,
           });
-          alertifyjs.success("Added successfully", 2, function() {});
+          alertifyjs.success("Updated successfully", 2, function () {});
           window.location.reload();
         }
       }
     );
   }
-
-  getHealthFacilities(id) {
+  updateStatus() {
     const thisApp = this;
     thisApp.setState({
-      health_facilities: [],
-      health_facilities_copy: [],
-      loadingText: "Loading..."
+      loading: true,
     });
-    service.getHealthFacilitiesByDistrict(id,function(error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          health_facilities: []
-        });
-        alertifyjs.error("Request failed, no health facilities attached to district", 5, function() {});
-      } else {
-        if(!response.results.length){
-          alertifyjs.error("Request failed, no health facilities attached to district", 5, function() {});
+    alertifyjs.message(
+      `${this.state.is_active ? "Activating" : "Deactivating"}`,
+      2,
+      function () {}
+    );
+    service.updateUser(
+      this.state.id,
+      {
+        is_active: this.state.is_active,
+      },
+      function (error, response) {
+        if (error) {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.error("Request failed, try again ", function () {});
+        } else {
+          thisApp.setState({
+            loading: false,
+          });
+          alertifyjs.success("Updated successfully", 2, function () {});
+          window.location.reload();
         }
-        thisApp.setState({
-          isLoaded: true,
-          health_facilities: response.results
-        });
       }
-    });
+    );
   }
-
   getDistricts() {
     const thisApp = this;
     service.getDistricts(function (error, response) {
@@ -179,7 +189,6 @@ export default class MidwifeModal extends Component {
       }
     });
   }
-
   getParishBySubCounty(id) {
     const thisApp = this;
     service.getParishBySubCounty(id, function (error, response) {
@@ -196,7 +205,6 @@ export default class MidwifeModal extends Component {
       }
     });
   }
-
   getSubCountiesByCounty(id) {
     const thisApp = this;
     service.getSubCountiesByCounty(id, function (error, response) {
@@ -213,8 +221,7 @@ export default class MidwifeModal extends Component {
       }
     });
   }
-
-  getVillagesByParish(id) {
+  getVillagesByParish(id){
     const thisApp = this;
     service.getVillagesByParish(id, function (error, response) {
       if (error) {
@@ -247,67 +254,110 @@ export default class MidwifeModal extends Component {
       }
     });
   }
-
   componentDidMount() {
     this.getDistricts();
+    const updateData = this.props.data;
+    this.setState({
+      id: updateData.id,
+      first_name: updateData.first_name,
+      last_name: updateData.last_name,
+      username: updateData.username,
+      gender: updateData.gender,
+      email: updateData.email,
+      phone_number: updateData.phone,
+      district: updateData.village.parish.sub_county.county.district.name,
+      is_active: updateData.is_active,
+    });
   }
   render() {
     return (
       <Modal
         show={this.props.show}
-        onHide={() => this.props.handleClose("midwife")}
+        onHide={() => this.props.handleClose("modal")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a new Midwife</Modal.Title>
+          <div className="row">
+            <div className="col-md-8">
+              <Modal.Title>
+                <span> Update DHO</span>{" "}
+              </Modal.Title>
+            </div>
+            <div className="col-md-4">
+              <button
+                className={`btn btn-sm ${
+                  this.state.is_active ? "btn-danger" : "btn-success"
+                }`}
+                onClick={() =>
+                  this.setState(
+                    { is_active: this.state.is_active ? false : true },
+                    () => this.updateStatus()
+                  )
+                }
+              >
+                {this.state.is_active ? "Deactivate" : "Activate"}
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                style={{marginLeft:'10px'}}
+                onClick={this.enableEdit}
+              >
+                {this.state.disableEdit?"Edit":"Editing"}
+              </button>
+            </div>
+          </div>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={e => this.submit(e)}>
-            <div className='col-md-12'>
-              <div className='form-group col-md-6'>
+          <form onSubmit={(e) => this.submit(e)}>
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>First name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='first_name'
+                  name="first_name"
                   value={this.state.first_name}
-                  className='form-control'
-                  placeholder='John'
+                  className="form-control"
+                  placeholder="John"
                   autoFocus={true}
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Last name</label>
                 <input
                   required
-                  type='text'
+                  type="text"
                   onChange={this.handleChange}
-                  name='last_name'
+                  name="last_name"
                   value={this.state.last_name}
-                  className='form-control'
-                  placeholder='Musoke'
+                  className="form-control"
+                  placeholder="Musoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Phone number</label>
                 <input
                   required
-                  type='tel'
+                  type="tel"
                   onChange={this.handleChange}
-                  name='phone_number'
+                  name="phone_number"
                   value={this.state.phone_number}
-                  className='form-control'
-                  placeholder='070XXXXXX'
+                  className="form-control"
+                  placeholder="070XXXXXX"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Gender</label>
                 <select
                   required
-                  className='form-control'
-                  name='gender'
+                  className="form-control"
+                  name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
                     Select gender
@@ -316,45 +366,37 @@ export default class MidwifeModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className='form-group col-md-6'>
+            </div>
+
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>Email address</label>
                 <input
-                  type='email'
-                  className='form-control'
-                  name='email'
+                  type="email"
+                  className="form-control"
+                  name="email"
                   onChange={this.handleChange}
                   value={this.state.email}
-                  placeholder='jmusoke@gmail.com'
+                  placeholder="jmusoke@gmail.com"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
-              <div className='form-group col-md-6'>
+              <div className="form-group col-md-6">
                 <label>Username</label>
                 <input
                   required
-                  type='text'
-                  className='form-control'
-                  name='username'
+                  type="text"
+                  className="form-control"
+                  name="username"
                   onChange={this.handleChange}
                   value={this.state.username}
-                  placeholder='jmusoke'
-                ></input>
-              </div>
-
-              <div className='form-group col-md-6'>
-                <label>Password</label>
-                <input
-                  required
-                  className='form-control'
-                  name='password'
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                  type='password'
-                  placeholder='Password'
+                  placeholder="jmusoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
             </div>
-            <div className='col-md-12'>
-              <br className='clear-both' />
+            <div className="col-md-12">
+              <br className="clear-both" />
               <div className="form-group col-md-6">
                 <label>District</label>
                 <select
@@ -363,9 +405,10 @@ export default class MidwifeModal extends Component {
                   name="district"
                   onChange={this.handleDistrictChange}
                   value={this.state.district}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
-                    Select District
+                    {this.state.district?this.state.district:"Select District"}
                   </option>
                   {this.state.districts
                     ? this.state.districts.map((district) => {
@@ -384,28 +427,7 @@ export default class MidwifeModal extends Component {
                 </select>
               </div>
 
-              {this.state.district && ( 
-                <div className='form-group col-md-6'>
-                  <label>Health facility</label>
-                  <select
-                    className='form-control'
-                    name='health_facility'
-                    onChange={this.handleChange}
-                    value={this.state.health_facility}
-                  >
-                    <option defaultValue value={null}>
-                      Select Health Facility
-                    </option>
-                    {this.state.health_facilities.map((value, key) => (
-                      <option key={key} value={value.id}>
-                        {value.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>)
-              }
-
-              {this.state.district && (
+              {(this.state.district && !this.state.disableEdit) && (
                 <div className="form-group col-md-6">
                   <label>County</label>
                   <select
@@ -526,19 +548,20 @@ export default class MidwifeModal extends Component {
                   </select>
                 </div>
               )}
-              <br className='clear-both' />
-              <br className='clear-both' />
-              <button type='submit' className='btn btn-primary'>
-                {this.state.loading ? "Adding Midwife" : "Submit"}
+
+              <br className="clear-both" />
+              <br className="clear-both" />
+              <button type="submit" className="btn btn-primary">
+                {this.state.loading ? "Updating DHO" : "Update"}
               </button>
-              <br className='clear-both' />
+              <br className="clear-both" />
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <button
-            className='btn btn-default'
-            onClick={() => this.props.handleClose("midwife")}
+            className="btn btn-default"
+            onClick={() => this.props.handleClose("modal")}
           >
             Close
           </button>

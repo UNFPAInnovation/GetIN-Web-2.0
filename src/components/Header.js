@@ -7,12 +7,14 @@ import {GlobalContext} from '../context/GlobalState';
 const alertifyjs = require("alertifyjs");
 const sessionStorage = window.sessionStorage;
 const service = require('../api/services');
+const PasswordChangeModal = React.lazy(()=> import("../pages/Settings/Update/ChangePassword"));
 
 export default function Header(){
 
   const [loggedInAs, setLoggedInAs] = useState('');
   const [districts,setDistricts] = useState([]);
   const {updateDistrict, updateDistrictId} = useContext(GlobalContext);
+  const [showModal,setShowModal] = useState(false)
 
   const logout = ()=>{
     sessionStorage.removeItem("token");
@@ -29,10 +31,18 @@ export default function Header(){
         return "Failed to load districts";
       }
       else{
-        setDistricts(response.results.filter((district)=> district.id !== 7 && district.id !== 4 && district.id !== 2 ));
+        setDistricts(response.results);
       }
     })
   
+  }
+
+  const openModal = ()=>{
+    setShowModal(true);
+  }
+
+  const closeModal = ()=>{
+    setShowModal(false);
   }
 
   useEffect(() => {
@@ -66,12 +76,19 @@ export default function Header(){
               title={capitalizeFirstLetter(loggedInAs)}
               id='basic-nav-dropdown'
             >
+              <MenuItem onClick={openModal} eventKey={3.4}>
+                Reset Password
+              </MenuItem>
               <MenuItem onClick={logout} eventKey={3.4}>
                 Logout
               </MenuItem>
             </NavDropdown>
           </ul>
         </div>
+        <PasswordChangeModal
+          show={showModal}
+          handleClose={()=> closeModal()}
+        />
       </div>
     </nav>
   );

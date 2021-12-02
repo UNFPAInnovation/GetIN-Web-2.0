@@ -25,7 +25,6 @@ class MappedGirlsPerDistrictBarChartCard extends Component {
           
           let newData = this.props.data;
           newData = newData.filter((unit)=> unit.district !== 'Kampala' && unit.district !== 'Arua' && unit.district !== 'BUNDIBUGYO' );
-          console.log(newData);
 
           let aggregatedData = {};
           newData.forEach((unit)=>{
@@ -33,11 +32,10 @@ class MappedGirlsPerDistrictBarChartCard extends Component {
           })
           
           let aggregateSubcountyData = {};
-          let subCounties = newData[0].subcounties;
           
           newData.forEach((unit)=>{
             if(aggregateSubcountyData[unit.district]){
-              subCounties.forEach((subcounty)=>{
+              unit['subcounties'].forEach((subcounty)=>{
                 for(let obj of aggregateSubcountyData[unit.district]){
                   if(obj.hasOwnProperty(`totalNumberOfGirlsMappedFrom${subcounty}`) && unit.hasOwnProperty(`totalNumberOfGirlsMappedFrom${subcounty}` )){
                     obj[`totalNumberOfGirlsMappedFrom${subcounty}`] += unit[`totalNumberOfGirlsMappedFrom${subcounty}`]
@@ -46,7 +44,7 @@ class MappedGirlsPerDistrictBarChartCard extends Component {
               });
               
             }else{
-              aggregateSubcountyData[unit.district] = subCounties.map((subcounty)=>{
+              aggregateSubcountyData[unit.district] = unit['subcounties'].map((subcounty)=>{
                   return {[`totalNumberOfGirlsMappedFrom${subcounty}`]: unit.hasOwnProperty(`totalNumberOfGirlsMappedFrom${subcounty}` )?unit[`totalNumberOfGirlsMappedFrom${subcounty}`]:0} 
                 })
             }
@@ -61,9 +59,8 @@ class MappedGirlsPerDistrictBarChartCard extends Component {
                   let [key,] = Object.entries(subcounty);
                   return [key[0].replace(/totalNumberOfGirlsMappedFrom/,''),key[1]]
               })
-              subCountyDataArray.push({id:district.toLowerCase(),data:newarr})
+              subCountyDataArray.push({name:'Women',id:district.toLowerCase(),data:newarr})
           }
-          console.log(subCountyDataArray);
 
           this.setState({subCountyData:subCountyDataArray});
           this.setState({districtData:aggregatedData});

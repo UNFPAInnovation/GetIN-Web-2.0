@@ -70,7 +70,7 @@ export default class HealthFacilityModal extends Component {
       } else {
         thisApp.setState({
           isLoaded: true,
-          districts: response.results.filter((district)=> district.id !== 7 && district.id !== 4 && district.id !== 2 )
+          districts: response.results
         });
       }
     });

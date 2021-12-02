@@ -3,46 +3,61 @@ import { Modal } from "react-bootstrap";
 const alertifyjs = require("alertifyjs");
 const service = require("../../../api/services");
 
-export default class UserModal extends Component {
+export default class AdminUpdateModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       first_name: null,
       last_name: null,
       username: null,
-      password: null,
       gender: null,
       email: null,
       phone_number: null,
       loading: false,
+      fieldUpdate:false,
+      disableEdit:true
     };
     this.handleChange = this.handleChange.bind(this);
+    this.enableEdit = this.enableEdit.bind(this);
   }
+
+  enableEdit(){
+    this.setState({
+      disableEdit:false
+    })
+  }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    this.setState({
-      [name]: value,
-    });
+    this.setState(
+      {
+        [name]: value,
+      },
+      function () {
+        
+      }
+    );
   }
-  addAdminUser(e) {
+
+  submit(e) {
     e.preventDefault();
     const thisApp = this;
     thisApp.setState({
       loading: true,
     });
-    alertifyjs.message("Adding Admin User..", 2, function () {});
-    service.addUser(
+    alertifyjs.message("Updating Admin..", 2, function () {});
+    service.updateUser(
+      this.state.id,
       {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
         username: this.state.username,
         email: this.state.email,
         gender: this.state.gender,
-        password: this.state.password,
-        phone: this.state.phone_number,
-        role: "manager",
+        phone: this.state.phone_number
       },
       function (error, response) {
         if (error) {
@@ -54,24 +69,52 @@ export default class UserModal extends Component {
           thisApp.setState({
             loading: false,
           });
-          alertifyjs.success("Added successfully", 2, function () {});
+          alertifyjs.success("Updated successfully", 2, function () {});
           window.location.reload();
         }
       }
     );
   }
-
+ 
+  
+  componentDidMount() {
+    const updateData = this.props.data;
+    this.setState({
+      id: updateData.id,
+      first_name: updateData.first_name,
+      last_name: updateData.last_name,
+      username: updateData.username,
+      gender: updateData.gender,
+      email: updateData.email,
+      phone_number: updateData.phone
+    });
+  }
   render() {
     return (
       <Modal
         show={this.props.show}
-        onHide={() => this.props.handleClose("addAdmin")}
+        onHide={() => this.props.handleClose("updateAdmin")}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add a new Admin User</Modal.Title>
+          <div className="row">
+            <div className="col-md-10">
+              <Modal.Title>
+                <span> Update Admin</span>{" "}
+              </Modal.Title>
+            </div>
+            <div className="col-md-2">
+              <button
+                className="btn btn-sm btn-success"
+                // style={{marginLeft:'10px'}}
+                onClick={this.enableEdit}
+              >
+                {this.state.disableEdit?"Edit":"Editing"}
+              </button>
+            </div>
+          </div>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={(e) => this.addAdminUser(e)}>
+          <form onSubmit={(e) => this.submit(e)}>
             <div className="col-md-12">
               <div className="form-group col-md-6">
                 <label>First name</label>
@@ -84,6 +127,7 @@ export default class UserModal extends Component {
                   className="form-control"
                   placeholder="John"
                   autoFocus={true}
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -96,6 +140,7 @@ export default class UserModal extends Component {
                   value={this.state.last_name}
                   className="form-control"
                   placeholder="Musoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -108,6 +153,7 @@ export default class UserModal extends Component {
                   value={this.state.phone_number}
                   className="form-control"
                   placeholder="070XXXXXX"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -118,6 +164,7 @@ export default class UserModal extends Component {
                   name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
                     Select gender
@@ -126,7 +173,10 @@ export default class UserModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
-              <div className="form-group col-md-12">
+            </div>
+
+            <div className="col-md-12">
+              <div className="form-group col-md-6">
                 <label>Email address</label>
                 <input
                   type="email"
@@ -135,6 +185,7 @@ export default class UserModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.email}
                   placeholder="jmusoke@gmail.com"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -147,32 +198,16 @@ export default class UserModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.username}
                   placeholder="jmusoke"
-                ></input>
-              </div>
-
-              <div className="form-group col-md-6">
-                <label>Password</label>
-                <input
-                  required
-                  className="form-control"
-                  name="password"
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                  type="password"
-                  placeholder="Password"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
             </div>
             <div className="col-md-12">
               <br className="clear-both" />
               <br className="clear-both" />
-              <div className="row">
-                <div className="col-md-offset-9 col-md-2">
-                  <button type="submit" className="btn btn-primary">
-                    {this.state.loading ? "Adding User" : "Submit"}
-                  </button>
-                </div>
-              </div>
+              <button type="submit" className="btn btn-primary">
+                {this.state.loading ? "Updating Admin" : "Update"}
+              </button>
               <br className="clear-both" />
             </div>
           </form>
@@ -180,7 +215,7 @@ export default class UserModal extends Component {
         <Modal.Footer>
           <button
             className="btn btn-default"
-            onClick={() => this.props.handleClose("addAdmin")}
+            onClick={() => this.props.handleClose("updateAdmin")}
           >
             Close
           </button>

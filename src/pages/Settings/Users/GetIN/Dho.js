@@ -5,12 +5,10 @@ import Check from "../../../../components/Check";
 import { NavDropdown, MenuItem, Label } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { GlobalContext } from "../../../../context/GlobalState";
-import service from "../../../../api/services";
-
 const Fuse = require("fuse.js");
-const UpdateModal = React.lazy(() => import("./Update/Midwife.js"));
+const UpdateModal = React.lazy(() => import("./Update/Dho"));
 
-export default class Midwives extends Component {
+export default class Dho extends Component {
   static contextType = GlobalContext;
   constructor(props) {
     super(props);
@@ -18,13 +16,12 @@ export default class Midwives extends Component {
     this.state = {
       users: [],
       users_copy: [],
-      healthFacilities: [],
       updateObj: null,
       search: null,
       isLoaded: false,
       loadingText: "Loading ..",
       status: "All",
-      role: "midwife",
+      role: "dho",
       from: fromInitialDate,
       to: moment(endOfDay).local().format("YYYY-MM-DD"),
       showCoords: true,
@@ -34,8 +31,6 @@ export default class Midwives extends Component {
         phone: false,
         gender: false,
         username: false,
-        health_facility: false,
-        sub_county: true,
         district: true,
       },
       // remote pagination
@@ -49,26 +44,7 @@ export default class Midwives extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.actionsFormatter = this.actionsFormatter.bind(this);
-    this.healthFormatter = this.healthFormatter.bind(this);
   }
-
-  getHealthFacilities() {
-    const thisApp = this;
-    service.getHealthFacilities(function (error, response) {
-      if (error) {
-        thisApp.setState({
-          isLoaded: true,
-          healthFacilities: [],
-        });
-      } else {
-        thisApp.setState({
-          isLoaded: true,
-          healthFacilities: response.results
-        });
-      }
-    });
-  }
-
   handleClose(modal) {
     this.setState({ [modal]: false, updateObj: null });
   }
@@ -78,7 +54,6 @@ export default class Midwives extends Component {
   }
   componentDidMount() {
     this.loadData();
-    this.getHealthFacilities();
   }
 
   componentDidUpdate() {
@@ -153,24 +128,11 @@ export default class Midwives extends Component {
       });
     }
   }
-
-  healthFormatter(cell, row) {
-    if (row.health_facility == null) return;
-    if(typeof(row.health_facility) === 'number' && this.state.healthFacilities.length){
-      let [facility] = this.state.healthFacilities.filter((facility)=> facility.id === row.health_facility);
-      return facility.name;
-    }
-    return row.health_facility.name;
-  }
-
+  
   nameFormatter(cell, row) {
     return row.first_name + " " + row.last_name;
   }
-  subCountyFormatter(cell, row) {
-    return (
-      row.village && row.village.parish && row.village.parish.sub_county.name
-    );
-  }
+  
   districtFormatter(cell, row) {
     return row?.village?.parish?.sub_county?.county?.district?.name;
   }
@@ -196,6 +158,7 @@ export default class Midwives extends Component {
       </button>
     );
   }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -212,8 +175,8 @@ export default class Midwives extends Component {
   render() {
     let users = this.state.users;
     const statusType = {
-      true: "Active",
-      false: "Deactivated",
+        true: "Active",
+        false: "Deactivated",
     };
     const options = {
       page: 1, // which page you want to show as default
@@ -274,23 +237,7 @@ export default class Midwives extends Component {
                 {" "}
                 <Check state={this.state.manageColomns.email} /> Email
               </MenuItem>
-              <MenuItem
-                onClick={(e, health_facility) =>
-                  this.updateTable("health_facility")
-                }
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.health_facility} />{" "}
-                Health facility
-              </MenuItem>
-              <MenuItem
-                onClick={(e, sub_county) => this.updateTable("sub_county")}
-                eventKey={3.1}
-              >
-                {" "}
-                <Check state={this.state.manageColomns.sub_county} /> Sub County
-              </MenuItem>
+             
               <MenuItem
                 onClick={(e, district) => this.updateTable("district")}
                 eventKey={3.1}
@@ -357,24 +304,6 @@ export default class Midwives extends Component {
                   dataField="email"
                 >
                   Email
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  width="200px"
-                  hidden={this.state.manageColomns.health_facility}
-                  dataFormat={this.healthFormatter}
-                  csvFormat={this.healthFormatter}
-                  dataSort={true}
-                  dataField="health_facility"
-                >
-                  Health facility
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  hidden={this.state.manageColomns.sub_county}
-                  dataFormat={this.subCountyFormatter}
-                  csvFormat={this.subCountyFormatter}
-                  dataField="sub_county"
-                >
-                  Sub county
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   hidden={this.state.manageColomns.district}

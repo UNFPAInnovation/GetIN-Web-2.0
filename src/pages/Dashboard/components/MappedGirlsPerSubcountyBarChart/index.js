@@ -20,7 +20,6 @@ const MappedGirlsPerSubcountyBarChartCard = ({ data }) => {
 
   useMemo(() => {
     if (data && data) {
-      console.log(data)
       setDistrict(getDistrict(data));
       setChart(MappedGirlsPerSubcountyBarChart(data));
     }

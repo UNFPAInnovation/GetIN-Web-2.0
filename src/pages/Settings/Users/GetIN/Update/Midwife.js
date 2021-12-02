@@ -18,9 +18,19 @@ export default class MidwifeModal extends Component {
       health_facility: null,
       health_facilities: [],
       loading: false,
+      fieldUpdate:false,
+      disableEdit:true
     };
     this.handleChange = this.handleChange.bind(this);
+    this.enableEdit = this.enableEdit.bind(this);
   }
+
+  enableEdit(){
+    this.setState({
+      disableEdit:false
+    })
+  }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -96,7 +106,7 @@ export default class MidwifeModal extends Component {
       2,
       function () {}
     );
-    service.updateChew(
+    service.updateUser(
       this.state.id,
       {
         is_active: this.state.is_active,
@@ -140,12 +150,12 @@ export default class MidwifeModal extends Component {
       >
         <Modal.Header closeButton>
           <div className="row">
-            <div className="col-md-10">
+            <div className="col-md-8">
               <Modal.Title>
                 <span> Update Midwife</span>{" "}
               </Modal.Title>
             </div>
-            <div className="col-md-2">
+            <div className="col-md-4">
               <button
                 className={`btn btn-sm ${
                   this.state.is_active ? "btn-danger" : "btn-success"
@@ -158,6 +168,13 @@ export default class MidwifeModal extends Component {
                 }
               >
                 {this.state.is_active ? "Deactivate" : "Activate"}
+              </button>
+              <button
+                className="btn btn-sm btn-success"
+                style={{marginLeft:'10px'}}
+                onClick={this.enableEdit}
+              >
+                {this.state.disableEdit?"Edit":"Editing"}
               </button>
             </div>
           </div>
@@ -176,6 +193,7 @@ export default class MidwifeModal extends Component {
                   className="form-control"
                   placeholder="John"
                   autoFocus={true}
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -188,6 +206,7 @@ export default class MidwifeModal extends Component {
                   value={this.state.last_name}
                   className="form-control"
                   placeholder="Musoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -200,6 +219,7 @@ export default class MidwifeModal extends Component {
                   value={this.state.phone_number}
                   className="form-control"
                   placeholder="070XXXXXX"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -210,6 +230,7 @@ export default class MidwifeModal extends Component {
                   name="gender"
                   onChange={this.handleChange}
                   value={this.state.gender}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
                     Select gender
@@ -218,6 +239,9 @@ export default class MidwifeModal extends Component {
                   <option value={"male"}>Male</option>
                 </select>
               </div>
+            </div>
+
+            <div className="col-md-12">
               <div className="form-group col-md-6">
                 <label>Email address</label>
                 <input
@@ -227,6 +251,7 @@ export default class MidwifeModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.email}
                   placeholder="jmusoke@gmail.com"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
               <div className="form-group col-md-6">
@@ -239,6 +264,7 @@ export default class MidwifeModal extends Component {
                   onChange={this.handleChange}
                   value={this.state.username}
                   placeholder="jmusoke"
+                  disabled={this.state.disableEdit}
                 ></input>
               </div>
             </div>
@@ -251,6 +277,7 @@ export default class MidwifeModal extends Component {
                   name="health_facility"
                   onChange={this.handleChange}
                   value={this.state.health_facility}
+                  disabled={this.state.disableEdit}
                 >
                   <option defaultValue value={null}>
                     Select Health Facility

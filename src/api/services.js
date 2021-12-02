@@ -28,7 +28,7 @@ exports.login = function(data, callback) {
           sessionStorage.setItem('token', response.auth_token);
           sessionStorage.setItem('role', response?.user?.role);
 
-        return callback(null, response.auth_token);
+        return callback(null, district);
       }
     }
   );
@@ -485,7 +485,25 @@ exports.users = function(role,districtId='',callback) {
          }
         });
 }
-
+exports.getMidWivesByDistrict = function(districtId='',callback) {
+  api.get(
+    addr + `/api/v1/users?role=midwife${districtId && (`&district=${districtId}`)}`,
+    // addr + `/api/v1/users?role=${role}`,
+    OPTIONS,function(error, response){
+        //callback of the method here
+         if(error){
+            return callback(error);
+         }else{
+              if (response.status !== 200) {
+                 return callback("Couldnt get users");
+             }
+              else{
+                return callback(null, response.data);
+              }
+            
+         }
+        });
+}
 exports.listSms = function(callback) {
   api.get(
     addr + "/api/v1/sms",
@@ -541,7 +559,7 @@ exports.sendSms = function(data, callback) {
 };
 exports.getDistricts = function(callback) {
   api.get(
-    addr + "/api/v1/districts",
+    addr + "/api/v1/districts?active=true",
     OPTIONS,
     function(error, response) {
       if (error) {
@@ -552,6 +570,55 @@ exports.getDistricts = function(callback) {
         } else {
           return callback(null, response.data);
         }
+      }
+    }
+  );
+};
+
+exports.getAllDistricts = function(callback) {
+  api.get(
+    addr + "/api/v1/districts/?limit=1000",
+    OPTIONS,
+    function(error, response) {
+      if (error) {
+        return callback(error);
+      } else {
+        if (response.status !== 200) {
+          return callback("Could not get districts");
+        } else {
+          return callback(null, response.data);
+        }
+      }
+    }
+  );
+};
+
+exports.updateDistrict = function(districtId="",data,callback) {
+  api.patch(
+    addr + `/api/v1/districts/${districtId}`,
+    OPTIONS,
+    data,
+    function(error, response) {
+      if (error) {
+        return callback(error);
+      } else {
+        return callback(null, response);
+      }
+    }
+  );
+};
+
+exports.changePassword = function(data, callback) {
+  api.post(
+    addr + "/auth/password/",
+    OPTIONS,
+    data,
+    function(error, response) {
+      //callback of the method here
+      if (error) {
+        return callback(error);
+      } else {
+        return callback(null, response);
       }
     }
   );
