@@ -2,8 +2,8 @@
 ![GetIn Mobile App](https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/jafgg9lgiaamswfzfw6m)
 
 ## Introduction
-The GetIN project aims at strengthening the community referral system with a particular focus on the most-at-risk pregnant girls 12 to 19 years who are less likely to seek health care if no deliberate follow up system is in place.
-It is a community referral system (mobile and web) to support outreach to pregnant girls in rural communities in Uganda.
+> The GetIN project aims at strengthening the community referral system with a particular  focus on the most-at-risk pregnant girls 12 to 19 years who are less likely to seek health care if no deliberate follow up system is in place.
+> It is a community referral system (mobile and web) to support outreach to pregnant girls in rural communities in Uganda.
 
 ## Getting Started
 
@@ -15,48 +15,30 @@ It is a community referral system (mobile and web) to support outreach to pregna
 
 
 ### Main Tools and Dependencies
-1. Create-React-App
-2. alertifyjs
-3. bootstrap3
-4. highcharts-react-official
-5. axios
-
 [Learn more about dependencies used in this project](https://github.com/UNFPAInnovation/GetIN-Web-2.0/blob/master/package.json)
 
 ### Project File structure
 ```bash
 
-|-- .gitignore
-|-- package-lock.json
 |-- package.json
 |-- README.md
-|-- yarn.lock
 |-- public '<--------------------------------- ** public assets folder'
-|   |-- android-icon-72x72.png
-|   |-- favicon.ico
-|   |-- favicon.png
 |   |-- index.html
-|   |-- manifest.json
-|   |-- robots.txt
-|   |-- _redirects
+|
 |-- src
     |-- App.js '<----------------------------- ** the main Component of the app'
     |-- config.json
     |-- env_config.js
     |-- index.js 
-    |-- serviceWorker.js
+    |
     |-- api '<---------------------------- ** GetIn Backend API request utilities'
     |   |-- index.js
     |   |-- services.js
+    |
     |-- assets 
     |   |-- fonts
-    |   |   |-- Montserrat-Bold.ttf
-    |   |   |-- Montserrat-Light.ttf
-    |   |   |-- Montserrat-Medium.ttf
-    |   |   |-- Montserrat-Regular.ttf
     |   |-- images
-    |       |-- login.webp
-    |       |-- Logo.png
+    |
     |-- components '<---------------------------- ** Resuable Components'
     |   |-- Card.js
     |   |-- ChartCard.js
@@ -77,9 +59,11 @@ It is a community referral system (mobile and web) to support outreach to pregna
     |       |-- MappedGirlsPerSubcountyBarChart.js
     |       |-- utils
     |           |-- utils.js
+    |
     |-- context '<---------------------------- ** Global State/Context folder'
     |   |-- AppReducer.js
     |   |-- GlobalState.js
+    |
     |-- pages   '<---------------------------- ** Dashboard Components'
     |   |-- FollowUps.js
     |   |-- HealthFacilities.js
@@ -92,6 +76,7 @@ It is a community referral system (mobile and web) to support outreach to pregna
     |   |   |-- ExpandableTable.js
     |   |   |-- Expected.js
     |   |   |-- Missed.js
+    |   |
     |   |-- Dashboard
     |   |   |-- Dashboard.js
     |   |   |-- components
@@ -107,6 +92,7 @@ It is a community referral system (mobile and web) to support outreach to pregna
     |   |       |   |-- index.js
     |   |       |-- MappedGirlsPerSubcountyBarChart
     |   |           |-- index.js
+    |   |
     |   |-- Deliveries
     |   |   |-- Deliveries.js
     |   |   |-- HealthFacility.js
@@ -125,6 +111,7 @@ It is a community referral system (mobile and web) to support outreach to pregna
     |   |   |-- Update
     |   |   |   |-- Admin.js
     |   |   |   |-- ChangePassword.js
+    |   |   |
     |   |   |-- Users
     |   |       |-- Admin.js
     |   |       |-- GetIN
@@ -148,11 +135,13 @@ It is a community referral system (mobile and web) to support outreach to pregna
     |       |-- Midwife.js
     |       |-- Users.js
     |       |-- VHT.js
+    |
     |-- styles '<---------------------------- ** Style sheets folder'
     |   |-- Footer.scss
     |   |-- global.scss
     |   |-- Header.scss
     |   |-- Login.scss
+    |
     |-- utils '<---------------------------- ** App Helper functions'
         |-- getData.js
         |-- index.js
@@ -168,26 +157,26 @@ It is a community referral system (mobile and web) to support outreach to pregna
 3. GetIn Test Dashboard * [testdash.getinmobile.org](http://testdash.getinmobile.org/)
 
 
-
 ## Deployment guide to AWS (Linux)
 
-Ensure that you the server pem key file in any of your directories.
+Ensure that you have the server pem key file in any of your directories.
 
 Connect to the GetIN instance on aws
 
-### `cd ~/Directory_With_Pem_Key && ssh -i filename.pem ubuntu@server_ip`
+> ### `cd ~/Directory_With_Pem_Key && ssh -i filename.pem ubuntu@server_ip`
 
 Locate the apache document root folder with dashboard
 
-### `cd /var/www/html/GetIN-Web-2.0`
+> ### `cd /var/www/html/GetIN-Web-2.0`
 
 Pull latest changes from production branch
 
-### `git pull origin branch`
+> ### `git pull origin branch`
 
 Run a production build
 
-### `sudo yarn run build`
+> ### `sudo yarn run build`
+
 
 ## Authors
 
