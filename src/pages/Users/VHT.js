@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { fromInitialDate, endOfDay, getData,getDistrict } from "../../utils/index";
+import { fromInitialDate, endOfDay, getData,getDistrict,filterOutTestUsers } from "../../utils/index";
 import moment from "moment";
 import Check from "../../components/Check";
 import { NavDropdown, MenuItem } from "react-bootstrap";
@@ -71,8 +71,8 @@ export default class VHT extends Component {
         } else {
           thisApp.setState({
             isLoaded: true,
-            users: response.results,
-            users_copy: response.results
+            users: filterOutTestUsers(response.results),
+            users_copy: filterOutTestUsers(response.results)
           });
         }
       }

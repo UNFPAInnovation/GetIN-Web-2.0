@@ -161,3 +161,9 @@ export const hideRowIfRecordExists = (row, appointments) => {
 export const getDistrict = (cell, row)=> {
   return row?.girl?.village?.parish?.sub_county?.county?.district?.name;
 }
+
+export const filterOutTestUsers = (users) =>{
+  let filterRegex = /mid|vht|test/i;
+  let filteredList = users.filter((user)=> !filterRegex.test(user.username));
+  return filteredList;
+}

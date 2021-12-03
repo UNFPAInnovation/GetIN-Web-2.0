@@ -22,6 +22,7 @@ export default class HealthFacilityModal extends Component {
     this.addHealthFacilty = this.addHealthFacilty.bind(this);
     this.handleDistrictChange = this.handleDistrictChange.bind(this);
     this.handleCountyChange = this.handleCountyChange.bind(this);
+    this.formatHealthFacilityName = this.formatHealthFacilityName.bind(this);
   }
 
   handleChange(event) {
@@ -111,12 +112,35 @@ export default class HealthFacilityModal extends Component {
     });
   }
 
+  formatHealthFacilityName(facilityName,facilityLevel){
+    if(facilityName.split(' ').length !== 1) return facilityName;
+    let level = '';
+    switch(facilityLevel){
+      case '0':
+        level  = 'Hospital'
+        break
+      case '2':
+        level = 'HC II'
+        break
+      case '3':
+        level = 'HC III'
+        break
+      case '4':
+        level = 'HC IV'
+        break
+      default:
+        level = ''
+    }
+    sessionStorage.setItem('Facility', `${facilityName} ${level}`.trim());
+    return `${facilityName} ${level}`.trim();
+  }
+
   addHealthFacilty(e) {
     e.preventDefault();
     const thisApp = this;
     service.addHealthFacility(
       {
-        name: this.state.facilityName,
+        name: this.formatHealthFacilityName(this.state.facilityName,this.state.facilityLevel),
         sub_county_id: this.state.subCounty,
         facility_level: this.state.facilityLevel,
         district: this.state.district,
@@ -180,16 +204,16 @@ export default class HealthFacilityModal extends Component {
                   <option defaultValue value={null}>
                     Select Level
                   </option>
-                  <option defaultValue value={'HC II'}>
+                  <option defaultValue value={'2'}>
                     HC II
                   </option>
-                  <option defaultValue value={'HC III'}>
+                  <option defaultValue value={'3'}>
                     HC III
                   </option>
-                  <option defaultValue value={'HC IV'}>
+                  <option defaultValue value={'4'}>
                     HC IV
                   </option> 
-                  <option defaultValue value={'Hospital'}>
+                  <option defaultValue value={'0'}>
                     Hospital
                   </option> 
                 </select>
