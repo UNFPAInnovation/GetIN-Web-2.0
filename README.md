@@ -1,4 +1,173 @@
 # GetIN Dashboard Web Client
+![GetIn Mobile App](https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/jafgg9lgiaamswfzfw6m)
+
+## Introduction
+The GetIN project aims at strengthening the community referral system with a particular focus on the most-at-risk pregnant girls 12 to 19 years who are less likely to seek health care if no deliberate follow up system is in place.
+It is a community referral system (mobile and web) to support outreach to pregnant girls in rural communities in Uganda.
+
+## Getting Started
+
+### SetUp
+1. `clone` this repository.
+2. `cd` into project folder.
+3. run `npm install` to install all dependencies.(you must have [node](https://nodejs.org) installed)
+4. Run `npm start` to spin up the dashboard.
+
+
+### Main Tools and Dependencies
+1. Create-React-App
+2. alertifyjs
+3. bootstrap3
+4. highcharts-react-official
+5. axios
+
+[Learn more about dependencies used in this project](https://github.com/UNFPAInnovation/GetIN-Web-2.0/blob/master/package.json)
+
+### Project File structure
+```bash
+
+|-- .gitignore
+|-- package-lock.json
+|-- package.json
+|-- README.md
+|-- yarn.lock
+|-- public '<--------------------------------- ** public assets folder'
+|   |-- android-icon-72x72.png
+|   |-- favicon.ico
+|   |-- favicon.png
+|   |-- index.html
+|   |-- manifest.json
+|   |-- robots.txt
+|   |-- _redirects
+|-- src
+    |-- App.js '<----------------------------- ** the main Component of the app'
+    |-- config.json
+    |-- env_config.js
+    |-- index.js 
+    |-- serviceWorker.js
+    |-- api '<---------------------------- ** GetIn Backend API request utilities'
+    |   |-- index.js
+    |   |-- services.js
+    |-- assets 
+    |   |-- fonts
+    |   |   |-- Montserrat-Bold.ttf
+    |   |   |-- Montserrat-Light.ttf
+    |   |   |-- Montserrat-Medium.ttf
+    |   |   |-- Montserrat-Regular.ttf
+    |   |-- images
+    |       |-- login.webp
+    |       |-- Logo.png
+    |-- components '<---------------------------- ** Resuable Components'
+    |   |-- Card.js
+    |   |-- ChartCard.js
+    |   |-- Check.js
+    |   |-- Footer.js
+    |   |-- Header.js
+    |   |-- Layout.js
+    |   |-- NotFound.js
+    |   |-- ScrollToTop.js
+    |   |-- Seo.js
+    |   |-- SideNav.js
+    |   |-- Charts
+    |       |-- AgeGroupOfMappedGirlsPieChart.js
+    |       |-- chartOptions.js
+    |       |-- DeliveriesPerSubCounty.js
+    |       |-- FamilyPlaning.js
+    |       |-- MappedGirlsBySubCounty.js
+    |       |-- MappedGirlsPerSubcountyBarChart.js
+    |       |-- utils
+    |           |-- utils.js
+    |-- context '<---------------------------- ** Global State/Context folder'
+    |   |-- AppReducer.js
+    |   |-- GlobalState.js
+    |-- pages   '<---------------------------- ** Dashboard Components'
+    |   |-- FollowUps.js
+    |   |-- HealthFacilities.js
+    |   |-- Login.js
+    |   |-- MappedGirls.js
+    |   |-- ANC
+    |   |   |-- AncVisits.js
+    |   |   |-- Attended.js
+    |   |   |-- Completed.js
+    |   |   |-- ExpandableTable.js
+    |   |   |-- Expected.js
+    |   |   |-- Missed.js
+    |   |-- Dashboard
+    |   |   |-- Dashboard.js
+    |   |   |-- components
+    |   |       |-- AgeGroupOfMappedGirlsBarChart
+    |   |       |   |-- index.js
+    |   |       |-- DeliveriesCard
+    |   |       |   |-- index.js
+    |   |       |-- FollowUpsCard
+    |   |       |   |-- index.js
+    |   |       |-- MappedGirlsCard
+    |   |       |   |-- index.js
+    |   |       |-- MappedGirlsPerDistrict
+    |   |       |   |-- index.js
+    |   |       |-- MappedGirlsPerSubcountyBarChart
+    |   |           |-- index.js
+    |   |-- Deliveries
+    |   |   |-- Deliveries.js
+    |   |   |-- HealthFacility.js
+    |   |   |-- Home.js
+    |   |-- Messages
+    |   |   |-- Compose.js
+    |   |   |-- List.js
+    |   |   |-- Messages.js
+    |   |-- Settings  '<---------------------------- ** Admin user Settings components'
+    |   |   |-- Districts.js
+    |   |   |-- HealthFacilities.js
+    |   |   |-- index.js
+    |   |   |-- Add
+    |   |   |   |-- HealthFacility.js
+    |   |   |   |-- User.js
+    |   |   |-- Update
+    |   |   |   |-- Admin.js
+    |   |   |   |-- ChangePassword.js
+    |   |   |-- Users
+    |   |       |-- Admin.js
+    |   |       |-- GetIN
+    |   |           |-- Ambulance.js
+    |   |           |-- Dho.js
+    |   |           |-- Midwife.js
+    |   |           |-- Users.js
+    |   |           |-- VHT.js
+    |   |           |-- Add
+    |   |           |   |-- Ambulance.js
+    |   |           |   |-- Dho.js
+    |   |           |   |-- Midwife.js
+    |   |           |   |-- Vht.js
+    |   |           |-- Update
+    |   |               |-- Ambulance.js
+    |   |               |-- Dho.js
+    |   |               |-- Midwife.js
+    |   |               |-- Vht.js
+    |   |-- Users  
+    |       |-- Ambulance.js
+    |       |-- Midwife.js
+    |       |-- Users.js
+    |       |-- VHT.js
+    |-- styles '<---------------------------- ** Style sheets folder'
+    |   |-- Footer.scss
+    |   |-- global.scss
+    |   |-- Header.scss
+    |   |-- Login.scss
+    |-- utils '<---------------------------- ** App Helper functions'
+        |-- getData.js
+        |-- index.js
+
+```
+
+
+## Useful Links and External Services
+1. GetIn backend API Documentation * [backend.getinmobile.org](https://backend.getinmobile.org/)
+
+2. GetIn Live Dashboard * [dash.getinmobile.org](http://dash.getinmobile.org/)
+
+3. GetIn Test Dashboard * [testdash.getinmobile.org](http://testdash.getinmobile.org/)
+
+
 
 ## Deployment guide to AWS (Linux)
 
@@ -20,84 +189,9 @@ Run a production build
 
 ### `sudo yarn run build`
 
-
-## Test Dashboard
-* [testdash.getinmobile.org](http://testdash.getinmobile.org/)
-
-## Live Dashboard
-* [dash.getinmobile.org](http://dash.getinmobile.org/)
-
-
 ## Authors
 
 * [Outbox (U) LTD](https://www.outbox.co.ug)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
