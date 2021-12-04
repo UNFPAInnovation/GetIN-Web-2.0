@@ -7,7 +7,9 @@
 
 ## Getting Started
 
-### SetUp
+### Local environment setup
+These are the setps you are to follow to spin up this application from a local development environment;
+ 
 1. `clone` this repository.
 2. `cd` into project folder.
 3. run `npm install` to install all dependencies.(you must have [node](https://nodejs.org) installed)
@@ -150,12 +152,27 @@
 
 
 ## Useful Links and External Services
-1. GetIn backend API Documentation * [backend.getinmobile.org](https://backend.getinmobile.org/)
 
-2. GetIn Live Dashboard * [dash.getinmobile.org](http://dash.getinmobile.org/)
+| API Documentation       | Live Dashboard                  | Test Dashboard          |
+|:----------------------- |:--------------------------------| ------------------------|
+| [backend.getinmobile.org](https://backend.getinmobile.org/)| [dash.getinmobile.org](http://dash.getinmobile.org/) | [testdash.getinmobile.org](http://testdash.getinmobile.org/) |
 
-3. GetIn Test Dashboard * [testdash.getinmobile.org](http://testdash.getinmobile.org/)
 
+1. [React-Bootstrap Documentation](https://react-bootstrap-v3.netlify.app/)  
+    - React-Bootstrap is used for the Styles and Layout of the dashboard.
+2. [Bootstrap Table](https://allenfang.github.io/react-bootstrap-table/docs.html)
+    - Bootstrap Table is used to represent application data in tables. 
+2. [Moment.js Documentation](https://momentjs.com/docs/)
+    - Helps with date and time caculation
+3. [Alertify.js Documentation](https://alertifyjs.com/guide.html)
+    - Displays alert messages when users login/logout or when posting data to the backend
+4. [HighCharts Docs](https://api.highcharts.com/highcharts/)
+    - It's a library that enables visualization of application data with graphs and charts
+5. [Axios Documentation](https://axios-http.com/docs/intro) 
+    - Library that takes care of API requests made to the GetBackend server in the application
+
+
+## Documentation
 
 ## Deployment guide to AWS (Linux)
 
