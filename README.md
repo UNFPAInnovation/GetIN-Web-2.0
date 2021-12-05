@@ -9,7 +9,7 @@
 
 ### Local environment setup
 These are the setps you are to follow to spin up this application from a local development environment;
- 
+
 1. `clone` this repository.
 2. `cd` into project folder.
 3. run `npm install` to install all dependencies.(you must have [node](https://nodejs.org) installed)
@@ -154,7 +154,7 @@ These are the setps you are to follow to spin up this application from a local d
 ## Useful Links and External Services
 
 | API Documentation       | Live Dashboard                  | Test Dashboard          |
-|:----------------------- |:--------------------------------| ------------------------|
+|:----------------------- |:--------------------------------|:------------------------|
 | [backend.getinmobile.org](https://backend.getinmobile.org/)| [dash.getinmobile.org](http://dash.getinmobile.org/) | [testdash.getinmobile.org](http://testdash.getinmobile.org/) |
 
 
