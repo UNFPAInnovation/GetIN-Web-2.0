@@ -4,7 +4,7 @@ You can find detailed documentation of the different modules of the application 
 ### Important Information
 You are required to have a practical understanding of JavaScript and React.js to help you easily understand the codebase so as to make changes/contributions.
 
-Feel free to skill up on react.js if you need to;
+Feel free to skill up on [react.js](https://reactjs.org/docs/getting-started.html) if you need to;
 
 ## Making API Requests to the GetIn backend
 This Application uses Axios to perform CRUD Operations. Requests are made to the GetIn Backend API endpoints that are provided via the Swagger Docs of the API which can be found [here](https://backend.getinmobile.org/).
@@ -147,7 +147,7 @@ There are other functions that you can reuse in the the application, these are f
 
 The Application uses both local and Global state to manage data.
 * Global State;
-    - Global state is created using react's [Context API](https://reactjs.org/docs/context.html). The entire Application wrapped with the Global context provider which makes global state values accessible to all components in this app
+    - Global state is created using react's [Context API](https://reactjs.org/docs/context.html). The entire application is wrapped with the Global context provider which makes global state values accessible to all components in this app
 
 * Local State;
     - Most components utilise local state and props to manage data.
@@ -180,4 +180,83 @@ const initialState = {
     // Captures the current date and is used in the date filters of the app 
 }
 ```  
+
+The application receives Global state context via the Global State provider that wraps the entire app in the main component file.
+> `src/App.js`
+
+```js
+class App extends Component {
+  ...
+  render() {
+    return (
+      <GlobalProvider>
+        ...          
+        // All App components are children that receive the Global state object
+        ...
+      </GlobalProvider>
+    );
+  }
+}
+```
+## Browser Routing
+Browser routing is handled using react's browser router, check out the documentation of that react routing library [here](https://v5.reactrouter.com/web/api/BrowserRouter).
+
+## Main Projects Components
+
+### Resuable Components
+Most of the apps resuable components are found in the components folder that can be accessed via this link;
+> `src/components`
+
+```bash
+|
+|-- src
+    |
+    |-- components '<---------------------------- ** Resuable Components'
+    |   |-- Card.js
+    |   |-- ChartCard.js
+    |   |-- Check.js
+    |   |-- Footer.js
+    |   |-- Header.js
+    |   |-- Layout.js
+    |   |-- NotFound.js
+    |   |-- ScrollToTop.js
+    |   |-- Seo.js
+    |   |-- SideNav.js
+    |   |-- Charts
+    |       |-- AgeGroupOfMappedGirlsPieChart.js
+    |       |-- chartOptions.js
+    |       |-- DeliveriesPerSubCounty.js
+    |       |-- FamilyPlaning.js
+    |       |-- MappedGirlsBySubCounty.js
+    |       |-- MappedGirlsPerSubcountyBarChart.js
+    |       |-- utils
+    |           |-- utils.js
+    |
+```
+
+## Card component
+This Component can be found via his link:
+> `src/components/Card.js`
+
+The card component is used to display data on the dashboard's landing page and it takes 6 props as shown in the table below;
+
+| Propname       | Type         | Default         | Description                      |
+|:---------------|:-------------|:----------------|:---------------------------------|
+| color          | string       | required        | - defines the color of the card  |
+| icon           | string       | required        | - font awesome icon class name   |
+| title          | string       | required        | - title of the card              |
+| number         | number       | required        | - Data variable count from backend (follow ups, mapped women and Deliveries)|
+| direction      | string       | required        | - either up or down              |
+| rate           | string       | required        | - percentage rise of fall in data variable  |
+
+Illustration of Component;
+
+![card component](/src/Docs/Images/card_component.png)
+
+
+
+
+
+
+
 
