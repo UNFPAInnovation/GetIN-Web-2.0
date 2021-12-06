@@ -2,7 +2,7 @@
 You can find detailed documentation of the different modules of the application that have heavy business logic and also those that are often reused.
 
 ### Important Information
-You are required to have a practical understanding of JavaScript and React.js to help you easily understand the codebase or make changes/contributions.
+You are required to have a practical understanding of JavaScript and React.js to help you easily understand the codebase so as to make changes/contributions.
 
 Feel free to skill up on react.js if you need to;
 

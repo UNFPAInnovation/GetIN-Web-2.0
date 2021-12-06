@@ -173,6 +173,7 @@ These are the setps you are to follow to spin up this application from a local d
 
 
 ## Documentation
+Find the detailed documentation of components and utility functions [here](/src/Docs/documentation)
 
 ## Deployment guide to AWS (Linux)
 
