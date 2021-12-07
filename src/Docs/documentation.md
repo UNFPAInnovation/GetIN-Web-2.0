@@ -13,6 +13,7 @@ Feel free to skill up on [react.js](https://reactjs.org/docs/getting-started.htm
 | 2            | - [State Management](/src/Docs/documentation.md#state-management) |
 | 3            | - [Browser Routing](/src/Docs/documentation.md#browser-routing)   |
 | 4            | - [Reusable App Components](/src/Docs/documentation.md#common-project-components) |
+| 5            | - [Testing the App](/src/Docs/documentation.md#testing-app) |
 
 
 
@@ -394,6 +395,31 @@ Read more about lazy loading [here](https://reactjs.org/docs/code-splitting.html
   const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
 ```
 
+## Testing App
+You are required to run tests in this application using the `run test` command in your terminal before building the app.
+
+The Test Suits in the app can be found the folders named `__tests__` as shown below;
+
+```bash
+  |-- Users
+  |   |-- Ambulance.js
+  |   |-- Midwife.js
+  |   |-- Users.js
+  |   |-- VHT.js
+  |-- __tests__   '<------------------ * Tests Folder'
+      |-- AncVisits.test.js
+      |-- Dashboard.test.js
+      |-- Deliveries.test.js
+      |-- FollowUps.test.js
+      |-- HealthFacilities.test.js
+      |-- Login.test.js
+      |-- MappedGirls.test.js
+      |-- Users.test.js
+
+```
+Testing Libraries / packages used for testing the app are;
+- [React Testing Library](https://testing-library.com/docs/)
+- [Jest](https://jestjs.io/docs/tutorial-react)
 
 
 

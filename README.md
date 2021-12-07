@@ -1,4 +1,6 @@
 # GetIN Dashboard Web Client
+![Netlify](https://img.shields.io/netlify/5d0e151d-eb8f-4dd1-a520-858df83590fb?label=Build) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/UNFPAInnovation/GetIN-Web-2.0/master?label=Last%20commit) ![GitHub contributors](https://img.shields.io/github/contributors/UNFPAInnovation/GetIN-Web-2.0)
+
 ![GetIn Mobile App](https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/jafgg9lgiaamswfzfw6m)
 
 ## Introduction
