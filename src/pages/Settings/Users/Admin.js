@@ -8,7 +8,7 @@ const Fuse = require("fuse.js");
 const UserModal = React.lazy(() => import("../Add/User"));
 const UpdateModal = React.lazy(()=> import("../Update/Admin"))
 
-export default class VHT extends Component {
+export default class AdminUsers extends Component {
   constructor(props) {
     super(props);
 

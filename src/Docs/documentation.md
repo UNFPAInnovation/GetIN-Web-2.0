@@ -6,6 +6,16 @@ You are required to have a practical understanding of JavaScript and React.js to
 
 Feel free to skill up on [react.js](https://reactjs.org/docs/getting-started.html) if you need to;
 
+### Table of Contents
+| Number       | Section                       |
+|:-------------|:------------------------------|
+| 1            | - [Making API Requests](/src/Docs/documentation.md#making-api-requests-to-the-getin-backend)         |
+| 2            | - [State Management](/src/Docs/documentation.md#state-management) |
+| 3            | - [Browser Routing](/src/Docs/documentation.md#browser-routing)   |
+| 4            | - [Reusable App Components](/src/Docs/documentation.md#common-project-components) |
+
+
+
 ## Making API Requests to the GetIn backend
 This Application uses Axios to perform CRUD Operations. Requests are made to the GetIn Backend API endpoints that are provided via the Swagger Docs of the API which can be found [here](https://backend.getinmobile.org/).
 
@@ -163,7 +173,7 @@ Global State context folder;
     |
    
 ``` 
-## Data in Global State
+### Data in Global State
 Code can be found here;
 > `src/context/GlobalState.js`
 ```js
@@ -201,7 +211,7 @@ class App extends Component {
 ## Browser Routing
 Browser routing is handled using react's browser router, check out the documentation of that react routing library [here](https://v5.reactrouter.com/web/api/BrowserRouter).
 
-## Main Projects Components
+## Common Project Components
 
 ### Resuable Components
 Most of the apps resuable components are found in the components folder that can be accessed via this link;
@@ -234,7 +244,7 @@ Most of the apps resuable components are found in the components folder that can
     |
 ```
 
-## Card component
+### Card component
 This Component can be found via his link:
 > `src/components/Card.js`
 
@@ -252,6 +262,150 @@ The card component is used to display data on the dashboard's landing page and i
 Illustration of Component;
 
 ![card component](/src/Docs/Images/card_component.png)
+
+
+### Chart Card Component
+This Component can be found via his link:
+> `src/components/ChartCard.js`
+
+This component is used to display charts created using the highcharts react library. It uses only 2 props as shown below;
+
+| Propname       | Type         | Default         | Description                      |
+|:---------------|:-------------|:----------------|:---------------------------------|
+| title          | string       | required        | - defines the title of the card  |
+| content        | HighChartsReact component | required | - Component of a chart created using HighChartsReact library|
+
+Usage Illustration of the card component on the dashboard
+
+![Chartcard_Component example](/src/Docs/Images/chartcard_component.png)
+
+### Creating a Chart using the HighchartsReact
+- [Checkout this demo project to learn how it's done](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/drilldown/basic/)
+- [Read the HighCharts documentation](https://api.highcharts.com/highcharts/)
+
+## Check Component
+This Component can be found via his link:
+> `src/components/Check.js`
+
+This component renders a checked or unchecked input checkbox element based whether the state prop is true or false respectively.
+
+| Propname       | Type         | Default         | Description                      |
+|:---------------|:-------------|:----------------|:---------------------------------|
+| state          | boolean      | required        | - state of the columns shown in the data tables |
+
+```js
+export default function Check(props) {
+      return (
+          <div className="checkboxWrapper">
+            <div className="disabler"></div>
+            {props.state === false ? (
+              <input type="checkbox" checked={true} />
+            ) : (
+              <input type="checkbox" checked={false} />
+            )}
+          </div>
+      )
+  }
+```
+
+Usage Illustration in the data tables under the manageColumns dropdown;
+
+![check component](/src/Docs/Images/check_component.PNG)
+
+
+### ErrorBoundary and Suspense Components
+The errorboundary and suspense components are used in the app.js file, 
+> `src/App.js`
+
+**Error boundaries** are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed. Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.
+
+Learn more about the ErrorBoundary Component [here](https://reactjs.org/docs/error-boundaries.html)
+
+Usage of ErrorBoundary codebase
+
+```js
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <React.Fragment>
+          <div className="container-custom text-center">
+            <h1 className="page-header text-center">Something went wrong.</h1>
+            <a className="btn btn-primary text-center" href="/">
+              Reload
+            </a>
+          </div>
+        </React.Fragment>
+      );
+    } else {
+      return this.props.children;
+    }
+  }
+}
+```
+
+**A Suspense** component that lets you “wait” for some code to load and declaratively specify a loading state (like a spinner) while we’re waiting:
+Learn more about the Suspense component [here](https://reactjs.org/docs/concurrent-mode-suspense.html)
+
+### SF Component
+This component is used in the app.js component to rendering fallback UI incase that's loaded fails, it wraps all components to be rendered in the app.js Component.
+
+```js
+class SF extends Component {
+  render() {
+    return (
+      <ScrollToTop>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <div className="loading text-center">
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <span>Loading...</span>
+              </div>
+            }
+          >
+            <Layout>{this.props.children}</Layout>
+          </Suspense>
+        </ErrorBoundary>
+      </ScrollToTop>
+    );
+  }
+}
+```
+
+### Lazy Loading App Components
+For optimization and faster page loads, not all components are loaded during the first render. 
+Components are rendered dynamically and are loaded only when they are needed:
+Read more about lazy loading [here](https://reactjs.org/docs/code-splitting.html#reactlazy):
+
+```js
+  const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

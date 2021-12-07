@@ -7,6 +7,17 @@
 
 ## Getting Started
 
+| Number       | Section                       |
+|:-------------|:------------------------------|
+| 1            | - [Local Environment Setup](/README.md#local-environment-setup)         |
+| 2            | - [Project File Structure](/README.md#project-file-structure) |
+| 3            | - [Useful Links](/README.md#useful-links-and-external-services) |
+| 4            | - [Project Documentation ](/README.md#documentation) |
+| 5            | - [App Deployment Instructions](/README.md#deployment-guide-to-aws-linux) |
+| 6            | - [Contributing](/README.md#contributing) |
+
+
+
 ### Local environment setup
 These are the setps you are to follow to spin up this application from a local development environment;
 
@@ -175,6 +186,7 @@ These are the setps you are to follow to spin up this application from a local d
 ## Documentation
 Find the detailed documentation of components and utility functions [here](/src/Docs/documentation.md)
 
+
 ## Deployment guide to AWS (Linux)
 
 Ensure that you have the server pem key file in any of your directories.
@@ -194,6 +206,12 @@ Pull latest changes from production branch
 Run a production build
 
 > ### `sudo yarn run build`
+
+
+## Contributing
+- ⇄ Pull/Merge requests and ★ Stars are always welcome.
+- For bugs and feature requests, please create an issue.
+- Pull requests must be accompanied by passing automated tests (`npm test`).
 
 
 ## Authors

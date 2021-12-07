@@ -182,9 +182,7 @@ class App extends Component {
               path="/"
               render={() =>
                 this.state.isLoggedIn ? (
-                  // <Redirect to="/dashboard" />
-                  //temporary fix until dashboard is sorted
-                  <Redirect to="/anc_visits" />
+                  <Redirect to="/dashboard" />
                 ) : (
                   <LoadingPage>
                     {" "}
@@ -252,7 +250,6 @@ class SF extends Component {
                 <div className="spacer"></div>
                 <div className="spacer"></div>
                 <div className="spacer"></div>
-                {/* <Logo/> */}
                 <span>Loading...</span>
               </div>
             }
@@ -275,7 +272,6 @@ class LoadingPage extends Component {
                 <div className="spacer"></div>
                 <div className="spacer"></div>
                 <div className="spacer"></div>
-                {/* <Logo/> */}
                 <span>Loading...</span>
               </div>
             }
