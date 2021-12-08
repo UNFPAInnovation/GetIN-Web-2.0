@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import Users from '../Settings/index';
 
 
-test('AncVisits Component Loads without crashing',()=>{
+test('GetIn Users Component Loads without crashing',()=>{
     const div = document.createElement('div');
     ReactDOM.render(
     <Suspense

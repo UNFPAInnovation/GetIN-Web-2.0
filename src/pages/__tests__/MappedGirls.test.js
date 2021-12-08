@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import MappedGirls from '../MappedGirls';
 
 
-test('AncVisits Component Loads without crashing',()=>{
+test('MappedGirls Component Loads without crashing',()=>{
     const div = document.createElement('div');
     ReactDOM.render(
     <Suspense

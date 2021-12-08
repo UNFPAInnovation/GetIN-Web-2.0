@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import Login from '../Login';
 
 
-test('AncVisits Component Loads without crashing',()=>{
+test('Login Component Loads without crashing',()=>{
     const div = document.createElement('div');
     ReactDOM.render(
     <Suspense

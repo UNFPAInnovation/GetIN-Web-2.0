@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import App from './App';
 
 
-test('AncVisits Component Loads without crashing',()=>{
+test('Main App Component Loads without crashing',()=>{
     const div = document.createElement('div');
     ReactDOM.render(
         <Router>

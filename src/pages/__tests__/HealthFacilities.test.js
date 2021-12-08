@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import HealthFacilities from '../HealthFacilities';
 
 
-test('AncVisits Component Loads without crashing',()=>{
+test('HealthFacilities Component Loads without crashing',()=>{
     const div = document.createElement('div');
     ReactDOM.render(
     <Suspense
