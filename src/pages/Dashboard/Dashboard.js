@@ -95,7 +95,7 @@ export default function Dashboard() {
         </div>
 
         {isLoading ? (
-          <LoadingData text='Loading dashboard and data ....' />
+          <LoadingData />
         ) : (
           <>
             <div className='col-md-12 flex-row'>

@@ -56,9 +56,9 @@ export default function Header(){
   return (
     <nav className='headerNav navbar navbar-default navbar-static-top'>
       <div className='container-fluid'>
-        <div id='navbar' className='top-navbar' style={{justifyContent: `${role}` === 'manager'?'space-between':'flex-end'}}>
+        <div data-testid="test-navbar" id='navbar' className='top-navbar' style={{justifyContent: `${role}` === 'manager'?'space-between':'flex-end'}}>
           {role === 'manager' && (<div id="district-nav">
-            <NavDropdown eventKey={1} title="Filter by district" id="district-nav-dropdown">
+            <NavDropdown data-testid="district-filter" eventKey={1} title="Filter by district" id="district-nav-dropdown">
               <MenuItem eventKey={1.1} onClick={()=>{updateDistrict("All Districts");updateDistrictId('')}}>All Districts</MenuItem>
               {districts?districts.map((district)=>{
                 return <MenuItem key={district.id} eventKey={district.id} onClick={()=>{updateDistrict(district.name);updateDistrictId(district.id)}}>{district.name}</MenuItem>

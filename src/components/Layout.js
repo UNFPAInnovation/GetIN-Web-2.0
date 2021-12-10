@@ -18,7 +18,7 @@ export default function Layout(props) {
   );
 }
 
-export function LoadingData(props) {
+export function LoadingData() {
   return (
     <React.Fragment>
       <div className='col-md-12 spinner'></div>

@@ -166,7 +166,7 @@ export default class SideNav extends Component {
               </Link>
             </ListGroupItem>
             {role !== "manager" && (
-              <ListGroupItem id="usersLink">
+              <ListGroupItem id="usersLink" data-testid="Users">
                 <Link to="/users">
                   {this.state.mini === false && "Users"}{" "}
                   <FontAwesomeIcon icon={faUsers} />
@@ -180,7 +180,7 @@ export default class SideNav extends Component {
               </Link>
             </ListGroupItem>
             {role === 'manager' && (
-              <ListGroupItem id="settingsLink">
+              <ListGroupItem id="settingsLink" data-testid="Settings">
                 <Link to="/settings">
                   {this.state.mini === false && "Settings"}{" "}
                   <FontAwesomeIcon icon={faCog} />
