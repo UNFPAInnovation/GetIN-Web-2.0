@@ -15,7 +15,7 @@
     "fuse.js": "^3.4.5",
     "highcharts": "^7.2.1",
     "highcharts-react-official": "^2.2.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "nprogress": "^0.2.0",
     "react": "^16.10.2",
     "react-bootstrap": "^0.32.4",
